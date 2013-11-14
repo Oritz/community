@@ -1,5 +1,5 @@
 class OldSystemTables < ActiveRecord::Migration
-  def change
+  def up
     # client_errors
     create_table :client_errors do |t|
       t.integer :account_id, null: false
@@ -8,7 +8,7 @@ class OldSystemTables < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :client_errors
+    add_index :client_errors, :account_id
 
     # client_updates
     create_table :client_updates do |t|
@@ -24,5 +24,10 @@ class OldSystemTables < ActiveRecord::Migration
 
       t.timestamps
     end
+  end
+
+  def down
+    drop_table :client_updates
+    drop_table :client_errors
   end
 end
