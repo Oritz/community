@@ -1,0 +1,4 @@
+div
+  span= image_tag(@post.creator.avatar.m.url, alt: @post.creator.nick_name)
+  span= @post.creator.nick_name
+p= @post.content

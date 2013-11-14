@@ -1,0 +1,16 @@
+ul.media-list
+  -@recommends.each do |recommend|
+    li.media
+      = link_to user_path(recommend.creator), class: "pull-left" do
+        = image_tag recommend.creator.avatar.m.url, alt: recommend.creator.nick_name, class: "media-object"
+      div.media-body
+        p.media-heading
+          = link_to recommend.creator.nick_name, user_path(recommend.creator)
+        div.media
+          p= recommend.content
+          -if recommend.original.cast.post_type == Post::TYPE_TALK
+            p= recommend.original.content
+          -else
+            p= recommend.original.cast.title
+            p= raw recommend.original.cast.content
+= will_paginate @recommends

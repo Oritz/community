@@ -1,0 +1,11 @@
+blockquote
+  h2= @post.title
+  - if @post.group
+    small
+      span= I18n.t("Posted in")
+      span= link_to @post.group.name, @post.group
+div
+  span= image_tag(@post.creator.avatar.m.url, alt: @post.creator.nick_name, class: "img-rounder", width: "50px")
+  span= t("post_created_at", time: @post.created_at.strftime("%Y-%m-%d %H:%M:%S"))
+.well
+  div= raw @post.content

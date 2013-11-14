@@ -1,0 +1,17 @@
+p
+  = link_to post.creator.nick_name, user_path(post.creator)
+  = t("recommended")
+small
+  p= link_to post.content, post_path(post.id)
+  div
+    -if post.original.status == Post::STATUS_DELETED
+      span= t("messages.posts.deleted")
+    -elsif post.original.post_type == Post::TYPE_TALK
+      = post.original.cast.content
+    -else
+      p
+        = post.original.cast.title
+      div
+        = raw truncate_html(post.original.cast.content, length: 1000, omission: "...")
+
+= render partial: "posts/post_op.html.slim", locals: {post: post}

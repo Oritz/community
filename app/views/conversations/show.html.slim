@@ -1,0 +1,20 @@
+div.form-div
+  = form_tag private_messages_path, method: :post do
+    =hidden_field_tag "recipient_id", @recipient.id
+    p= text_area_tag "private_message[content]", "", class: "span", rows: "3"
+    p= submit_tag t("send"), class: "btn btn-primary"
+
+ul.media-list
+  -@private_messages.each do |pm|
+    - pm.conversation = @conversation
+    li.media
+      = link_to user_path(pm.sender), class: "pull-left" do
+        = image_tag pm.sender.avatar.m.url, alt: pm.sender.nick_name, class: "media-object"
+      div.media-body.well.well-small
+        p.media-heading
+          = link_to pm.sender.nick_name, user_path(pm.sender)
+          span.label= pm.created_at
+          = link_to t("delete"), private_message_path(pm), method: :delete, data: {confirm: 'Are you sure?'}
+        div.media
+          p= pm.content
+=will_paginate @private_messages

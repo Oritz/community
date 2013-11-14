@@ -1,0 +1,15 @@
+ul.unstyled
+  - @recommends.each do |recommend|
+    li
+      .container-fluid
+        .row-fluid
+          .span1
+            = image_tag(recommend.creator.avatar.m.url, alt: recommend.creator.nick_name, class: "img-rounded", width: "50px")
+          .span10
+            .well.well-small
+              span
+                = link_to(recommend.creator.nick_name, user_path(recommend.creator))
+              span= t("recommended this #{@post.class.to_s.downcase}")
+              span= @post.created_at.strftime("%Y-%m-%d %H:%M:%S")
+            div
+              span= recommend.content

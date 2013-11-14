@@ -1,0 +1,18 @@
+p.text-info= I18n.t("Groups")
+ul.unstyled
+  - @groups.each do |group|
+    li
+      div.media
+        = link_to image_tag(group.logo, class: "media-object img-rounded", width: "100px"), group, class: "pull-left"
+        div.media-body
+          h4.media-heading
+            = link_to truncate(group.name, length: 15), group
+          p= t("groups_members", count: group.member_count)
+          div.media= truncate(group.description, length: 100)
+          p
+            - if current_account && group.account_id
+              span= t("Joined")
+            - else
+              = link_to 'Add', {action: :add_user, id: group.id}, method: :put
+br/
+= link_to 'New Group', new_group_path

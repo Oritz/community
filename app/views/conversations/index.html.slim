@@ -1,0 +1,21 @@
+ul.media-list
+  -@private_messages.each do |pm|
+    li.media
+      - if pm.sender == current_account
+        - another = pm.recipient
+      - else
+        - another = pm.sender
+      = link_to user_path(another), class: "pull-left" do
+        = image_tag another.avatar.m.url, alt: another.nick_name, class: "media-object"
+      div.media-body.well.well-small
+        p.media-heading
+          = link_to another.nick_name, user_path(another)
+          span.label= another.created_at
+          = link_to t("delete"), conversation_path(pm.conversation), method: :delete, data: {confirm: 'Are you sure?'}
+          - if pm.sender != current_account && !pm.read_at
+            span
+              i.icon-envelope
+        div.media
+          = link_to conversation_path(pm.conversation) do
+            = pm.content
+=will_paginate @private_messages

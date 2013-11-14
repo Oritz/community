@@ -1,0 +1,55 @@
+- content_for(:jsfiles) do
+  = javascript_include_tag "home/index"
+  = javascript_include_tag "/javascripts/ckeditor/ckeditor.js"
+.span2
+  p= current_account.nick_name
+  .span
+    = image_tag(current_account.avatar.b.url, alt: current_account.nick_name, class: "img-rounded", width: "100px")
+  p
+    span
+      = t("following")
+      | :#{current_account.following_count}
+    span
+      = t("followers")
+      | :#{current_account.follower_count}
+    span
+      = t("post")
+      | :#{current_account.talk_count + current_account.subject_count}
+.span9
+  .row
+    .btn-group
+      a.btn.dropdown-toggle data-toggle="dropdown" href="#" 
+        span.post-type-selected= t("talk")
+        span.caret
+      ul.dropdown-menu
+        li
+          a.post-type-item href="#" = t("talk")
+        li
+          a.post-type-item href="#" = t("subject")
+    = form_for(@new_talk) do |f|
+      p= f.text_area :content, class: "span9", rows: "3"
+      p= f.submit t("send"), class: "btn btn-primary"
+    = form_for @new_subject do |f|
+      p= t("title")
+      p= f.text_field :title, class: "span5"
+      p= t("content")
+      p= f.text_area :content, class: "span9", rows: "7"
+      p= f.submit t("send"), class: "btn btn-primary"
+  .row
+    ul.nav.nav-tabs
+      - if @type == "POSTS"
+        li.active
+          = link_to t("posts"), {controller: :home}
+      - else
+        li
+          = link_to t("posts"), {controller: :home}
+      - if @type == "GROUPS"
+        li.active
+          = link_to t("groups"), {action: :groups_posts, controller: :home}
+      - else
+        li
+          = link_to t("groups"), {action: :groups_posts, controller: :home}
+  ul.unstyled.container
+    - @subjects.each do |subject|
+      li
+        = render partial: "subject", locals: {behavior: subject}

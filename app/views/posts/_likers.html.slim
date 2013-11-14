@@ -1,0 +1,13 @@
+ul.unstyled
+  - @likers.each do |liker|
+    li
+      .container-fluid
+        .row-fluid
+          .span1
+            = image_tag(liker.avatar.m.url, alt: liker.nick_name, class: "img-rounded", width: "50px")
+          .span10
+            p
+              = liker.nick_name
+              = I18n.t("likes this #{@post.class.to_s.downcase}")
+div
+  = will_paginate @likers

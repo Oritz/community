@@ -1,0 +1,22 @@
+default: &defaults
+  sso:
+    root_domain: ".sonkwo.com"
+    domain_key: "9fc54dfc86fea801f5760998614a19a4"
+    domains:
+      store:
+        name: "store.sonkwo.com"
+        key: "9fc54dfc86fea801f5760998614a19a4"
+        logout_url: "http://store.sonkwo.com/logout"
+      forum:
+        name: "forum.sonkwo.com"
+        key: "9fc54dfc86fea801f5760998614a19a4"
+        logout_url: "http://forum.sonkwo.com/xxx"
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

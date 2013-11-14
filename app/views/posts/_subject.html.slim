@@ -1,0 +1,9 @@
+p
+  = link_to post.creator.nick_name, {action: :show, controller: :users, id: post.creator.id}
+  = t("say")
+p
+  = link_to post.title, post_path(post.id)
+div
+  = raw truncate_html(post.content, length: 1000, omission: "...")
+
+= render partial: "posts/post_op.html.slim", locals: {post: post}

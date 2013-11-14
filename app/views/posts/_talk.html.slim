@@ -1,0 +1,8 @@
+blockquote
+  p
+    = link_to post.creator.nick_name, user_path(post.creator)
+    = t("say")
+  small
+    = link_to post.content, post_path(post.id)
+
+= render partial: "posts/post_op.html.slim", locals: {post: post}

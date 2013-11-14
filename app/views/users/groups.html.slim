@@ -1,0 +1,9 @@
+= render "basic_info"
+ul.unstyled
+  - @groups.each do |group|
+    li.container
+      blockquote
+        p= link_to group.name, group
+        small
+          span= t("groups_members", count: group.member_count)
+= will_paginate @groups

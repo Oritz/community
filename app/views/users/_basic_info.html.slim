@@ -1,0 +1,55 @@
+.container
+  .container-fluid
+    .row-fluid
+      .span2
+        = image_tag(@target.avatar.b.url, alt: @target.nick_name, class: "img-rounded", width: "100px")
+      .span9
+        blockquote
+          h3= @target.nick_name
+          small
+            span= t("account_created_at", time: @target.created_at.strftime("%Y-%m-%d"))
+            - unless current_account == @target
+              a href="#new_private_message" data-toggle="modal"
+                i.icon-envelope
+        - if account_signed_in? && current_account.id == @target.id
+          p= link_to t("edit_info"), edit_account_registration_path(current_account), method: "get", class: "btn"
+        - elsif account_signed_in? && current_account.stars.include?(@target)
+          p= link_to t("unfollow"),  {controller: "users", action: "unfollow", target_id: @target.id}, data: { confirm: t("unfollow_confirm")} , method: "delete", class: "btn btn-danger"
+        - else
+          p= link_to t("follow"), {controller: "users", action: "follow", target_id: @target.id}, method: "put", class: "btn btn-primary"
+  ul.nav.nav-tabs
+    - if @type == "POSTS"
+      li.active
+        = link_to t("posts"), user_path(@target)
+    - else
+      li
+        = link_to t("posts"), user_path(@target)
+    - if @type == "GROUPS"
+      li.active
+        = link_to t("groups"), groups_user_path(@target)
+    - else
+      li
+        = link_to t("groups"), groups_user_path(@target)
+    - if @type == "STARS"
+      li.active
+        = link_to t("someone_s_stars"), people_user_path(@target)
+    - else
+      li
+        = link_to t("someone_s_stars"), people_user_path(@target)
+    - if @type == "FANS"
+      li.active
+        = link_to t("someone_s_fans"), {action: :people, type: "fans"}
+    - else
+      li
+        = link_to t("someone_s_fans"), {action: :people, type: "fans"}
+- unless current_account == @target
+  div
+    = form_tag private_messages_path, method: :post, class: "modal hide fade", id: "new_private_message"
+      .modal-header
+        button.close aria-hidden="true" data-dismiss="modal" type="button"  ×
+        h3= t("private_message")
+      .modal-body
+        =hidden_field_tag "recipient_id", @target.id
+        p= text_area_tag "private_message[content]", "", class: "span12", rows: "3"
+      .modal-footer
+        = submit_tag t("send"), class: "btn btn-primary"

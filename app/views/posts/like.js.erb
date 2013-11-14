@@ -1,0 +1,11 @@
+var $item = $("li[post_id=<%= @post.id -%>]");
+var index = $("li[post_id]").index($item);
+<% if !is_included && params[:action] == "like" %>
+  var count = $(".post-op .like-count").eq(index).html();
+  $(".post-op .like-count").eq(index).html(parseInt(count) + 1);
+<% end -%>
+<% if is_included && params[:action] == "unlike" %>
+  var count = $(".post-op .like-count").eq(index).html();
+  $(".post-op .like-count").eq(index).html(parseInt(count) - 1);
+<% end -%>
+

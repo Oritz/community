@@ -1,0 +1,92 @@
+require 'sonkwo/behavior/fetcher'
+
+class UsersController < ApplicationController
+  before_filter :sonkwo_authenticate_account, only: [:follow, :unfollow]
+  #layout "home"
+
+  def show
+    @target = Account.find(params[:id])
+    @type = "POSTS"
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @target }
+    end
+  end
+
+  def groups
+    @target = Account.find(params[:id])
+    @type = "GROUPS"
+
+    @groups = @target.groups.order("created_at DESC").paginate(page: params[:page], per_page: 10)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @target }
+    end
+  end
+
+  def posts
+    @target = Account.find(params[:id])
+    fetcher = Sonkwo::Behavior::Fetcher.new(current_account, target: @target)
+    if params[:end_id]
+      @posts = fetcher.behaviors(limit: 2, max_id: params[:end_id], status: Post::STATUS_NORMAL)
+    else
+      @posts = fetcher.behaviors(limit: 2, status: Post::STATUS_NORMAL)
+    end
+    @posts = Post.downcast(@posts)
+
+    respond_to do |format|
+      format.html
+      format.json { render_for_api :post_info, json: @posts, root: "data", meta: {status: "success"} }
+    end
+  end
+
+  def people
+    @target = Account.find(params[:id])
+    show_fans = params[:type] ? (params[:type].downcase == "fans") : false
+
+    if show_fans
+      @type = "FANS"
+      @users = @target.people_relation_with_visitor(visitor: current_account, select: "id, nick_name, avatar", type: Friendship::FOLLOWER, page: params[:page], per_page: 10)
+    else
+      @type = "STARS"
+      @users = @target.people_relation_with_visitor(visitor: current_account, select: "id, nick_name, avatar", type: Friendship::FOLLOWING, page: params[:page], per_page: 10)
+    end
+  end
+
+  def follow
+    @friendship = Friendship.new
+    @target = Account.find(params[:target_id])
+    if current_account != @target
+      @friendship.account = @target
+      @friendship.follower = current_account
+      if @friendship.save
+        respond_to do |format|
+          format.html { redirect_to :back, notice: "Follow successfully." }
+          format.json { render json: @friendship }
+        end
+      else
+        respond_to do |format|
+          format.html { redirect_to :back, notice: "Follow failed." }
+          format.json { render json: @friendship }
+        end
+      end
+    end
+  end
+
+  def unfollow
+    @friendship = Friendship.find(params[:target_id], current_account.id)
+    if @friendship.destroy
+      respond_to do |format|
+        format.html { redirect_to :back, notice: "Unfollow successfully." }
+        format.json { render json: @friendship }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to :back, notice: "Unfollow failed." }
+        format.json { render json: @friendship }
+      end
+    end
+  end
+end

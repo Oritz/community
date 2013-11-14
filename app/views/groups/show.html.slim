@@ -1,0 +1,35 @@
+.span9
+  div
+    div.media
+      = image_tag(@group.logo, class: "media-object img-rounded pull-left", width: "100px")
+      div.media-body
+        h2.media-heading= t(@group.name)
+        p
+          span= t("group_created_at", time: @group.created_at.strftime("%Y-%m-%d"))
+          span= t("creator")
+            | :#{@group.creator.nick_name}
+          - if @group.joined?(current_account)
+            span= link_to t("Quit"), {aciont: :remove_user}, method: :delete, data: { confirm: I18n.t("Are you sure?") }
+          - else
+            span= link_to t("Join"), {action: :add_user}, method: :put
+          span= link_to t("post_subject"), action: :new, controller: :subjects, group_id: @group.id 
+        p
+          - @tags.each do |tag|
+            = link_to tag do
+              span.label.label-info= tag.name
+        div.media.well= @group.description
+  div
+    p= t("recent_topics")
+    table.table
+      - @subjects.each do |subject|
+        tr
+          td= link_to subject.title, post_path(subject.id)
+          td= link_to subject.creator.nick_name, user_path(subject.creator)
+          td= subject.created_at.strftime("%Y-%m-%d %H:%M:%S")
+.span3
+  p
+    strong= t("new_comers")
+  - @newcomers.each do |newcomer|
+    .span2
+      span= image_tag(newcomer.avatar.m.url, alt: newcomer.nick_name, class: "img-rounded", width: "50px")
+      span= truncate(newcomer.nick_name, length: 10)

@@ -1,0 +1,25 @@
+- content_for(:jsfiles) do
+  = javascript_include_tag "posts/post_op"
+  = javascript_include_tag "users/show"
+  = javascript_include_tag "posts/post_templates"
+.span
+  = render "basic_info"
+div.container
+  ul.unstyled.posts user_id=@target.id
+  p
+    a href="javascript:void(0);" class="more-btn"= t("more")
+  div.form-div
+    div
+      = form_tag url_for("#"), method: :post, class: "modal hide fade recommend-form", id: "new_recommend" do
+        .modal-header
+          button.close aria-hidden="true" data-dismiss="modal" type="button"  ×
+          h3= t("Recommend")
+        .modal-body
+          p= text_area_tag "new_recommend[content]", "", class: "span12", rows: "3"
+        .modal-footer
+          = submit_tag t("Recommend"), class: "btn btn-primary"
+    div.new-comment-form.hide
+      = form_tag url_for("#"), method: :post do
+        p= text_area_tag "comment[comment]", "", class: "span", row: 3
+        p= submit_tag t("Reply"), class: "btn btn-primary"
+
