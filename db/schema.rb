@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131113071320) do
+ActiveRecord::Schema.define(:version => 20131114091422) do
 
   create_table "accounts", :force => true do |t|
     t.string   "email",                                :default => "", :null => false
@@ -90,6 +90,29 @@ ActiveRecord::Schema.define(:version => 20131113071320) do
 
   add_index "auth_items", ["name"], :name => "index_auth_items_on_name", :unique => true
 
+  create_table "client_errors", :force => true do |t|
+    t.integer  "account_id", :null => false
+    t.text     "err_msg",    :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "client_errors", ["account_id"], :name => "index_client_errors_on_account_id"
+
+  create_table "client_updates", :force => true do |t|
+    t.integer  "major_ver",       :limit => 2, :null => false
+    t.integer  "minor_ver",       :limit => 2, :null => false
+    t.integer  "tiny_ver",        :limit => 2, :null => false
+    t.string   "patch_file"
+    t.string   "patch_digest"
+    t.text     "description"
+    t.string   "full_pkg_file",                :null => false
+    t.integer  "status",          :limit => 1, :null => false
+    t.string   "full_pkg_digest"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
+
   create_table "comments", :force => true do |t|
     t.integer  "post_id",                           :null => false
     t.integer  "post_author_id",                    :null => false
@@ -130,6 +153,48 @@ ActiveRecord::Schema.define(:version => 20131113071320) do
   add_index "friendship", ["account_id", "follower_id"], :name => "idx_friendship_account_id_follower_id"
   add_index "friendship", ["account_id", "follower_id"], :name => "uni_friendship_account_id_follower_id", :unique => true
   add_index "friendship", ["follower_id"], :name => "index_friendship_on_follower_id"
+
+  create_table "game_files", :force => true do |t|
+    t.integer  "game_id",                                   :null => false
+    t.string   "file_dir",                                  :null => false
+    t.string   "exe_path_name",                             :null => false
+    t.integer  "crypt_type",          :limit => 1,          :null => false
+    t.integer  "launcher_ver",        :limit => 2
+    t.string   "game_key"
+    t.string   "game_key_iv"
+    t.string   "key_digest"
+    t.datetime "process_start_time"
+    t.datetime "process_finish_time"
+    t.text     "process_result"
+    t.integer  "patch_ver",                                 :null => false
+    t.binary   "seed_content",        :limit => 2147483647
+    t.string   "seed_digest"
+    t.integer  "file_size",           :limit => 8
+    t.binary   "game_shell",          :limit => 2147483647, :null => false
+    t.integer  "shell_ver",                                 :null => false
+    t.string   "shell_digest",                              :null => false
+    t.binary   "game_ini",                                  :null => false
+    t.integer  "ini_ver",                                   :null => false
+    t.string   "ini_digest",                                :null => false
+    t.integer  "status",              :limit => 1,          :null => false
+    t.string   "comment"
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+  end
+
+  add_index "game_files", ["game_id"], :name => "index_game_files_on_game_id"
+
+  create_table "games", :force => true do |t|
+    t.string   "title",                             :null => false
+    t.string   "alias_name",                        :null => false
+    t.string   "dir_name",                          :null => false
+    t.text     "description", :limit => 2147483647, :null => false
+    t.integer  "parent_id"
+    t.integer  "type",        :limit => 1,          :null => false
+    t.integer  "status",      :limit => 1,          :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
 
   create_table "groups", :force => true do |t|
     t.string   "name",         :limit => 31,                :null => false
