@@ -8,4 +8,5 @@ class CreateNotifications < ActiveRecord::Migration
       t.integer :mentioned
       t.integer :private_message
     end
+  end
 end
