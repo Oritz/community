@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
-require 'cache/ext_platform_cache'
+#require 'cache/ext_platform_cache'
 class Api::UserController < ApplicationController
   before_filter :sonkwo_authenticate_account
 

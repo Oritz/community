@@ -35,7 +35,7 @@ describe Post do
   context "validate recommend_count" do
   end
 
-  contenxt "validate like_count" do
+  context "validate like_count" do
   end
 
   context "validate creator" do

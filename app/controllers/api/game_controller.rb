@@ -2,8 +2,8 @@
 require 'net/http'
 require 'net/https'
 require 'rexml/document'
-require 'cache/sys_params_cache'
-require "cache/serial_types_cache"
+#require 'cache/sys_params_cache'
+#require "cache/serial_types_cache"
 
 #require 'openssl'
 
