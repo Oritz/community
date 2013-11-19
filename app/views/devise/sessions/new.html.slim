@@ -1,5 +1,5 @@
 - @title = '登录'
-= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
   div
     = f.label :email
     br/
@@ -8,9 +8,10 @@
     = f.label :password
     br/
     = f.password_field :password
+
   - if devise_mapping.rememberable?
     div
       = f.check_box :remember_me
       = f.label :remember_me
   div= f.submit "Sign in"
-= render "accounts/shared/links"
+= render "devise/shared/links"

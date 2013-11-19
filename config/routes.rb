@@ -1,5 +1,6 @@
 SonkwoCommunity::Application.routes.draw do
   devise_for :accounts, :controllers => { :sessions => 'account_sessions' }
+  root to: "home#index"
 
   resources :groups do
     member do
@@ -47,5 +48,13 @@ SonkwoCommunity::Application.routes.draw do
 
   resources :conversations, only: [:index, :show, :destroy]
   resources :private_messages, only: [:create, :destroy]
+  resources :setting, only: [:index] do
+    collection do
+      get 'security'
+      post 'bind'
+      get 'bind_complete'
+    end
+  end
+
   # match ':controller(/:action(/:id))(.:format)'
 end

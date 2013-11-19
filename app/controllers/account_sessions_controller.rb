@@ -1,5 +1,5 @@
 class AccountSessionsController < Devise::SessionsController
-  layout "home"
+  layout "account"
   def create
     self.resource = warden.authenticate!(auth_options)
     set_flash_message(:notice, :signed_in) if is_navigational_format?
@@ -34,7 +34,7 @@ class AccountSessionsController < Devise::SessionsController
     params[:client] ||= "web"
     client = params[:client].strip.downcase
     now_time = Time.now.to_i
-    sso_domain_key = ExtServerCache.get("sso_domain_key")
+    sso_domain_key = Settings.sso.domain_key
     auth_token = Digest::SHA1.hexdigest("#{current_account.id},#{current_account.email},#{now_time},#{sso_domain_key}")
     if current_account.remember_expired?
       cookies.signed[:sso_auth] = {
