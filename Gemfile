@@ -84,3 +84,5 @@ gem 'erbac'
 gem 'acts_as_api'
 gem 'settingslogic'
 gem 'ruby-openid', require: 'openid'
+gem "resque", "~> 2.0.0.pre.1", github: "resque/resque"
+gem 'validates_timeliness', '~> 3.0'

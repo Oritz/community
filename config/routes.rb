@@ -56,5 +56,9 @@ SonkwoCommunity::Application.routes.draw do
     end
   end
 
+  resources :games, only: [] do
+    resources :game_achievements, only: [:index, :show]
+  end
+
   # match ':controller(/:action(/:id))(.:format)'
 end
