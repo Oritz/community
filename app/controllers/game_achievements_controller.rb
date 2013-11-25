@@ -1,7 +1,7 @@
 class GameAchievementsController < ApplicationController
   def index
     @game = AllGame.find(params[:game_id])
-    @game_achievements = @game.game_achievements
+    @game_achievements = @game.game_achievements.includes(:subable)
 
     respond_to do |format|
       format.html

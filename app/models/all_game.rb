@@ -12,16 +12,17 @@ class AllGame < ActiveRecord::Base
 
   # Associations
   has_many :game_achievements, foreign_key: 'game_id', class_name: 'GameAchievement', dependent: :destroy
+  belongs_to :subable, polymorphic: true
 
   # Validations
   validates :name, presence: true, length: { maximum: 255 }
-  validates :game_type, presence: true
+  validates :subable, presence: true
   validates :status, presence: true
+  validates :subable_id, uniqueness: { scope: :subable_type }
 
   # Methods
   protected
   def default_values
-    self.game_type ||= self.class::TYPE_OFFICAL
     self.status ||= self.class::STATUS_NORMAL
   end
 end

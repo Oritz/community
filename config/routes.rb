@@ -60,5 +60,9 @@ SonkwoCommunity::Application.routes.draw do
     resources :game_achievements, only: [:index, :show]
   end
 
+  # sidekiq
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   # match ':controller(/:action(/:id))(.:format)'
 end

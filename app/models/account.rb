@@ -54,6 +54,7 @@ class Account < ActiveRecord::Base
     before_add: :forbid_callback
   has_one :notification, foreign_key: 'id', dependent: :destroy
   has_many :client_errors, dependent: :destroy
+  has_one :steam_user
 
   # Scopes
   scope :post_likers, lambda { |post_id| where("post_id=?", post_id).joins("INNER JOIN accounts_like_posts ON accounts_like_posts.account_id=accounts.id").order("accounts_like_posts.created_at DESC") }

@@ -1,12 +1,13 @@
 class GameAchievement < ActiveRecord::Base
   # attr_accessible :title, :body
-  attr_accessible :name, :description, :api_name, :lock_url, :unlock_url, :percentage
+  attr_accessible :name, :description, :lock_url, :unlock_url
 
   # Constants
   STATUS_NORMAL = 0
 
   # Associations
   belongs_to :game, class_name: 'AllGame', foreign_key: 'game_id', dependent: :destroy
+  belongs_to :subable, polymorphic: true
 
   # Callbacks
   after_initialize :default_values
@@ -14,11 +15,11 @@ class GameAchievement < ActiveRecord::Base
   # Validations
   validates :name, presence: true, length: { maximum: 255 }
   validates :description, presence: true
-  validates :api_name, presence: true, length: { maximum: 255 }, uniqueness: { scope: :game_id }
   validates :lock_url, presence: true, length: { maximum: 255 }
   validates :unlock_url, presence: true, length: { maximum: 255 }
-  validates :percentage, numericality: { greater_than_or_equal_to: 0.0, less_than_or_equal_to: 100.0 }, if: Proc.new { |a| a.percentage }
   validates :game, presence: true
+  validates :subable, presence: true
+  validates :subable_id, uniqueness: { scope: :subable_type }
 
   # Scopes
 

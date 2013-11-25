@@ -69,6 +69,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'email_spec'
   gem 'timecop'
+  gem 'webmock'
 end
 
 gem 'foreigner'
@@ -84,5 +85,7 @@ gem 'erbac'
 gem 'acts_as_api'
 gem 'settingslogic'
 gem 'ruby-openid', require: 'openid'
-gem "resque", "~> 2.0.0.pre.1", github: "resque/resque"
 gem 'validates_timeliness', '~> 3.0'
+gem 'sidekiq'
+gem 'sinatra', '>= 1.3.0', require: nil
+gem 'unicorn'
