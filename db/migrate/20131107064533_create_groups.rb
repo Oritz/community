@@ -14,7 +14,7 @@ class CreateGroups < ActiveRecord::Migration
 
     add_index :groups, :creator_id
 
-    create_table :groups_accounts do |t|
+    create_table :groups_accounts, id: false do |t|
       t.integer :group_id, null: false
       t.integer :account_id, null: false
 

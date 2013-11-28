@@ -1,6 +1,6 @@
 class CreateSteamUsersGameAchievements < ActiveRecord::Migration
   def change
-    create_table :steam_users_game_achievements do |t|
+    create_table :steam_users_game_achievements, id: false do |t|
       t.integer :steam_user_id, null: false
       t.integer :game_achievement_id, null: false
 

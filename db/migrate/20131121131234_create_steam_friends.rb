@@ -1,6 +1,6 @@
 class CreateSteamFriends < ActiveRecord::Migration
   def change
-    create_table :steam_friends do |t|
+    create_table :steam_friends, id: false do |t|
       t.integer :steam_user_id, null: false
       t.integer :friend_id, null: false
       t.column :friend_since, "timestamp", null: false

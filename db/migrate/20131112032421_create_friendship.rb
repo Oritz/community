@@ -1,6 +1,6 @@
 class CreateFriendship < ActiveRecord::Migration
   def change
-    create_table :friendship do |t|
+    create_table :friendship, id: false do |t|
       t.integer :account_id, null: false
       t.integer :follower_id, null: false
       t.column :is_mutual, "tinyint", null: false, default: 0

@@ -17,7 +17,7 @@ class CreatePosts < ActiveRecord::Migration
 
     create_table(:accounts_like_posts, id: false) do |t|
       t.integer :account_id, null: false
-      t.integer :post_id
+      t.integer :post_id, null: false
       t.timestamps
     end
 

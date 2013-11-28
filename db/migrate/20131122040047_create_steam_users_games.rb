@@ -1,6 +1,6 @@
 class CreateSteamUsersGames < ActiveRecord::Migration
   def change
-    create_table :steam_users_games do |t|
+    create_table :steam_users_games, id: false do |t|
       t.integer :steam_user_id, null: false
       t.integer :game_id, null: false
       t.integer :playtime_forever
