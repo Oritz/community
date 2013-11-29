@@ -1,3 +1,5 @@
+require 'sonkwo/exp'
+
 class Recommend < ActiveRecord::Base
   #acts_as_notificable callbacks: ["after_create"], slot: "recommended", from: "creator", tos: ["original_author"]
   acts_as_post find_options: {include: [original: [:creator]]},
@@ -24,6 +26,7 @@ class Recommend < ActiveRecord::Base
   # Callbacks
   after_initialize :default_values
   after_create :add_recommend_count
+  after_create { Sonkwo::Exp.increase("exp_recommend_post", self.creator, self.created_at) if self.original_author != self.creator }
 
   # Validations
   validates :content, presence: true, length: { maximum: 140 }

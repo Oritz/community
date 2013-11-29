@@ -4,7 +4,6 @@ FactoryGirl.define do
   factory :all_game do
     sequence(:name) { |n| "game#{n}" }
     status AllGame::STATUS_NORMAL
-    subable nil
 
     #trait :game_steam_subable do
     #  association :subable, factory: :steam_game

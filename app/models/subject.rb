@@ -1,5 +1,7 @@
+require 'sonkwo/exp'
+
 class Subject < ActiveRecord::Base
-  attr_protected :group_id
+  attr_accessible :title, :content
 
   acts_as_post find_options: {include: [:group]}
   #acts_as_behavior_provider author_key: "posts.account_id",
@@ -21,10 +23,12 @@ class Subject < ActiveRecord::Base
     t.add :title
     t.add :group
   end
+  #exp_hookable account: "self.creator", setting_name: "exp_subject_value"
 
   # Callbacks
   after_initialize :default_values
   before_create :check_group, :add_subject_count
+  after_create { Sonkwo::Exp.increase("exp_post_subject", self.creator, self.created_at) }
 
   # Validations
   validates :content, presence: true

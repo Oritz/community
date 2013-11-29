@@ -16,9 +16,8 @@ class AllGame < ActiveRecord::Base
 
   # Validations
   validates :name, presence: true, length: { maximum: 255 }
-  validates :subable, presence: true
   validates :status, presence: true
-  validates :subable_id, uniqueness: { scope: :subable_type }
+  validates :subable_id, uniqueness: { scope: :subable_type }, if: Proc.new { |a| a.subable_id }
 
   # Methods
   protected

@@ -1,3 +1,5 @@
+require 'sonkwo/exp'
+
 class Talk < ActiveRecord::Base
   acts_as_post
   #acts_as_behavior_provider author_key: "posts.account_id",
@@ -21,6 +23,7 @@ class Talk < ActiveRecord::Base
   # Callbacks
   after_initialize :default_values
   before_create :add_talk_count
+  after_create { Sonkwo::Exp.increase("exp_post_talk", self.creator, self.created_at) }
 
   # Validations
   validates :content, presence: true, length: { maximum: 140 }

@@ -9,6 +9,11 @@ describe AllGame do
     expect(game).to be_valid
   end
 
+  it "is valid without subable" do
+    game = AllGame.new(name: "testname")
+    expect(game).to be_valid
+  end
+
   context "validate name" do
     it "is not valid without name" do
       game = AllGame.new
@@ -22,11 +27,6 @@ describe AllGame do
       game.subable = steam_game
       expect(game).not_to be_valid
     end
-  end
-
-  it "is not valid without subable" do
-    game = AllGame.new(name: "test")
-    expect(game).not_to be_valid
   end
 
   it "is not valid wit subable duplicated" do

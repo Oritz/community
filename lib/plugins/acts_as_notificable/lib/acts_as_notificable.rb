@@ -44,7 +44,7 @@ module Sonkwo
           from_account = self.send(from.to_s) if from
           tos.each do |to|
             to_account = nil
-            
+
             tmp = to.to_s.split(".")
             to_account = self if tmp.count > 0
             tmp.each { |item| to_account = to_account.send(item) }

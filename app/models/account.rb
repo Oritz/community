@@ -30,6 +30,7 @@ class Account < ActiveRecord::Base
   # Callbacks
   after_initialize :default_values
   #after_create :create_notification_item
+  after_create :create_exp_strategy
 
   # Associations
   has_many :groups_accounts
@@ -55,6 +56,10 @@ class Account < ActiveRecord::Base
   has_one :notification, foreign_key: 'id', dependent: :destroy
   has_many :client_errors, dependent: :destroy
   has_one :steam_user
+
+  # Validations
+  validates :exp, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :bonus, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   # Scopes
   scope :post_likers, lambda { |post_id| where("post_id=?", post_id).joins("INNER JOIN accounts_like_posts ON accounts_like_posts.account_id=accounts.id").order("accounts_like_posts.created_at DESC") }
@@ -146,6 +151,8 @@ class Account < ActiveRecord::Base
     self.subject_count ||= 0
     self.recommend_count ||= 0
     self.account_type ||= self.class::TYPE_NORMAL
+    self.exp ||= 0
+    self.bonus ||= 0
   end
 
   def post_liked(post)
@@ -167,5 +174,16 @@ class Account < ActiveRecord::Base
     notification = Notification.new
     notification.account = self
     notification.save!
+  end
+
+  def create_exp_strategy
+    exp_strategies = ExpStrategy.all
+    exp_strategies.each do |exp_strategy|
+      item = AccountsExpStrategy.new
+      item.account = self
+      item.exp_strategy = exp_strategy
+      item.period_count = 0
+      item.save!
+    end
   end
 end

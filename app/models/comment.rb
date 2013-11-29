@@ -1,3 +1,5 @@
+require 'sonkwo/exp'
+
 class Comment < ActiveRecord::Base
   #acts_as_notificable callbacks: ["after_create"], slot: "commented", from: "creator", tos: ["original_author", "post_author"]
   attr_accessible :comment
@@ -16,6 +18,7 @@ class Comment < ActiveRecord::Base
 
   # Callbacks
   after_initialize :default_values
+  after_create { Sonkwo::Exp.increase("exp_comment_post", self.creator, self.created_at) if self.post_author != self.creator }
 
   # Associations
   belongs_to :creator, class_name: 'Account', foreign_key: 'author_id'

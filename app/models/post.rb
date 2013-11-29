@@ -16,6 +16,7 @@ class Post < ActiveRecord::Base
     t.add :created_at
     t.add :updated_at
   end
+  #hookable name: "experience", callbacks: ["after_create"]
 
   attr_accessible :comment
   #attr_protected :post_type, :privilege, :status, :comment_count, :recommend_count, :like_count, :created_at, :updated_at

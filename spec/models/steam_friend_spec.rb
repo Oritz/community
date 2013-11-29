@@ -53,13 +53,11 @@ describe SteamFriend do
     new_steam_friend = SteamFriend.new
     new_steam_friend.steam_user = steam_user
     new_steam_friend.friend = friend
-    new_steam_friend.save
-    expect(new_steam_friend.id).to eq nil
+    expect(new_steam_friend).not_to be_valid
 
     new_steam_friend = SteamFriend.new
     new_steam_friend.steam_user = friend
     new_steam_friend.friend = steam_user
-    new_steam_friend.save
-    expect(new_steam_friend.id).to eq nil
+    expect(new_steam_friend).not_to be_valid
   end
 end

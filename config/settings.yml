@@ -11,6 +11,116 @@ default: &defaults
         name: "forum.sonkwo.com"
         key: "9fc54dfc86fea801f5760998614a19a4"
         logout_url: "http://forum.sonkwo.com/xxx"
+  reputation:
+    # The ORDER IS VERY IMPORTANT
+    elite:
+      name: "ELITE"
+      range:
+        from: 0.1
+        to: 0
+    hardcore:
+      name: "HARDCORE"
+      range:
+        from: 0.2
+        to: 0.1
+    dedicated:
+      name: "DEDICATED"
+      range:
+        from: 0.4
+        to: 0.2
+    experienced:
+      name: "EXPERIENCED"
+      range:
+        from: 0.6
+        to: 0.4
+    amateur:
+      name: "AMATEUR"
+      range:
+        from: 0.8
+        to: 0.6
+    newbie:
+      name: "NEWBIE"
+      range:
+        from: 1.0
+        to: 0.8
+  exp:
+    exp_regist:
+      period_type: 0
+      status: 1
+      name: "注册成功"
+      time_limit: 1
+      value: 10
+      bonus: 20
+    exp_upload_avatar:
+      period_type: 0
+      status: 1
+      name: "首次上传头像"
+      time_limit: 1
+      value: 10
+      bonus: 5
+    exp_fill_personal_info:
+      period_type: 0
+      status: 1
+      name: "完善个人资料"
+      time_limit: 1
+      value: 20
+      bonus: 20
+    exp_sign:
+      period_type: 1
+      status: 1
+      name: "每日签到"
+      time_limit: 1
+      value: 10
+      bonus: 5
+    exp_post_subject:
+      period_type: 1
+      status: 1
+      name: "发表攻略和心情"
+      time_limit: 5
+      value: 10
+      bonus: 0
+    exp_post_talk:
+      period_type: 1
+      status: 1
+      name: "发表说说"
+      time_limit: 5
+      value: 10
+      bonus: 0
+    exp_recommend_post:
+      period_type: 1
+      status: 1
+      name: "转发"
+      time_limit: 20
+      value: 1
+      bonus: 0
+    exp_comment_post:
+      period_type: 1
+      status: 1
+      name: "评论"
+      time_limit: 20
+      value: 1
+      bonus: 0
+    exp_add_a_follower:
+      period_type: 1
+      status: 1
+      name: "被关注"
+      time_limit: 10
+      value: 5
+      bonus: 0
+    exp_add_a_grouper:
+      period_type: 1
+      status: 1
+      name: "小组增加新成员"
+      time_limit: 10
+      value: 5
+      bonus: 0
+    exp_post_as_elite:
+      period_type: 2
+      status: 1
+      name: "加精"
+      time_limit: 0
+      value: 50
+      bonus: 10
 
 development:
   <<: *defaults
