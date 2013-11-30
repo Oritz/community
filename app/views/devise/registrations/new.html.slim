@@ -1,25 +1,76 @@
-- @title = '注册'
-= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
-  = devise_error_messages!
-  div
-    = f.label :email
-    br/
-    = f.email_field :email, :autofocus => true
-  div
-    = f.label :password
-    br/
-    = f.password_field :password
-  div
-    = f.label :password_confirmation
-    br/
-    = f.password_field :password_confirmation
-  div
-    = f.label :nick_name
-    br/
-    = f.text_field :nick_name
-  div
-    = f.label :gender
-    br/
-    = f.text_field :gender
-  div= f.submit "Sign up"
-= render "devise/shared/links"
+- @title = "杉果游戏注册"
+
+.log_mian
+  .log_center
+    .log_center_h1.log_align_center 创建杉果游戏
+    .log_center_lr
+      .log_center_lr_fl
+        ul
+          li
+            span.log_lr_fl_tu1
+            span.log_lr_fl_zi
+              h4 杉果游戏商城
+              p
+                | 上百款正版单机游戏，彬琅满目的风格总有一款
+                | 适合你。来体验正版游戏带给您的震撼与乐趣吧！
+          li
+            span.log_lr_fl_tu2
+            span.log_lr_fl_zi
+              h4 杉果游戏商城
+              p
+                | 上百款正版单机游戏，彬琅满目的风格总有一款
+                | 适合你。来体验正版游戏带给您的震撼与乐趣吧！
+          li
+            span.log_lr_fl_tu3
+            span.log_lr_fl_zi
+              h4 杉果游戏商城
+              p
+                | 上百款正版单机游戏，彬琅满目的风格总有一款
+                | 适合你。来体验正版游戏带给您的震撼与乐趣吧！
+      .log_center_lr_fr
+        #formbox
+          .formbox-style
+            = form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
+              .form
+                .item
+                  span.label
+                    | 昵称
+                    span.red *
+                  .fl
+                    = f.text_field :nick_name
+                    span.clear
+                    #username_error
+                .item
+                  span.label
+                    | 邮箱
+                    span.red *
+                  .fl
+                    = f.email_field :email
+                    span.clear
+                    #mail_error
+                #o-password
+                  .item
+                    span.label
+                      | 密码
+                      span.red *
+                    .fl
+                      = f.password_field :password
+                      span.clear
+                      label#pwdstrength.hide
+                        span.fl 安全程度：
+                        b
+                      label#pwd_error
+                  .item
+                    span.label
+                      | 确认密码
+                      span.red *
+                    .fl
+                      = f.password_field :password_confirmation
+                      span.clear
+                      label#pwd2_error
+                .item style="height:25px"
+                  .fl
+                    input#protocol checked="checked" name="protocol" tabindex="6" type="checkbox"
+                    label for="protocol" style="cursor:pointer;"
+                .item style="height:30px;"
+                  = f.submit "注册"

@@ -11,6 +11,11 @@ default: &defaults
         name: "forum.sonkwo.com"
         key: "9fc54dfc86fea801f5760998614a19a4"
         logout_url: "http://forum.sonkwo.com/xxx"
+  subdomains:
+    store: "http://store.sonkwo.com"
+    forum: "http://forum.sonkwo.com"
+    community: "http://www.sonkwo.com"
+    client: "#"
   reputation:
     # The ORDER IS VERY IMPORTANT
     elite:
@@ -124,6 +129,11 @@ default: &defaults
 
 development:
   <<: *defaults
+  subdomains:
+    store: "#"
+    forum: "#"
+    community: "#"
+    client: "#"
 
 test:
   <<: *defaults

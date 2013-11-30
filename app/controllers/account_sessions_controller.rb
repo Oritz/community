@@ -1,5 +1,4 @@
 class AccountSessionsController < Devise::SessionsController
-  layout "account"
   def create
     self.resource = warden.authenticate!(auth_options)
     set_flash_message(:notice, :signed_in) if is_navigational_format?
