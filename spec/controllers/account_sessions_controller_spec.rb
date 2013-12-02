@@ -1,12 +1,15 @@
 require 'spec_helper'
 
 describe AccountSessionsController do
-  login_account
+  let(:account) { create(:account) }
 
   describe "POST create" do
     it "should create a new session" do
       pending "test cookies"
       expect(subject.current_account).not_to be_nil
+    end
+
+    it "should create a new session with json" do
     end
   end
 
