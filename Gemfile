@@ -88,4 +88,6 @@ gem 'ruby-openid', require: 'openid'
 gem 'validates_timeliness', '~> 3.0'
 gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', require: nil
-gem 'unicorn'
+#gem 'unicorn'
+gem 'qiniu-rs'
+gem 'jquery-form-rails'

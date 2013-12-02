@@ -55,6 +55,8 @@ SonkwoCommunity::Application.routes.draw do
       get 'bind_complete'
     end
   end
+  
+  resources :cloud_storages
 
   resources :games, only: [] do
     resources :game_achievements, only: [:index, :show]
