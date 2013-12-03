@@ -1,6 +1,6 @@
 SonkwoCommunity::Application.routes.draw do
-  devise_for :accounts, :controllers => { :sessions => 'account_sessions' }
   root to: "home#index"
+  devise_for :accounts, :controllers => { :sessions => 'account_sessions' }
 
   resources :groups do
     member do
@@ -66,5 +66,24 @@ SonkwoCommunity::Application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 
+  # old routes (need to be cleaned in future)
+  namespace :api do
+    post 'client/post_err_msg', to: 'client#post_err_msg'
+    get 'client/get_latest_client_version', to: 'client#get_latest_client_version'
+    post 'user/post_action', to: 'user#post_action'
+    post 'user/update_env', to: 'user#update_env'
+    get 'user/get_play_time', to: 'user#get_play_time'
+    get 'launch/get_launcher', to: 'launch#get_launcher'
+    get 'game/list_my_games', to: 'game#list_my_games'
+    get 'game/list_my_game_ids', to: 'game#list_my_game_ids'
+    get 'game/get_game_info', to: 'game#get_game_info'
+    get 'game/get_game_dlcs', to: 'game#get_game_dlcs'
+    get 'game/request_game_shell', to: 'game#request_game_shell'
+    get 'game/request_game_ini', to: 'game#request_game_ini'
+    get 'game/get_game_seed', to: 'game#get_game_seed'
+    get 'game/get_game_serial_number', to: 'game#get_game_serial_number'
+    post 'game/register_serial_number', to: 'game#register_serial_number'
+    get 'game/get_game_news', to: 'game#get_game_news'
+  end
   # match ':controller(/:action(/:id))(.:format)'
 end

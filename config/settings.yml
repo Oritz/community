@@ -16,6 +16,17 @@ default: &defaults
     forum: "http://forum.sonkwo.com"
     community: "http://www.sonkwo.com"
     client: "#"
+  cloud_storage:
+    avatar_bucket: 'sonkwo-avatar'
+    snapshot_bucket: 'sonkwo-snapshot'
+    sonkwo_key: 'dsfa1315zasfz989-77'
+    token_expire: 60
+    callback_url: 'http://www.sonkwo.com/cloud_storages'
+    callback_body: 'name=$(fname)&size=$(fsize)&w=$(imageInfo.width)&h=$(imageInfo.height)&hash=$(etag)&sonkwo_token=$(x:sonkwo_token)&account_id=$(x:account_id)&timestamp=$(x:timestamp)'
+    callback_body_type: 'application/x-www-form-urlencoded'
+    escape: 1
+    async_options: ''
+    return_body: '{"foo": "bar", "size": $(fsize), "hash": $(etag), "w": $(imageInfo.width), "h": $(imageInfo.height), "color": $(exif.ColorSpace.val), "sonkwo_token": $(x:sonkwo_token), "account_id": $(x:account_id), "timestamp": $(x:timestamp)}'
   reputation:
     # The ORDER IS VERY IMPORTANT
     elite:
