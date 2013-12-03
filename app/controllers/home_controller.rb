@@ -1,10 +1,9 @@
 class HomeController < ApplicationController
   before_filter :sonkwo_authenticate_account
-  #layout "home"
 
   def index
+    @friends = Account.friends(current_account.id).limit(12).order("updated_at DESC")
     @new_talk = Talk.new
-    @new_subject = Subject.new
 
     params[:type] ||= "posts"
     #fetcher = Sonkwo::Behavior::Fetcher.new(current_account)

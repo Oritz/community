@@ -1,0 +1,98 @@
+doctype html
+html
+  head
+    meta content=("text/html; charset=utf-8") http-equiv="Content-Type"
+    = stylesheet_link_tag "application", media: "all"
+    title= @title
+  body
+    #code
+    #code_img
+    a#gotop href="javascript:void(0)"
+    .sns_nav_top
+      ul
+        li
+          a href="#" target="_blank"  欢迎页
+        li
+          a href="#" target="_blank"  欢迎页
+        li
+          a href="#" target="_blank"  欢迎页
+        li
+          a href="#" target="_blank"  欢迎页
+        li
+          a href="#" target="_blank"  欢迎页
+    .sns_logo
+      .sns_logo_logo
+        a href="#" target="_blank"
+      .sns_logo_search
+        input.sns_logo_search_style.radius3px name="" placeholder="请输入关键词" type="text" /
+        a.sns_logo_search_botton href="#"
+      .sns_logo_user
+        .sns_logo_user_tx_fl.sns_logo_user_tx_style.radius3px.border_2px_red
+          a href="#"
+            = image_tag current_account.avatar
+        span#info.sns_logo_user_tx_fl.sns_logo_user_tx_id
+          = link_to current_account.nick_name, "#"
+        span.sns_logo_user_tx_fl.sns_logo_user_tx_tuichu
+          = link_to "退出", destroy_account_session_path
+    #sns_nav
+      a.nav-btn1
+      .nav-btn1_L_zd
+        ul.nav-left1
+          li.icon_nav_zd_gr_bj
+            = link_to "个人主页", user_path(current_account.id), class: "nav-left1_xx_a"
+            i
+              a.badge href="#"  1
+          li.icon_nav_zd_xtxx_bj
+            a.nav-left1_xx_a href="#"  系统消息
+            i
+              a.badge href="#"  1
+          li.icon_nav_zd_email_bj
+            a.nav-left1_xx_a href="#"  我的私信
+            i
+              a.badge href="#"  1
+          li.icon_nav_zd_shopp_bj
+            a.nav-left1_xx_a href="#"  我的资产
+            i
+              a.badge href="#"  1
+          li.icon_nav_zd_xz_bj
+            a.nav-left1_xx_a href="#"  我的小组
+            i
+              a.badge href="#"  1
+          li.icon_nav_zd_grzx_bj
+            a.nav-left1_xx_a href="#"  个人中心
+            i
+              a.badge href="#"  1
+          li.icon_nav_zrscer_xz_bj
+            a.nav-left1_xx_a href="#"  找人
+            i
+              a.badge href="#"  1
+          li.icon_nav_zrscer_yq_bj
+            a.nav-left1_xx_a href="#"  邀请
+            i
+              a.badge href="#"  1
+      a.nav-btn2
+      .nav-btn1_R_zd
+        .nav-right1
+          .nav_right1_friends
+            h4.friends_titleHy
+              a href="#"  我的好友
+            ul
+              li.radius3px.friends_tx
+                a href="#"
+                  img src="images/img/ceshi_touxiang.png" /
+            span.friends_titleHy_span
+              a href="#"  全部
+      .sns_nav_tab_nav
+        ul
+          li.margin_R_5px.sns_nav_tab_nav_1
+            a href="#"  最新动态
+          li.margin_R_5px.sns_nav_tab_nav_2
+            a href="#"  最新动态
+          li.sns_nav_tab_nav_3
+            a href="#"  最新动态
+    .container
+      = yield
+    #footer
+      span.footer_stop
+        a 玩命加载中
+    = javascript_include_tag "application"

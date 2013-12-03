@@ -2,20 +2,20 @@
 /*编码*/
 
 /*
-  Document : CSS样式初始化
-  Created on : 2013. 10. 12,12:41:00
-  Name : zd 赵东
-  Description: CSS样式表的初始化，全局样式设置。
-  部分样式属性请根据具体页面重置其属性导入方式：<link href="css/reset.css" rel="stylesheet" type="text/css" />
-  */
+	Document : CSS样式初始化 
+	Created on : 2013. 10. 12,12:41:00 
+	Name : zd 赵东 
+	Description: CSS样式表的初始化，全局样式设置。
+	部分样式属性请根据具体页面重置其属性导入方式：<link href="css/reset.css" rel="stylesheet" type="text/css" />
+*/
 /* 全局CSS reset */
 /* 页面设置 */
 
 /* 初始化标签在所有浏览器中的margin、padding值 */
-body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button{padding: 0; margin: 0;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button,img{padding: 0; margin: 0;}
 html{ _background:url(about:blank);}
 /* 酌情修改 */
-body{background:#ecf0f1;font-family:"宋体","微软雅黑"; color:#2c3e50;overflow-x:hidden;}
+body{background:#ecf0f1;font-family:"宋体","微软雅黑"; color:#2c3e50;}
 body,th,td,input,select,textarea,button{font-size:12px;line-height:1 ;} /* 重置页面文字属性 */
 
 /* 短引用的内容可取值：''或"" */
@@ -37,7 +37,6 @@ sup{vertical-align: text-top;}
 sub{vertical-align: text-bottom;}
 
 /* 设置表格的边框被合并为一个单一的边框, 指定分隔边框模型中单元格边界之间的距离为0*/
-table{width:100%;border-collapse:collapse;border-spacing:0;table-layout:fixed;} /* 重置table属性 */
 
 /* 表格标题及内容居左显示 */
 caption{display:none;} /* 重置表格标题为隐藏 */
@@ -58,9 +57,9 @@ del,ins,a{text-decoration:none;}
 a:hover,a:active,a:focus{ text-decoration:none;} /* 取消a标签点击后的虚线框 */
 a:active{star:expression(this.onFocus=this.blur());} /* 设置页面文字等在拖动鼠标选中情况下的背景色与文字颜色 */
 /*
-  ::selection{color: #fff;background-color: #4C6E78;}
-  ::-moz-selection{color: #fff;background-color: #4C6E78;}
-  */
+::selection{color: #fff;background-color: #4C6E78;}
+::-moz-selection{color: #fff;background-color: #4C6E78;}
+*/
 a{outline: none;transition: color 0.2s ease 0s;}/*链接秒数缓冲效果*/
 /* 层板块缓冲效果       transition: all 0.3s ease 0s;   */
 /* 鼠标样式 */

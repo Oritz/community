@@ -1,7 +1,8 @@
 SonkwoCommunity::Application.routes.draw do
-  root to: "home#index"
   devise_for :accounts, :controllers => { :sessions => 'account_sessions' }
+  root :to => "home_pages#index"
 
+  resources :home_pages, only: [:index]
   resources :groups do
     member do
       put 'add_user'
@@ -55,7 +56,7 @@ SonkwoCommunity::Application.routes.draw do
       get 'bind_complete'
     end
   end
-  
+
   resources :cloud_storages
 
   resources :games, only: [] do

@@ -91,3 +91,4 @@ gem 'sinatra', '>= 1.3.0', require: nil
 #gem 'unicorn'
 gem 'qiniu-rs'
 gem 'jquery-form-rails'
+gem "messengerjs-rails", "~> 1.3.6.2"

@@ -12,4 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require_tree ./community
+//= require messenger
+//= require messenger-theme-future
+//= require_tree ../../../vendor/assets/stylesheets

@@ -1,6 +1,17 @@
 module Sonkwo
   module Exp
     class << self
+      def level(exp)
+        exp = exp.to_i
+        return 0 if exp < 0
+        level_values = Settings.level
+        count = level_values.count
+        return count+1 if exp > level_values[count - 1]
+        level_values.each_with_index do |value, i|
+          return i+1 if value >= exp
+        end
+      end
+
       def increase(app_name, account, added_at)
         return unless account
         exp_strategy = ExpStrategy.where(app_name: app_name).first

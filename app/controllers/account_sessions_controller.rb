@@ -9,6 +9,7 @@ class AccountSessionsController < Devise::SessionsController
       format.json { render json: {status: 'success', data: {account_id: self.resource.id, nick_name: self.resource.nick_name, token: form_authenticity_token, avatar: self.resource.avatar}} }
     end
   end
+
   def destroy
     redirect_path = after_sign_out_path_for(resource_name)
     signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))

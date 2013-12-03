@@ -1,71 +1,1249 @@
-- content_for(:jsfiles) do
-  = javascript_include_tag "home/index"
-  = javascript_include_tag "/javascripts/ckeditor/ckeditor.js"
-  = javascript_include_tag "posts/post_op"
-  = javascript_include_tag "posts/post_templates"
-.span2
-  p= current_account.nick_name
-  .span
-    = image_tag(current_account.avatar.b.url, alt: current_account.nick_name, class: "img-rounded", width: "100px")
-  p
-    span
-      = t("following")
-      | :#{link_to(current_account.following_count, people_user_path(current_account))}
-    span
-      = t("followers")
-      | :#{link_to(current_account.follower_count, url_for(action: :people, controller: :users, id: current_account.id, type: "fans"))}
-    span
-      = t("post")
-      | :#{current_account.talk_count + current_account.subject_count + current_account.recommend_count}
-.span9
-  .row
-    .btn-group
-      a.btn.dropdown-toggle data-toggle="dropdown" href="#" 
-        span.post-type-selected= t("talk")
-        span.caret
-      ul.dropdown-menu
-        li
-          a.post-type-item href="#" = t("talk")
-        li
-          a.post-type-item href="#" = t("subject")
-    = form_for(@new_talk) do |f|
-      p= f.text_area :content, class: "span9", rows: "3"
-      p= f.submit t("send"), class: "btn btn-primary"
-    = form_for @new_subject, html: {class: "hide"} do |f|
-      p= t("title")
-      p= f.text_field :title, class: "span5"
-      p= t("content")
-      p= f.text_area :content, class: "span9", rows: "7"
-      p= f.submit t("send"), class: "btn btn-primary"
-  .row
-    ul.nav.nav-tabs
-      - if params[:type] == "posts"
-        li.active
-          = link_to t("posts"), "javascript:void(0);"
-      - else
-        li
-          = link_to t("posts"), {controller: :home}
-      - if params[:type] == "groups"
-        li.active
-          = link_to t("groups"), "javascript:void(0);"
-      - else
-        li
-          = link_to t("groups"), {controller: :home, type: "groups"}
-  ul.unstyled.container.posts posts_type=params[:type]
-  p
-    a href="javascript:void(0);" class="more-btn"= t("more")
-  div.form-div
-    div
-      = form_tag url_for("#"), method: :post, class: "modal hide fade recommend-form", id: "new_recommend" do
-        .modal-header
-          button.close aria-hidden="true" data-dismiss="modal" type="button"  ×
-          h3= t("Recommend")
-        .modal-body
-          p= text_area_tag "recommend[content]", "", class: "span12", rows: "3"
-        .modal-footer
-          = submit_tag t("Recommend"), class: "btn btn-primary"
-    div.new-comment-form.hide
-      = form_tag url_for("#"), method: :post do
-        p= text_area_tag "comment[comment]", "", class: "span", row: 3
-        p= submit_tag t("Reply"), class: "btn btn-primary"
-
+.sns_release
+  .radius3px.sns_release_data
+    .sns_release_data_top
+      .sns_release_data_top_tx_kuang
+        .radius3px.sns_release_data_top_tx.top_txvip
+          = image_tag(current_account.avatar, height: 60, width: 60)
+          .sns_release_data_top_tx_vip
+          a href="#"
+            img src="images/img/sns_tx_vip1.png" /
+            sup 10
+      .sns_release_data_top_r
+        .sns_release_data_top_dj
+          span.top_dj_id
+          = link_to current_account.nick_name, "#"
+          span.top_dj_id_sj
+            ul
+              li.sns_tx_id_yxBJ 333
+              li.sns_tx_id_jlBJ 222
+              li.sns_tx_id_sjBJ 111
+        .sns_release_data_top_cj
+          span.top_dj_dj
+            = link_to "Lv #{level(current_account.exp)}", "#"
+          span.top_dj_dj_sj
+            i.top_dj_dj_sj_jdt
+    .sns_release_data_con
+      ul
+        li.sns_release_data_con_fs
+          = link_to current_account.following_count, people_user_path(current_account.id)
+        li.sns_release_data_con_fx
+          a href="#"  999999999
+        li.sns_release_data_con_pl
+          a href="#"  999999999
+        li.sns_release_data_con_ft
+          a href="#"  999999999
+    .sns_release_data_bom
+      a href="#"
+  .radius3px.sns_release_enter
+    #msgBox
+      form
+        .countTxt_block
+          span.countTxt 还能输入
+          strong.maxNum 140
+          span 个字
+        .conBoxwidth1
+          textarea#conBox.f-text name="conBox"
+        .sendBtn_tr_width1
+          .sendBtn_tr
+          .sendBtn_tr_L
+            span.emotion
+              a href="#"  表情
+            span.emotion_img
+              a href="#"  图片
+            span.emotion_ltv
+              a href="#"  视频
+            span.emotion_text
+              a href="#"  长文章
+            span.emotion_xian \
+            span.emotion_more
+              a.snshide href="#"  更多
+            .snsshow
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .sendBtn_tr_R
+            span.emotion_more
+              a.snshide1 href="#"  公开
+            .snsshow1
+              p
+                a href="#"  举报
+            input#sendBtn title=("快捷键 Ctrl+Enter") type="button" value="发布" /
+.sns_hr_wrapper
+.sns_filter_select
+  .select_box
+    span.select_txt 输入
+    .option
+      a 1
+      a 2
+      a 3
+  .select_box.select_marL20
+    span.select_txt 输入
+    .option
+      a 1
+      a 2
+      a 3
+  .select_box.select_marL20
+    span.select_txt 输入
+    .option
+      a 1
+      a 2
+      a 3
+#wrapper
+  /! 列表开始
+  .item_4_list.item_4_list_L_20
+    /! 瀑布流循环 开始
+    /! 瀑布列表快 开始
+    .item_Container
+      .item.item_GR
+        /! 头像head
+        .item_GR_top
+          .item_GR_top_tx_kuang
+          .radius3px.item_GR_top_tx.top_txvip
+            img height="60" src="images/img/sns_tx.png" width="60" /
+          .item_GR_top_tx_vip
+            a href="#"
+              img src="images/img/sns_tx_vip1.png" /
+              sup 10
+          .item_GR_sns_release_data_top_r
+          .item_GR_sns_release_data_top_dj
+            span.item_GR_top_dj_id
+              a.snshideid 窝窝窝窝窝窝
+            .snsshowid
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .item_GR_sns_release_data_top_cj
+            span.item_GR_top_dj_dj
+              a href="#" target="_blank"  Lv 999
+            span.item_GR_top_dj_dj_sj
+              i.item_GR_top_dj_dj_sj_jdt
+        /! 头像head end
+        .forward_cent
+          .forward_cent_mian
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+        .article_cent
+          h2
+          a href="#" target="_blank"  蝙蝠侠：起源反派登场！！
+          .article_cent_text
+          p
+            a href="#" target="_blank"  文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容
+          .article_cent_text_xx
+          span.text_xx_time 2013-10-17  12:00
+          span.text_xx_report
+            a href="#" target="_blank"  举报
+          span.text_xx_full
+            a href="#" target="_blank"  全文
+        .img_cent
+          a href="#" target="_blank"
+          img src="images/banner/tutu1.png" /
+        .article_cent_comment
+          span.article_cent_comment_up
+          a href="#"  99999
+          span.article_cent_comment_zhuan
+          a href="#"  99999
+          span.article_cent_comment_huifu.up1
+          a 点击我
+      .up_mian
+        .up_mian_bj
+        .up_mian_con
+          .up_mian_con_input
+          .up_mian_con_input_center
+            textarea.up_mian_con_input_style cols="" name="" placeholder="请输入您要回复的内容" rows=""
+            span
+              a.up_mian_con_buttonQ.up1 取消
+            span
+              a.up_mian_con_buttonE 回复
+          .up_mian_con_reply
+          .up_mian_con_reply_tx
+            span.up_mian_con_reply_tx_tx
+              a href="#" target="_blank"
+            span.up_mian_con_reply_tx_id
+              a href="#" target="_blank"  我就是我哈哈
+            span.up_mian_con_reply_tx_time 2013-10-17 12:00
+          .up_mian_con_reply_text
+            p
+              | 我说了什么？我不知道！！我说了什么我不知道！！
+              | 我真的不知道我说了什么！！
+    /! 瀑布列表快 结束
+    /! 瀑布列表快 开始
+    .item_Container
+      .item.item_GR
+        /! 头像head
+        .item_GR_top
+          .item_GR_top_tx_kuang
+          .radius3px.item_GR_top_tx.top_txvip
+            img height="60" src="images/img/sns_tx.png" width="60" /
+          .item_GR_top_tx_vip
+            a href="#"
+              img src="images/img/sns_tx_vip1.png" /
+              sup 10
+          .item_GR_sns_release_data_top_r
+          .item_GR_sns_release_data_top_dj
+            span.item_GR_top_dj_id
+              a.snshideid 窝窝窝窝窝窝
+            .snsshowid
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .item_GR_sns_release_data_top_cj
+            span.item_GR_top_dj_dj
+              a href="#" target="_blank"  Lv 999
+            span.item_GR_top_dj_dj_sj
+              i.item_GR_top_dj_dj_sj_jdt
+        /! 头像head end
+        .forward_cent
+          .forward_cent_mian
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+        .article_cent
+          h2
+          a href="#" target="_blank"  蝙蝠侠：起源反派登场！！
+          .article_cent_text
+          p
+            a href="#" target="_blank"  文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容
+          .article_cent_text_xx
+          span.text_xx_time 2013-10-17  12:00
+          span.text_xx_report
+            a href="#" target="_blank"  举报
+          span.text_xx_full
+            a href="#" target="_blank"  全文
+        .img_cent
+          a href="#" target="_blank"
+          img src="images/banner/tutu1.png" /
+        .article_cent_comment
+          span.article_cent_comment_up
+          a href="#"  99999
+          span.article_cent_comment_zhuan
+          a href="#"  99999
+          span.article_cent_comment_huifu.up1
+          a 点击我
+      .up_mian
+        .up_mian_bj
+        .up_mian_con
+          .up_mian_con_input
+          .up_mian_con_input_center
+            textarea.up_mian_con_input_style cols="" name="" placeholder="请输入您要回复的内容" rows=""
+            span
+              a.up_mian_con_buttonQ.up1 取消
+            span
+              a.up_mian_con_buttonE 回复
+          .up_mian_con_reply
+          .up_mian_con_reply_tx
+            span.up_mian_con_reply_tx_tx
+              a href="#" target="_blank"
+            span.up_mian_con_reply_tx_id
+              a href="#" target="_blank"  我就是我哈哈
+            span.up_mian_con_reply_tx_time 2013-10-17 12:00
+          .up_mian_con_reply_text
+            p
+              | 我说了什么？我不知道！！我说了什么我不知道！！
+              | 我真的不知道我说了什么！！
+    /! 瀑布列表快 结束
+    /! 瀑布列表快 开始
+    .item_Container
+      .item.item_GR
+        /! 头像head
+        .item_GR_top
+          .item_GR_top_tx_kuang
+          .radius3px.item_GR_top_tx.top_txvip
+            img height="60" src="images/img/sns_tx.png" width="60" /
+          .item_GR_top_tx_vip
+            a href="#"
+              img src="images/img/sns_tx_vip1.png" /
+              sup 10
+          .item_GR_sns_release_data_top_r
+          .item_GR_sns_release_data_top_dj
+            span.item_GR_top_dj_id
+              a.snshideid 窝窝窝窝窝窝
+            .snsshowid
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .item_GR_sns_release_data_top_cj
+            span.item_GR_top_dj_dj
+              a href="#" target="_blank"  Lv 999
+            span.item_GR_top_dj_dj_sj
+              i.item_GR_top_dj_dj_sj_jdt
+        /! 头像head end
+        .forward_cent
+          .forward_cent_mian
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+        .article_cent
+          h2
+          a href="#" target="_blank"  蝙蝠侠：起源反派登场！！
+          .article_cent_text
+          p
+            a href="#" target="_blank"  文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容
+          .article_cent_text_xx
+          span.text_xx_time 2013-10-17  12:00
+          span.text_xx_report
+            a href="#" target="_blank"  举报
+          span.text_xx_full
+            a href="#" target="_blank"  全文
+        .img_cent
+          a href="#" target="_blank"
+          img src="images/banner/tutu1.png" /
+        .article_cent_comment
+          span.article_cent_comment_up
+          a href="#"  99999
+          span.article_cent_comment_zhuan
+          a href="#"  99999
+          span.article_cent_comment_huifu.up1
+          a 点击我
+      .up_mian
+        .up_mian_bj
+        .up_mian_con
+          .up_mian_con_input
+          .up_mian_con_input_center
+            textarea.up_mian_con_input_style cols="" name="" placeholder="请输入您要回复的内容" rows=""
+            span
+              a.up_mian_con_buttonQ.up1 取消
+            span
+              a.up_mian_con_buttonE 回复
+          .up_mian_con_reply
+          .up_mian_con_reply_tx
+            span.up_mian_con_reply_tx_tx
+              a href="#" target="_blank"
+            span.up_mian_con_reply_tx_id
+              a href="#" target="_blank"  我就是我哈哈
+            span.up_mian_con_reply_tx_time 2013-10-17 12:00
+          .up_mian_con_reply_text
+            p
+              | 我说了什么？我不知道！！我说了什么我不知道！！
+              | 我真的不知道我说了什么！！
+    /! 瀑布列表快 结束
+    /! 瀑布列表快 开始
+    .item_Container
+      .item.item_GR
+        /! 头像head
+        .item_GR_top
+          .item_GR_top_tx_kuang
+          .radius3px.item_GR_top_tx.top_txvip
+            img height="60" src="images/img/sns_tx.png" width="60" /
+          .item_GR_top_tx_vip
+            a href="#"
+              img src="images/img/sns_tx_vip1.png" /
+              sup 10
+          .item_GR_sns_release_data_top_r
+          .item_GR_sns_release_data_top_dj
+            span.item_GR_top_dj_id
+              a.snshideid 窝窝窝窝窝窝
+            .snsshowid
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .item_GR_sns_release_data_top_cj
+            span.item_GR_top_dj_dj
+              a href="#" target="_blank"  Lv 999
+            span.item_GR_top_dj_dj_sj
+              i.item_GR_top_dj_dj_sj_jdt
+        /! 头像head end
+        .forward_cent
+          .forward_cent_mian
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+        .article_cent
+          h2
+          a href="#" target="_blank"  蝙蝠侠：起源反派登场！！
+          .article_cent_text
+          p
+            a href="#" target="_blank"  文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容
+          .article_cent_text_xx
+          span.text_xx_time 2013-10-17  12:00
+          span.text_xx_report
+            a href="#" target="_blank"  举报
+          span.text_xx_full
+            a href="#" target="_blank"  全文
+        .img_cent
+          a href="#" target="_blank"
+          img src="images/banner/tutu1.png" /
+        .article_cent_comment
+          span.article_cent_comment_up
+          a href="#"  99999
+          span.article_cent_comment_zhuan
+          a href="#"  99999
+          span.article_cent_comment_huifu.up1
+          a 点击我
+      .up_mian
+        .up_mian_bj
+        .up_mian_con
+          .up_mian_con_input
+          .up_mian_con_input_center
+            textarea.up_mian_con_input_style cols="" name="" placeholder="请输入您要回复的内容" rows=""
+            span
+              a.up_mian_con_buttonQ.up1 取消
+            span
+              a.up_mian_con_buttonE 回复
+          .up_mian_con_reply
+          .up_mian_con_reply_tx
+            span.up_mian_con_reply_tx_tx
+              a href="#" target="_blank"
+            span.up_mian_con_reply_tx_id
+              a href="#" target="_blank"  我就是我哈哈
+            span.up_mian_con_reply_tx_time 2013-10-17 12:00
+          .up_mian_con_reply_text
+            p
+              | 我说了什么？我不知道！！我说了什么我不知道！！
+              | 我真的不知道我说了什么！！
+    /! 瀑布列表快 结束
+    /! 瀑布流循环 结束
+  .item_4_list
+    /! 瀑布流循环 开始
+    /! 瀑布列表快 开始
+    .item_Container
+      .item.item_GR
+        /! 头像head
+        .item_GR_top
+          .item_GR_top_tx_kuang
+          .radius3px.item_GR_top_tx.top_txvip
+            img height="60" src="images/img/sns_tx.png" width="60" /
+          .item_GR_top_tx_vip
+            a href="#"
+              img src="images/img/sns_tx_vip1.png" /
+              sup 10
+          .item_GR_sns_release_data_top_r
+          .item_GR_sns_release_data_top_dj
+            span.item_GR_top_dj_id
+              a.snshideid 窝窝窝窝窝窝
+            .snsshowid
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .item_GR_sns_release_data_top_cj
+            span.item_GR_top_dj_dj
+              a href="#" target="_blank"  Lv 999
+            span.item_GR_top_dj_dj_sj
+              i.item_GR_top_dj_dj_sj_jdt
+        /! 头像head end
+        .forward_cent
+          .forward_cent_mian
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+        .article_cent
+          h2
+          a href="#" target="_blank"  蝙蝠侠：起源反派登场！！
+          .article_cent_text
+          p
+            a href="#" target="_blank"  文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容
+          .article_cent_text_xx
+          span.text_xx_time 2013-10-17  12:00
+          span.text_xx_report
+            a href="#" target="_blank"  举报
+          span.text_xx_full
+            a href="#" target="_blank"  全文
+        .img_cent
+          a href="#" target="_blank"
+          img src="images/banner/tutu.png" /
+        .article_cent_comment
+          span.article_cent_comment_up
+          a href="#"  99999
+          span.article_cent_comment_zhuan
+          a href="#"  99999
+          span.article_cent_comment_huifu.up1
+          a 点击我
+      .up_mian
+        .up_mian_bj
+        .up_mian_con
+          .up_mian_con_input
+          .up_mian_con_input_center
+            textarea.up_mian_con_input_style cols="" name="" placeholder="请输入您要回复的内容" rows=""
+            span
+              a.up_mian_con_buttonQ.up1 取消
+            span
+              a.up_mian_con_buttonE 回复
+          .up_mian_con_reply
+          .up_mian_con_reply_tx
+            span.up_mian_con_reply_tx_tx
+              a href="#" target="_blank"
+            span.up_mian_con_reply_tx_id
+              a href="#" target="_blank"  我就是我哈哈
+            span.up_mian_con_reply_tx_time 2013-10-17 12:00
+          .up_mian_con_reply_text
+            p
+              | 我说了什么？我不知道！！我说了什么我不知道！！
+              | 我真的不知道我说了什么！！
+    /! 瀑布列表快 结束
+    /! 瀑布列表快 开始
+    .item_Container
+      .item.item_GR
+        /! 头像head
+        .item_GR_top
+          .item_GR_top_tx_kuang
+          .radius3px.item_GR_top_tx.top_txvip
+            img height="60" src="images/img/sns_tx.png" width="60" /
+          .item_GR_top_tx_vip
+            a href="#"
+              img src="images/img/sns_tx_vip1.png" /
+              sup 10
+          .item_GR_sns_release_data_top_r
+          .item_GR_sns_release_data_top_dj
+            span.item_GR_top_dj_id
+              a.snshideid 窝窝窝窝窝窝
+            .snsshowid
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .item_GR_sns_release_data_top_cj
+            span.item_GR_top_dj_dj
+              a href="#" target="_blank"  Lv 999
+            span.item_GR_top_dj_dj_sj
+              i.item_GR_top_dj_dj_sj_jdt
+        /! 头像head end
+        .forward_cent
+          .forward_cent_mian
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+        .article_cent
+          h2
+          a href="#" target="_blank"  蝙蝠侠：起源反派登场！！
+          .article_cent_text
+          p
+            a href="#" target="_blank"  文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容
+          .article_cent_text_xx
+          span.text_xx_time 2013-10-17  12:00
+          span.text_xx_report
+            a href="#" target="_blank"  举报
+          span.text_xx_full
+            a href="#" target="_blank"  全文
+        .img_cent
+          a href="#" target="_blank"
+          img src="images/banner/tutu.png" /
+        .article_cent_comment
+          span.article_cent_comment_up
+          a href="#"  99999
+          span.article_cent_comment_zhuan
+          a href="#"  99999
+          span.article_cent_comment_huifu.up1
+          a 点击我
+      .up_mian
+        .up_mian_bj
+        .up_mian_con
+          .up_mian_con_input
+          .up_mian_con_input_center
+            textarea.up_mian_con_input_style cols="" name="" placeholder="请输入您要回复的内容" rows=""
+            span
+              a.up_mian_con_buttonQ.up1 取消
+            span
+              a.up_mian_con_buttonE 回复
+          .up_mian_con_reply
+          .up_mian_con_reply_tx
+            span.up_mian_con_reply_tx_tx
+              a href="#" target="_blank"
+            span.up_mian_con_reply_tx_id
+              a href="#" target="_blank"  我就是我哈哈
+            span.up_mian_con_reply_tx_time 2013-10-17 12:00
+          .up_mian_con_reply_text
+            p
+              | 我说了什么？我不知道！！我说了什么我不知道！！
+              | 我真的不知道我说了什么！！
+    /! 瀑布列表快 结束
+    /! 瀑布列表快 开始
+    .item_Container
+      .item.item_GR
+        /! 头像head
+        .item_GR_top
+          .item_GR_top_tx_kuang
+          .radius3px.item_GR_top_tx.top_txvip
+            img height="60" src="images/img/sns_tx.png" width="60" /
+          .item_GR_top_tx_vip
+            a href="#"
+              img src="images/img/sns_tx_vip1.png" /
+              sup 10
+          .item_GR_sns_release_data_top_r
+          .item_GR_sns_release_data_top_dj
+            span.item_GR_top_dj_id
+              a.snshideid 窝窝窝窝窝窝
+            .snsshowid
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .item_GR_sns_release_data_top_cj
+            span.item_GR_top_dj_dj
+              a href="#" target="_blank"  Lv 999
+            span.item_GR_top_dj_dj_sj
+              i.item_GR_top_dj_dj_sj_jdt
+        /! 头像head end
+        .forward_cent
+          .forward_cent_mian
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+        .article_cent
+          h2
+          a href="#" target="_blank"  蝙蝠侠：起源反派登场！！
+          .article_cent_text
+          p
+            a href="#" target="_blank"  文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容
+          .article_cent_text_xx
+          span.text_xx_time 2013-10-17  12:00
+          span.text_xx_report
+            a href="#" target="_blank"  举报
+          span.text_xx_full
+            a href="#" target="_blank"  全文
+        .img_cent
+          a href="#" target="_blank"
+          img src="images/banner/tutu1.png" /
+        .article_cent_comment
+          span.article_cent_comment_up
+          a href="#"  99999
+          span.article_cent_comment_zhuan
+          a href="#"  99999
+          span.article_cent_comment_huifu.up1
+          a 点击我
+      .up_mian
+        .up_mian_bj
+        .up_mian_con
+          .up_mian_con_input
+          .up_mian_con_input_center
+            textarea.up_mian_con_input_style cols="" name="" placeholder="请输入您要回复的内容" rows=""
+            span
+              a.up_mian_con_buttonQ.up1 取消
+            span
+              a.up_mian_con_buttonE 回复
+          .up_mian_con_reply
+          .up_mian_con_reply_tx
+            span.up_mian_con_reply_tx_tx
+              a href="#" target="_blank"
+            span.up_mian_con_reply_tx_id
+              a href="#" target="_blank"  我就是我哈哈
+            span.up_mian_con_reply_tx_time 2013-10-17 12:00
+          .up_mian_con_reply_text
+            p
+              | 我说了什么？我不知道！！我说了什么我不知道！！
+              | 我真的不知道我说了什么！！
+    /! 瀑布列表快 结束
+    /! 瀑布流循环 结束
+  .item_4_list
+    /! 瀑布流循环 开始
+    /! 瀑布列表快 开始
+    .item_Container
+      .item.item_GR
+        /! 头像head
+        .item_GR_top
+          .item_GR_top_tx_kuang
+          .radius3px.item_GR_top_tx.top_txvip
+            img height="60" src="images/img/sns_tx.png" width="60" /
+          .item_GR_top_tx_vip
+            a href="#"
+              img src="images/img/sns_tx_vip1.png" /
+              sup 10
+          .item_GR_sns_release_data_top_r
+          .item_GR_sns_release_data_top_dj
+            span.item_GR_top_dj_id
+              a.snshideid 窝窝窝窝窝窝
+            .snsshowid
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .item_GR_sns_release_data_top_cj
+            span.item_GR_top_dj_dj
+              a href="#" target="_blank"  Lv 999
+            span.item_GR_top_dj_dj_sj
+              i.item_GR_top_dj_dj_sj_jdt
+        /! 头像head end
+        .forward_cent
+          .forward_cent_mian
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+        .article_cent
+          h2
+          a href="#" target="_blank"  蝙蝠侠：起源反派登场！！
+          .article_cent_text
+          p
+            a href="#" target="_blank"  文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容
+          .article_cent_text_xx
+          span.text_xx_time 2013-10-17  12:00
+          span.text_xx_report
+            a href="#" target="_blank"  举报
+          span.text_xx_full
+            a href="#" target="_blank"  全文
+        .img_cent
+          a href="#" target="_blank"
+          img src="images/banner/tutu1.png" /
+        .article_cent_comment
+          span.article_cent_comment_up
+          a href="#"  99999
+          span.article_cent_comment_zhuan
+          a href="#"  99999
+          span.article_cent_comment_huifu.up1
+          a 点击我
+      .up_mian
+        .up_mian_bj
+        .up_mian_con
+          .up_mian_con_input
+          .up_mian_con_input_center
+            textarea.up_mian_con_input_style cols="" name="" placeholder="请输入您要回复的内容" rows=""
+            span
+              a.up_mian_con_buttonQ.up1 取消
+            span
+              a.up_mian_con_buttonE 回复
+          .up_mian_con_reply
+          .up_mian_con_reply_tx
+            span.up_mian_con_reply_tx_tx
+              a href="#" target="_blank"
+            span.up_mian_con_reply_tx_id
+              a href="#" target="_blank"  我就是我哈哈
+            span.up_mian_con_reply_tx_time 2013-10-17 12:00
+          .up_mian_con_reply_text
+            p
+              | 我说了什么？我不知道！！我说了什么我不知道！！
+              | 我真的不知道我说了什么！！
+    /! 瀑布列表快 结束
+    /! 瀑布列表快 开始
+    .item_Container
+      .item.item_GR
+        /! 头像head
+        .item_GR_top
+          .item_GR_top_tx_kuang
+          .radius3px.item_GR_top_tx.top_txvip
+            img height="60" src="images/img/sns_tx.png" width="60" /
+          .item_GR_top_tx_vip
+            a href="#"
+              img src="images/img/sns_tx_vip1.png" /
+              sup 10
+          .item_GR_sns_release_data_top_r
+          .item_GR_sns_release_data_top_dj
+            span.item_GR_top_dj_id
+              a.snshideid 窝窝窝窝窝窝
+            .snsshowid
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .item_GR_sns_release_data_top_cj
+            span.item_GR_top_dj_dj
+              a href="#" target="_blank"  Lv 999
+            span.item_GR_top_dj_dj_sj
+              i.item_GR_top_dj_dj_sj_jdt
+        /! 头像head end
+        .forward_cent
+          .forward_cent_mian
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+        .article_cent
+          h2
+          a href="#" target="_blank"  蝙蝠侠：起源反派登场！！
+          .article_cent_text
+          p
+            a href="#" target="_blank"  文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容
+          .article_cent_text_xx
+          span.text_xx_time 2013-10-17  12:00
+          span.text_xx_report
+            a href="#" target="_blank"  举报
+          span.text_xx_full
+            a href="#" target="_blank"  全文
+        .img_cent
+          a href="#" target="_blank"
+          img src="images/banner/tutu1.png" /
+        .article_cent_comment
+          span.article_cent_comment_up
+          a href="#"  99999
+          span.article_cent_comment_zhuan
+          a href="#"  99999
+          span.article_cent_comment_huifu.up1
+          a 点击我
+      .up_mian
+        .up_mian_bj
+        .up_mian_con
+          .up_mian_con_input
+          .up_mian_con_input_center
+            textarea.up_mian_con_input_style cols="" name="" placeholder="请输入您要回复的内容" rows=""
+            span
+              a.up_mian_con_buttonQ.up1 取消
+            span
+              a.up_mian_con_buttonE 回复
+          .up_mian_con_reply
+          .up_mian_con_reply_tx
+            span.up_mian_con_reply_tx_tx
+              a href="#" target="_blank"
+            span.up_mian_con_reply_tx_id
+              a href="#" target="_blank"  我就是我哈哈
+            span.up_mian_con_reply_tx_time 2013-10-17 12:00
+          .up_mian_con_reply_text
+            p
+              | 我说了什么？我不知道！！我说了什么我不知道！！
+              | 我真的不知道我说了什么！！
+    /! 瀑布列表快 结束
+    /! 瀑布列表快 开始
+    .item_Container
+      .item.item_GR
+        /! 头像head
+        .item_GR_top
+          .item_GR_top_tx_kuang
+          .radius3px.item_GR_top_tx.top_txvip
+            img height="60" src="images/img/sns_tx.png" width="60" /
+          .item_GR_top_tx_vip
+            a href="#"
+              img src="images/img/sns_tx_vip1.png" /
+              sup 10
+          .item_GR_sns_release_data_top_r
+          .item_GR_sns_release_data_top_dj
+            span.item_GR_top_dj_id
+              a.snshideid 窝窝窝窝窝窝
+            .snsshowid
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .item_GR_sns_release_data_top_cj
+            span.item_GR_top_dj_dj
+              a href="#" target="_blank"  Lv 999
+            span.item_GR_top_dj_dj_sj
+              i.item_GR_top_dj_dj_sj_jdt
+        /! 头像head end
+        .forward_cent
+          .forward_cent_mian
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+        .article_cent
+          h2
+          a href="#" target="_blank"  蝙蝠侠：起源反派登场！！
+          .article_cent_text
+          p
+            a href="#" target="_blank"  文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容
+          .article_cent_text_xx
+          span.text_xx_time 2013-10-17  12:00
+          span.text_xx_report
+            a href="#" target="_blank"  举报
+          span.text_xx_full
+            a href="#" target="_blank"  全文
+        .img_cent
+          a href="#" target="_blank"
+          img src="images/banner/tutu1.png" /
+        .article_cent_comment
+          span.article_cent_comment_up
+          a href="#"  99999
+          span.article_cent_comment_zhuan
+          a href="#"  99999
+          span.article_cent_comment_huifu.up1
+          a 点击我
+      .up_mian
+        .up_mian_bj
+        .up_mian_con
+          .up_mian_con_input
+          .up_mian_con_input_center
+            textarea.up_mian_con_input_style cols="" name="" placeholder="请输入您要回复的内容" rows=""
+            span
+              a.up_mian_con_buttonQ.up1 取消
+            span
+              a.up_mian_con_buttonE 回复
+          .up_mian_con_reply
+          .up_mian_con_reply_tx
+            span.up_mian_con_reply_tx_tx
+              a href="#" target="_blank"
+            span.up_mian_con_reply_tx_id
+              a href="#" target="_blank"  我就是我哈哈
+            span.up_mian_con_reply_tx_time 2013-10-17 12:00
+          .up_mian_con_reply_text
+            p
+              | 我说了什么？我不知道！！我说了什么我不知道！！
+              | 我真的不知道我说了什么！！
+    /! 瀑布列表快 结束
+    /! 瀑布列表快 开始
+    .item_Container
+      .item.item_GR
+        /! 头像head
+        .item_GR_top
+          .item_GR_top_tx_kuang
+          .radius3px.item_GR_top_tx.top_txvip
+            img height="60" src="images/img/sns_tx.png" width="60" /
+          .item_GR_top_tx_vip
+            a href="#"
+              img src="images/img/sns_tx_vip1.png" /
+              sup 10
+          .item_GR_sns_release_data_top_r
+          .item_GR_sns_release_data_top_dj
+            span.item_GR_top_dj_id
+              a.snshideid 窝窝窝窝窝窝
+            .snsshowid
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+              p
+                a href="#"  举报
+          .item_GR_sns_release_data_top_cj
+            span.item_GR_top_dj_dj
+              a href="#" target="_blank"  Lv 999
+            span.item_GR_top_dj_dj_sj
+              i.item_GR_top_dj_dj_sj_jdt
+        /! 头像head end
+        .forward_cent
+          .forward_cent_mian
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+          span.forward_cent_mian_line
+            a.forward_cent_mian_id href="#" target="_blank" > @垚垚
+            | ：你有的玩了//
+        .article_cent
+          h2
+          a href="#" target="_blank"  蝙蝠侠：起源反派登场！！
+          .article_cent_text
+          p
+            a href="#" target="_blank"  文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容文章内容文章内容文章内容内容
+          .article_cent_text_xx
+          span.text_xx_time 2013-10-17  12:00
+          span.text_xx_report
+            a href="#" target="_blank"  举报
+          span.text_xx_full
+            a href="#" target="_blank"  全文
+        .img_cent
+          a href="#" target="_blank"
+          img src="images/banner/tutu1.png" /
+        .article_cent_comment
+          span.article_cent_comment_up
+          a href="#"  99999
+          span.article_cent_comment_zhuan
+          a href="#"  99999
+          span.article_cent_comment_huifu.up1
+          a 点击我
+      .up_mian
+        .up_mian_bj
+        .up_mian_con
+          .up_mian_con_input
+          .up_mian_con_input_center
+            textarea.up_mian_con_input_style cols="" name="" placeholder="请输入您要回复的内容" rows=""
+            span
+              a.up_mian_con_buttonQ.up1 取消
+            span
+              a.up_mian_con_buttonE 回复
+          .up_mian_con_reply
+          .up_mian_con_reply_tx
+            span.up_mian_con_reply_tx_tx
+              a href="#" target="_blank"
+            span.up_mian_con_reply_tx_id
+              a href="#" target="_blank"  我就是我哈哈
+            span.up_mian_con_reply_tx_time 2013-10-17 12:00
+          .up_mian_con_reply_text
+            p
+              | 我说了什么？我不知道！！我说了什么我不知道！！
+              | 我真的不知道我说了什么！！
+    /! 瀑布列表快 结束
+    /! 瀑布流循环 结束
+  /! 品牌列表 end

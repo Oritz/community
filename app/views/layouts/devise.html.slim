@@ -1,12 +1,8 @@
 doctype html
 html xmlns="http://www.w3.org/1999/xhtml"
   head
-    meta content=("text/html; charset=utf-8") http-equiv="Content-Type"
-    = stylesheet_link_tag "application", media: "all"
-    = stylesheet_link_tag "login"
-    = stylesheet_link_tag "reset"
-    = stylesheet_link_tag "storefooter"
-    = yield :cssfile
+    meta content="text/html; charset=utf-8" http-equiv="Content-Type"
+    = stylesheet_link_tag "devise", media: "all"
     title= @title
     = csrf_meta_tags
   body
@@ -38,21 +34,34 @@ html xmlns="http://www.w3.org/1999/xhtml"
             ul.foot_navigation
               li
                 a href="#" target="_blank" 关于中电博亚
-                | \
+                | |
               li
                 a href="#" target="_blank" 关于杉果游戏
-                | \
+                | |
               li
                 a href="#" target="_blank" 用户协议
-                | \
+                | |
               li
                 a href="#" target="_blank" 客户服务
-                | \
+                | |
               li
                 a href="#" target="_blank" 联系我们
-                | \
+                | |
       div.footer_Copyright
         p &copy;2013 北京中电博亚科技有限公司版权所有 所有商标版权属于其拥有者 Tel:010-68434500
         p 京ICP备12041226号 《出版物经营许可证》 新出发京批字第直0816号 京公网安备11010802012421号
+    div.flash-messages style="display: none;"
+      - if flash[:error]
+        p.flash-error
+          = flash[:error]
+      - if flash[:alert]
+        p.flash-alert
+          = flash[:alert]
+      - if flash[:notice]
+        p.flash-notice
+          = flash[:notice]
+      - if flash[:success]
+        p.flash-success
+          = flash[:success]
 
-= yield :jsfile
+  = javascript_include_tag "devise"
