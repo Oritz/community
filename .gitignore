@@ -1,0 +1,5 @@
+config/database.yml
+config/application.yml
+log/*
+.DS_Store
+.idea

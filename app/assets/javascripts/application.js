@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require twitter/bootstrap
 //= require messenger
 //= require messenger-theme-future
 //= require_tree ../../../vendor/assets/stylesheets
