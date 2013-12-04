@@ -1,12 +1,11 @@
 require 'sonkwo/behavior/fetcher'
 
 class UsersController < ApplicationController
-  before_filter :sonkwo_authenticate_account, only: [:follow, :unfollow]
-  #layout "home"
+  #before_filter :sonkwo_authenticate_account, only: [:follow, :unfollow]
 
   def show
     @target = Account.find(params[:id])
-    @type = "POSTS"
+    @games = AllGame.belong_to_account(@target)
 
     respond_to do |format|
       format.html

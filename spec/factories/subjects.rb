@@ -5,6 +5,5 @@ FactoryGirl.define do
     association :post, factory: :subject_post
     title "subject title"
     content "subject content"
-    group nil
   end
 end

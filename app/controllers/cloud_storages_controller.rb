@@ -2,6 +2,7 @@ class CloudStoragesController < ApplicationController
   before_filter :sonkwo_authenticate_account, :except => [:create]
   protect_from_forgery :except => :create 
 
+  layout false
   def index
   end
 
@@ -27,23 +28,27 @@ class CloudStoragesController < ApplicationController
     # TODO: ONLY allow from qiniu server!
     # TODO: Add try catch!
     # check token
-    account_id = params['account_id']
+    account = Account.where(id: params[:account_id].to_i).first
+    unless account
+      ret = {error: 'wrong account_id'}
+      render json: ret, status: 501
+    end
+
     upload_time = params['timestamp']
     sonkwo_token = Digest::MD5.hexdigest("#{account_id},#{upload_time},#{Settings.cloud_storage.sonkwo_key}")
     if sonkwo_token != params['sonkwo_token']
-      ret = {:error => 'wrong token'}
-      render :json => ret, :status => 501
+      ret = {error: 'wrong token'}
+      render json: ret, status: 501
     end
     # save the result
     storage = CloudStorage.new
-    storage.account_id = account_id
+    storage.account = account
     storage.bucket_name = Settings.cloud_storage.avatar_buchekt
     storage.key = params['hash']
     # TODO
-    #storage.data = 
+    #storage.data
     storage.save!
-    dest_url = "http://#{Settings.cloud_storage.avatar_buchekt}.u.qiniudn.com/#{params['hash']}"
-    ret = {:dest_url => dest_url}
-    render :json => ret, :status => 200
+    ret = {dest_url: storage.url, storage_id: storage.id}
+    render json: ret, status: 200
   end
 end

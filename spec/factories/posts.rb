@@ -3,6 +3,7 @@
 FactoryGirl.define do
   factory :post do
     association :creator, factory: :account
+    group nil
     comment ""
 
     trait :deleted do

@@ -7,6 +7,7 @@ class SteamUsersGame < ActiveRecord::Base
   # Callbacks
   after_initialize :default_values
   after_save :update_reputation
+  before_destroy :destroy_reputation
 
   # Associations
   belongs_to :steam_user
@@ -28,14 +29,20 @@ class SteamUsersGame < ActiveRecord::Base
   end
 
   def update_reputation
-    item = UsersGamesReputationRanklist.where(game_id: self.game.id, user_id: self.account.id, user_type: "Account").first
+    item = UsersGamesReputationRanklist.where(game_id: self.game.id, user_id: self.steam_user.id, user_type: "Account").first
     unless item
       item = UsersGamesReputationRanklist.new unless item
       item.game = self.game
-      item.user = self.account
+      item.user = self.steam_user
     end
 
-    item.reputation = self.playtime_forever / 3600 + self.achievements_count * 2
+    item.reputation = (self.playtime_forever.to_i / 3600) + self.achievements_count.to_i * 2
     item.save!
+  end
+
+  def destroy_reputation
+    item = UsersGamesReputationRanklist.where(game_id: self.game.id, user_id: self.steam_user.id, user_type: "Account").first
+    return false unless item.destroy
+    true
   end
 end

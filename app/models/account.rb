@@ -54,8 +54,10 @@ class Account < ActiveRecord::Base
     association_foreign_key: 'account_id',
     before_add: :forbid_callback
   has_one :notification, foreign_key: 'id', dependent: :destroy
-  has_many :client_errors, dependent: :destroy
   has_one :steam_user
+  belongs_to :cloud_storage, class_name: "CloudStorage", foreign_key: "avatar_id"
+  has_many :accounts_other_games
+  has_many :other_games, through: :accounts_other_games, source: :game
 
   # Validations
   validates :exp, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
@@ -66,6 +68,17 @@ class Account < ActiveRecord::Base
   scope :friends, lambda { |account_id| joins("INNER JOIN friendship ON follower_id=accounts.id").where("account_id=? AND is_mutual=#{Friendship::IS_MUTUAL}", account_id) }
 
   # Methods
+  def avatar
+    return Settings.images.avatar.default unless self.cloud_storage
+    cloud_storage.url
+  end
+
+  def games
+    steam_user_games = []
+    steam_user_games = self.steam_user.games if self.steam_user
+    self.other_games + steam_user_games
+  end
+
   def people_relation_with_visitor(options={})
     options.assert_valid_keys(:visitor, :type, :select, :page, :per_page)
     options[:visitor] ||= self
@@ -145,15 +158,15 @@ class Account < ActiveRecord::Base
 
   protected
   def default_values
-    self.gender ||= self.class::GENDER_BOY
-    self.follower_count ||= 0
-    self.following_count ||= 0
-    self.talk_count ||= 0
-    self.subject_count ||= 0
-    self.recommend_count ||= 0
-    self.account_type ||= self.class::TYPE_NORMAL
-    self.exp ||= 0
-    self.bonus ||= 0
+    self.gender ||= self.class::GENDER_BOY if self.attribute_names.include?("gender")
+    self.follower_count ||= 0 if self.attribute_names.include?("follower_count")
+    self.following_count ||= 0 if self.attribute_names.include?("following_count")
+    self.talk_count ||= 0 if self.attribute_names.include?("talk_count")
+    self.subject_count ||= 0 if self.attribute_names.include?("subject_count")
+    self.recommend_count ||= 0 if self.attribute_names.include?("recommend_count")
+    self.account_type ||= self.class::TYPE_NORMAL if self.attribute_names.include?("account_type")
+    self.exp ||= 0 if self.attribute_names.include?("exp")
+    self.bonus ||= 0 if self.attribute_names.include?("bonus")
   end
 
   def post_liked(post)

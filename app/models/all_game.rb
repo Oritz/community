@@ -1,6 +1,6 @@
 class AllGame < ActiveRecord::Base
   # attr_accessible :title, :body
-  attr_accessible :name
+  attr_accessible :name, :image
 
   # Constants
   STATUS_NORMAL = 0
@@ -16,12 +16,16 @@ class AllGame < ActiveRecord::Base
 
   # Validations
   validates :name, presence: true, length: { maximum: 255 }
+  validates :image, presence: true, length: { maximum: 255 }
   validates :status, presence: true
   validates :subable_id, uniqueness: { scope: :subable_type }, if: Proc.new { |a| a.subable_id }
 
+  # Scopes
+  scope :belong_to_account, lambda { |account| joins("INNER JOIN users_games_reputation_ranklists ON game_id=all_games.id").where("(user_id=? AND user_type=?) OR (user_id=? AND user_type=?)", account.id, account.class.to_s, account.steam_user, account.steam_user.class.to_s) }
   # Methods
   protected
   def default_values
     self.status ||= self.class::STATUS_NORMAL
+    self.image ||= Settings.images.game.default
   end
 end

@@ -16,7 +16,6 @@ class Post < ActiveRecord::Base
     t.add :created_at
     t.add :updated_at
   end
-  #hookable name: "experience", callbacks: ["after_create"]
 
   attr_accessible :comment
   #attr_protected :post_type, :privilege, :status, :comment_count, :recommend_count, :like_count, :created_at, :updated_at
@@ -35,6 +34,9 @@ class Post < ActiveRecord::Base
   TYPE_SUBJECT = 1
   TYPE_RECOMMEND = 2
 
+  # Callbacks
+  after_initialize :default_values
+
   # Validations
   validates :post_type, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::TYPE_RECOMMEND }
   validates :privilege, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::PRIVILEGE_PRIVATE }
@@ -44,8 +46,7 @@ class Post < ActiveRecord::Base
   validates :like_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :creator, presence: true
   validates :comment, length: { maximum: 140 }
-  # Callbacks
-  after_initialize :default_values
+  validate :group_should_be_added
 
   # Associations
   belongs_to :creator, class_name: 'Account', foreign_key: 'account_id'
@@ -53,6 +54,7 @@ class Post < ActiveRecord::Base
   has_many :likers, through: :accounts_like_posts, source: :account
   has_many :comments, class_name: 'Comment'
   has_many :recommend_posts, class_name: 'Recommend', foreign_key: 'parent_id'
+  belongs_to :group
 
   # Scopes
   scope :recommend_posts_with_account, lambda { |post_id| where("original_id=? AND status=?", post_id, Post::STATUS_NORMAL).includes(:creator).order("created_at DESC") }
@@ -65,5 +67,11 @@ class Post < ActiveRecord::Base
     self.comment_count ||= 0
     self.recommend_count ||= 0
     self.like_count ||= 0
+  end
+
+  def group_should_be_added
+    if self.group && self.creator && !self.creator.groups.include?(self.group)
+      errors.add(:group, I18n.t("models.post.error_group_not_added"))
+    end
   end
 end

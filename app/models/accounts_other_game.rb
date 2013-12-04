@@ -4,6 +4,7 @@ class AccountsOtherGame < ActiveRecord::Base
   # Callbacks
   after_initialize :default_values
   after_save :update_reputation
+  before_destroy :destroy_reputation
 
   # Associations
   belongs_to :account
@@ -33,7 +34,13 @@ class AccountsOtherGame < ActiveRecord::Base
       item.user = self.account
     end
 
-    item.reputation = self.playtime_forever / 3600
+    item.reputation = self.playtime_forever.to_i / 3600
     item.save!
+  end
+
+  def destroy_reputation
+    item = UsersGamesReputationRanklist.where(game_id: self.game.id, user_id: self.account.id, user_type: "Account").first
+    return false unless item.destroy
+    true
   end
 end

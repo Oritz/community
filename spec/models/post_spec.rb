@@ -2,13 +2,35 @@ require 'spec_helper'
 
 describe Post do
   let(:creator) { create(:account) }
+  let(:group) { create(:group) }
 
-  it "is valid with valid attributes" do
+  it "is valid with valid attributes(no group)" do
     post = Post.new(comment: "comment")
     post.creator = creator
     post.post_type = Post::TYPE_TALK
 
     expect(post).to be_valid
+  end
+
+  context "validate group" do
+    it "is valid with group added" do
+      creator.groups << group
+      post = Post.new
+      post.creator = creator
+      post.post_type = Post::TYPE_TALK
+      post.group = group
+
+      expect(post).to be_valid
+    end
+
+    it "is not valid with group not added" do
+      post = Post.new
+      post.creator = creator
+      post.post_type = Post::TYPE_TALK
+      post.group = group
+
+      expect(post).not_to be_valid
+    end
   end
 
   context "validate comment" do
