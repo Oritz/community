@@ -1,7 +1,5 @@
 class GroupsController < ApplicationController
-  before_filter :sonkwo_authenticate_account, except: [:index, :show]
-
-  #layout "home"
+  #before_filter :sonkwo_authenticate_account, except: [:index, :show]
 
   # GET /groups
   # GET /groups.json
@@ -28,8 +26,8 @@ class GroupsController < ApplicationController
     # TODO: rewrite the function without andy "select"
     @group = Group.find(params[:id])
     @tags = @group.tags
-    @newcomers = @group.accounts.select("id, nick_name, avatar").order("groups_accounts.created_at DESC").limit(6)
-    @subjects = Subject.sort_by_time_in_group(@group.id).paginate(page: params[:page], per_page: 10)
+    #@newcomers = @group.accounts.select("id, nick_name, avatar").order("groups_accounts.created_at DESC").limit(6)
+    #@subjects = Subject.sort_by_time_in_group(@group.id).paginate(page: params[:page], per_page: 10)
 
     respond_to do |format|
       format.html # show.html.erb

@@ -1,35 +1,84 @@
-.span9
-  div
-    div.media
-      = image_tag(@group.logo, class: "media-object img-rounded pull-left", width: "100px")
-      div.media-body
-        h2.media-heading= t(@group.name)
-        p
-          span= t("group_created_at", time: @group.created_at.strftime("%Y-%m-%d"))
-          span= t("creator")
-            | :#{@group.creator.nick_name}
-          - if @group.joined?(current_account)
-            span= link_to t("Quit"), {aciont: :remove_user}, method: :delete, data: { confirm: I18n.t("Are you sure?") }
-          - else
-            span= link_to t("Join"), {action: :add_user}, method: :put
-          span= link_to t("post_subject"), action: :new, controller: :subjects, group_id: @group.id 
-        p
-          - @tags.each do |tag|
-            = link_to tag do
-              span.label.label-info= tag.name
-        div.media.well= @group.description
-  div
-    p= t("recent_topics")
-    table.table
-      - @subjects.each do |subject|
-        tr
-          td= link_to subject.title, post_path(subject.id)
-          td= link_to subject.creator.nick_name, user_path(subject.creator)
-          td= subject.created_at.strftime("%Y-%m-%d %H:%M:%S")
-.span3
-  p
-    strong= t("new_comers")
-  - @newcomers.each do |newcomer|
-    .span2
-      span= image_tag(newcomer.avatar.m.url, alt: newcomer.nick_name, class: "img-rounded", width: "50px")
-      span= truncate(newcomer.nick_name, length: 10)
+.sns_release
+.groups_inside
+  .radius3px.sns_groups_data_inner
+    .sns_groups_data_top_inner
+      .groups_top_tx_inner
+        = image_tag(@group.logo)
+      .groups_top_new_inner
+        h1
+          = link_to @group.name, "#"
+          a.set.fr href="#"
+        span
+          | 已有
+          = @group.member_count
+          | 位成员
+        span.groups_top_new_inner_block
+          p
+          | 小组组长：
+          = @group.creator.nick_name
+          p
+          | 创建日期：
+          = @group.created_at.strftime("%Y-%m-%d")
+    .sns_groups_data_bottom_inner
+      .groups_b_jb_inner
+        a href="#" 举报
+      .groups_b_cz_inner
+        span.groups_b_cz_jr_inner
+          a href="#" 加入小组
+  .radius3px.sns_release_enter
+    #msgBox
+      form
+        .countTxt_block
+          span.countTxt 还能输入
+          strong.maxNum 140
+          span 个字
+        .conBoxwidth1
+          textarea#conBox.f-text name="conBox"
+        .sendBtn_tr_width1
+          .sendBtn_tr
+            .sendBtn_tr_L
+              span.emotion
+                a href="#"
+              span.emotion_img
+                a href="#"
+              span.emotion_ltv
+                a href="#"
+              span.emotion_text
+                a href="#"
+              span.emotion_xian \
+              span.emotion_more
+                a.snshide href="#"
+                .snsshow
+                  p
+                    a href="#"
+                  p
+                    a href="#"
+                  p
+                    a href="#"
+            .sendBtn_tr_R
+              span.emotion_more
+                a.snshide1 href="#"
+                .snsshow1
+                  p
+                    a href="#"
+              input#sendBtn title="快捷键 Ctrl+Enter" type="button" value="发布"
+.post_member
+  .post.fl
+    .prompt
+      .post_writing
+        h3 小组公告
+      .post_bn
+        a.set href="#"
+    .post_text
+      textarea.post_text_area cols="" name="" rows=""
+  .member.fr
+    .prompt
+      .post_writing
+        h3 最新加入
+      .post_bn
+        a.set href="#"
+    .new_join
+      ul
+        li
+          a href="#"
+            img src="images/groups_create/hy_tx.png"

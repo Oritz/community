@@ -21,6 +21,8 @@ default: &defaults
       default: "/avatar/default.jpg"
     game:
       default: "/game/default.jpg"
+    group:
+      default: "/group/default.jpg"
   cloud_storage:
     avatar_bucket: 'sonkwo-avatar'
     snapshot_bucket: 'sonkwo-snapshot'
