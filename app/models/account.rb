@@ -30,7 +30,7 @@ class Account < ActiveRecord::Base
   # Callbacks
   after_initialize :default_values
   #after_create :create_notification_item
-  after_create :create_exp_strategy
+  after_create :create_exp_strategy, :create_screenshot_album
 
   # Associations
   has_many :groups_accounts
@@ -199,5 +199,12 @@ class Account < ActiveRecord::Base
       item.period_count = 0
       item.save!
     end
+  end
+
+  def create_screenshot_album
+    album = Album.new(name: "screenshot")
+    album.album_type = Album::TYPE_SCREENSHOT
+    album.account = self
+    album.save!
   end
 end
