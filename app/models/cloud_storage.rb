@@ -1,5 +1,5 @@
 class CloudStorage < ActiveRecord::Base
-  attr_accessible :bucket_name, :key, :storage_type, :data, :private
+  attr_accessible :bucket_name, :key, :storage_type, :data, :private, :url
 
   # Constants
   STORAGE_TYPE_VEDIO = 0
@@ -26,6 +26,20 @@ class CloudStorage < ActiveRecord::Base
       "http://#{self.bucket_name}.u.qiniudn.com/#{self.key}"
     else
       ""
+    end
+  end
+
+  def url=(url)
+    return unless url
+    begin
+      url = url.split("http://")[1]
+      tmps = url.split("/")
+      key = tmps[1]
+      bucket_name = tmps[0].split(".u.qiniudn.com")
+      self.key = key
+      self.bucket_name = bucket_name[0]
+    rescue
+      return
     end
   end
 

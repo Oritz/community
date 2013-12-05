@@ -63,6 +63,11 @@ SonkwoCommunity::Application.routes.draw do
     resources :game_achievements, only: [:index, :show]
   end
 
+  resources :albums do
+    resources :photos, only: [:index, :create]
+  end
+  post 'photos/screenshot', to: 'photos#screenshot'
+
   # sidekiq
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
