@@ -16,9 +16,15 @@ html xmlns="http://www.w3.org/1999/xhtml"
           a.www_head_logo_bj href="#" target="_blank" title="杉果游戏"
         ul.www_nav_font
           li
-            = link_to "登录", new_account_session_path, target: "_blank"
+            - if current_account
+              = link_to current_account.nick_name, user_path(current_account)
+            - else
+              = link_to "登录", new_account_session_path
           li
-            = link_to "注册", new_account_registration_path, target: "_blank"
+            - if current_account
+              = link_to "退出", destroy_account_session_path
+            - else
+              = link_to "注册", new_account_registration_path
           li
             a href="" target="_blank" 收藏
           li

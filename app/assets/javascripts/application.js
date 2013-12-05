@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require twitter/bootstrap
 //= require messenger
 //= require messenger-theme-future
 
@@ -37,6 +36,26 @@ function toggle_nav($block, position) {
     return;
   $block.animate(properties, 100, function() {
     $block.attr("is_hide", (is_hide+1)%2);
+  });
+}
+
+function fetch_posts() {
+  $.ajax({
+    url: "/home/posts.json",
+    cache: false
+  }).done(function(data) {
+    status = data.status;
+    if(status == "success") {
+      posts = data.data;
+      $.each(posts, function(index, post) {
+        var creator = post.creator;
+        alert(post.content);
+      });
+    }
+    else
+      alert("error");
+  }).fail(function() {
+    alert("error");
   });
 }
 
@@ -73,6 +92,7 @@ $.fn.nav_float = function() {
 
 
 $(document).ready(function() {
+  fetch_posts();
   change_nav_height($("#sns_nav .nav-left1"));
   change_nav_height($("#sns_nav .nav-right1"));
   $(window).resize(function() {
