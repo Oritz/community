@@ -71,6 +71,7 @@
         a.set href="#"
     .post_text
       textarea.post_text_area cols="" name="" rows=""
+        = @group.description
   .member.fr
     .prompt
       .post_writing
@@ -79,6 +80,7 @@
         a.set href="#"
     .new_join
       ul
-        li
-          a href="#"
-            img src="images/groups_create/hy_tx.png"
+        - @newcomers.each do |newcomer|
+          li
+            = link_to user_path(newcomer) do
+              = image_tag(newcomer.avatar, width: 37, height: 37)

@@ -1,3 +1,17 @@
 class PostImage < ActiveRecord::Base
-  # attr_accessible :title, :body
+  attr_accessible :comment
+
+  # Associations
+  belongs_to :post
+  has_one :cloud_storage
+
+  # Validations
+  validates :post, presence: true
+  validates :cloud_storage, presence: true
+  validates :comment, length: { maximum: 30 }, if: Proc.new { |a| a.comment }
+
+  # Methods
+  def url
+    cloud_storage.url
+  end
 end

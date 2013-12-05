@@ -44,7 +44,7 @@ html
       - if current_account
         a.nav-btn1
         .nav-btn1_L_zd
-          ul.nav-left1
+          ul.nav-left1 is_hide = 0
             li.icon_nav_zd_gr_bj
               = link_to "个人主页", user_path(current_account.id), class: "nav-left1_xx_a"
               i
@@ -79,7 +79,7 @@ html
                 a.badge href="#"  1
         a.nav-btn2
         .nav-btn1_R_zd
-          .nav-right1
+          .nav-right1 is_hide = 0
             .nav_right1_friends
               h4.friends_titleHy
                 a href="#"  我的好友
@@ -100,6 +100,4 @@ html
     .container
       = yield
     #footer
-      span.footer_stop
-        a 玩命加载中
     = javascript_include_tag "application"

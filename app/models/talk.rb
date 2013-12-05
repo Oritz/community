@@ -24,6 +24,10 @@ class Talk < ActiveRecord::Base
   after_initialize :default_values
   before_create :add_talk_count
   after_create { Sonkwo::Exp.increase("exp_post_talk", self.creator, self.created_at) }
+  after_create { self.post_image.save! if self.post_image }
+
+  # Associations
+  has_one :post_image, foreign_key: "post_id"
 
   # Validations
   validates :content, presence: true, length: { maximum: 140 }

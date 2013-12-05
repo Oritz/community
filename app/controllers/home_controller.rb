@@ -28,7 +28,7 @@ class HomeController < ApplicationController
   end
 
   def games
-    user_game_serials = UserGameSerial.by_account(current_account.id).includes(:game)
+    #user_game_serials = UserGameSerial.by_account(current_account.id).includes(:game)
   end
 
   def posts

@@ -37,6 +37,14 @@ class Post < ActiveRecord::Base
   # Callbacks
   after_initialize :default_values
 
+  # Associations
+  belongs_to :creator, class_name: 'Account', foreign_key: 'account_id'
+  has_many :accounts_like_posts
+  has_many :likers, through: :accounts_like_posts, source: :account
+  has_many :comments, class_name: 'Comment'
+  has_many :recommend_posts, class_name: 'Recommend', foreign_key: 'parent_id'
+  belongs_to :group
+
   # Validations
   validates :post_type, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::TYPE_RECOMMEND }
   validates :privilege, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::PRIVILEGE_PRIVATE }
@@ -47,14 +55,6 @@ class Post < ActiveRecord::Base
   validates :creator, presence: true
   validates :comment, length: { maximum: 140 }
   validate :group_should_be_added
-
-  # Associations
-  belongs_to :creator, class_name: 'Account', foreign_key: 'account_id'
-  has_many :accounts_like_posts
-  has_many :likers, through: :accounts_like_posts, source: :account
-  has_many :comments, class_name: 'Comment'
-  has_many :recommend_posts, class_name: 'Recommend', foreign_key: 'parent_id'
-  belongs_to :group
 
   # Scopes
   scope :recommend_posts_with_account, lambda { |post_id| where("original_id=? AND status=?", post_id, Post::STATUS_NORMAL).includes(:creator).order("created_at DESC") }
