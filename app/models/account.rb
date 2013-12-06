@@ -11,6 +11,7 @@ class Account < ActiveRecord::Base
     t.add :id
     t.add :avatar
     t.add :nick_name
+    t.add :level
   end
 
   EMAIL_NOT_VERIFY = 0
@@ -71,6 +72,10 @@ class Account < ActiveRecord::Base
   def avatar
     return Settings.images.avatar.default unless self.cloud_storage
     cloud_storage.url
+  end
+
+  def level
+    Sonkwo::Exp.level(self.exp)
   end
 
   def games

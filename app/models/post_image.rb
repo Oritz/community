@@ -3,7 +3,7 @@ class PostImage < ActiveRecord::Base
 
   # Associations
   belongs_to :post
-  has_one :cloud_storage
+  belongs_to :cloud_storage
 
   # Validations
   validates :post, presence: true
