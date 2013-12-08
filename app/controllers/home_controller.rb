@@ -32,6 +32,7 @@ class HomeController < ApplicationController
   end
 
   def posts
+    require "sonkwo/behavior/fetcher"
     params[:type] ||= "posts"
     if params[:type] == "posts"
       fetcher = Sonkwo::Behavior::Fetcher.new(current_account)

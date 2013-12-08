@@ -77,13 +77,11 @@ function fetch_posts(templates) {
 
 $(document).ready(function() {
   // cascading initialize
-  var $wrapper = $("#wrapper").masonry({
-    columnWidth: 326,
-    itemSelector: ".item_Container"
-  });
-  $.get('/template/talk.mustache').done(function(data) {
-    var templates = {};
-    templates.talk = data;
+  var $wrapper = $("#wrapper").masonry();
+  $.get('/posts/templates').done(function(data) {
+    if(data.status != "success")
+      return;
+    var templates = data.data;
     $.ajax({
       url: "/home/posts.json",
       cache: false
@@ -92,8 +90,16 @@ $(document).ready(function() {
       if(status == "success") {
         posts = data.data;
         $.each(posts, function(index, post) {
-          var talk_template = templates.talk;
-          var $output = $(Mustache.render(talk_template, post));
+          var template = templates.talk;
+          if(post.post_type == 0)
+            template = templates.talk;
+          else if(post.post_type == 1)
+            template = templates.subject;
+          else if(post.original.post_type == 0)
+            template = templates.recommend_talk;
+          else
+            template = templates.recommend_subject;
+          var $output = $(Mustache.render(template, post));
           $wrapper.append($output).imagesLoaded(function() {
             $wrapper.masonry('appended', $output);
           });
