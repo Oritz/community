@@ -1,9 +1,12 @@
 class CloudStoragesController < ApplicationController
   before_filter :sonkwo_authenticate_account, :except => [:create]
-  protect_from_forgery :except => :create 
+  protect_from_forgery :except => :create
 
-  layout false
   def index
+  end
+
+  def template
+    render json: {status: "success", data: MustacheTemplate.upload_image}
   end
 
   def new
@@ -22,6 +25,20 @@ class CloudStoragesController < ApplicationController
                                 :escape             => Settings.cloud_storage.escape,
                                 :async_options      => Settings.cloud_storage.async_options,
                                 :return_body        => Settings.cloud_storage.return_body)
+
+    respond_to do |format|
+      format.html
+      format.json { render json:
+        { status: "success", data: {
+            upload_token: @upload_token,
+            account_id: current_account.id,
+            now_time: @now_time,
+            sonkwo_token: @sonkwo_token,
+            bucket_name: (params[:bucket_name] ||= Settings.cloud_storage.default_bucket)
+          }
+        }
+      }
+    end
   end
 
   def create
@@ -35,7 +52,7 @@ class CloudStoragesController < ApplicationController
     end
 
     upload_time = params['timestamp']
-    sonkwo_token = Digest::MD5.hexdigest("#{account_id},#{upload_time},#{Settings.cloud_storage.sonkwo_key}")
+    sonkwo_token = Digest::MD5.hexdigest("#{account.id},#{upload_time},#{Settings.cloud_storage.sonkwo_key}")
     if sonkwo_token != params['sonkwo_token']
       ret = {error: 'wrong token'}
       render json: ret, status: 501
@@ -43,7 +60,7 @@ class CloudStoragesController < ApplicationController
     # save the result
     storage = CloudStorage.new
     storage.account = account
-    storage.bucket_name = Settings.cloud_storage.avatar_buchekt
+    storage.bucket_name = Settings.cloud_storage.avatar_bucket
     storage.key = params['hash']
     # TODO
     #storage.data

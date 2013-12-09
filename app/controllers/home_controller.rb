@@ -4,6 +4,7 @@ class HomeController < ApplicationController
   def index
     @friends = Account.friends(current_account.id).limit(12).order("updated_at DESC")
     @new_talk = Talk.new
+    @cloud_storage_settings = CloudStorage.settings(current_account)
 
     params[:type] ||= "posts"
     #fetcher = Sonkwo::Behavior::Fetcher.new(current_account)
@@ -37,9 +38,9 @@ class HomeController < ApplicationController
     if params[:type] == "posts"
       fetcher = Sonkwo::Behavior::Fetcher.new(current_account)
       if params[:end_id]
-        @posts = fetcher.behaviors(limit: 2, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
+        @posts = fetcher.behaviors(limit: 20, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
       else
-        @posts = fetcher.behaviors(limit: 2, status: Post::STATUS_NORMAL, order: "created_at DESC")
+        @posts = fetcher.behaviors(limit: 20, status: Post::STATUS_NORMAL, order: "created_at DESC")
       end
       @posts = Post.downcast(@posts)
     elsif params[:type] == "groups"

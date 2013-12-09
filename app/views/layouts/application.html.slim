@@ -100,4 +100,17 @@ html
     .container
       = yield
     #footer
+    div.flash-messages style="display: none;"
+      - if flash[:error]
+        p.flash-error
+          = flash[:error]
+      - if flash[:alert]
+        p.flash-alert
+          = flash[:alert]
+      - if flash[:notice]
+        p.flash-notice
+          = flash[:notice]
+      - if flash[:success]
+        p.flash-success
+          = flash[:success]
     = javascript_include_tag "application"

@@ -77,7 +77,10 @@ function fetch_posts(templates) {
 
 $(document).ready(function() {
   // cascading initialize
-  var $wrapper = $("#wrapper").masonry();
+  var $wrapper = $("#wrapper").masonry({
+    columnWidth: 341,
+    itemSelector: ".item_Container"
+  });
   $.get('/posts/templates').done(function(data) {
     if(data.status != "success")
       return;
@@ -89,7 +92,9 @@ $(document).ready(function() {
       status = data.status;
       if(status == "success") {
         posts = data.data;
-        $.each(posts, function(index, post) {
+        var i = 0;
+        for(i = 0; i < posts.length; ++i) {
+          var post = posts[i];
           var template = templates.talk;
           if(post.post_type == 0)
             template = templates.talk;
@@ -100,10 +105,13 @@ $(document).ready(function() {
           else
             template = templates.recommend_subject;
           var $output = $(Mustache.render(template, post));
+          $wrapper.append($output).masonry('appended', $output, true);
+          /*
           $wrapper.append($output).imagesLoaded(function() {
-            $wrapper.masonry('appended', $output);
+            $wrapper.masonry('appended', $output).masonry();
           });
-        });
+           */
+        }
       }
       else
         alert("error");

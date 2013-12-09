@@ -36,40 +36,50 @@
       a href="#"
   .radius3px.sns_release_enter
     #msgBox
-      form
+      = form_for(@new_talk) do |f|
+        = f.hidden_field :cloud_storage_id
         .countTxt_block
           span.countTxt 还能输入
           strong.maxNum 140
           span 个字
         .conBoxwidth1
-          textarea#conBox.f-text name="conBox"
+          = f.text_area :content, class: "f-text", style: "height: 110px"
         .sendBtn_tr_width1
           .sendBtn_tr
             .sendBtn_tr_L
               span.emotion
                 a href="#"  表情
               span.emotion_img
-                a href="#"  图片
-              span.emotion_ltv
-                a href="#"  视频
+                a href="javascript:void(0);" class="post-pic"  图片
               span.emotion_text
                 a href="#"  长文章
               span.emotion_xian
-              span.emotion_more
-                a.snshide href="#"  更多
-              .snsshow
-                p
-                  a href="#"  举报
-                p
-                  a href="#"  举报
-                p
-                  a href="#"  举报
             .sendBtn_tr_R
-              span.emotion_more
-                a.snshide1 href="#"  公开
               .snsshow1
                 p
                   a href="#"  举报
-              input#sendBtn title=("快捷键 Ctrl+Enter") type="button" value="发布" /
+              = f.submit("发布")
+      .image-upload-block style="display: none;"
+        .image-upload-form style="display: none;"
+          form#qiniu_uploader method="post" action="http://up.qiniu.com/" enctype="multipart/form-data"
+            input name="token" value=@cloud_storage_settings[:upload_token]
+            input name="x:account_id" value=current_account.id
+            input name="x:timestamp" value=@cloud_storage_settings[:now]
+            input name="x:sonkwo_token" value=@cloud_storage_settings[:sonkwo_token]
+            input name="x:bucket_name" value="sonkwo-post"
+            input name="file" type="file"
+            input name="submit" type="submit"
+        .image-upload-result
+          span.image-upload-before
+            a href="javascript:void(0);" class="image-upload-btn" 上传图片
+          span.image-upload-loading style="display: none;"
+          span.image-upload-after style="display: none;"
+            div
+              img src="" /
+            div
+              span
+                a href="javascript:void(0);" class="image-upload-cancel" 取消上传
+              span
+                a href="javascript:void(0);" class="image-upload-reselect" 重新选择
 .sns_hr_wrapper
 #wrapper

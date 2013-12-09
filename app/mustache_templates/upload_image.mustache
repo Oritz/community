@@ -1,0 +1,9 @@
+<form method="post" id="qiniu_uploader" action="http://up.qiniu.com/" style="display: none;" enctype="multipart/form-data">
+  <input name="token" type="hidden" value="{{upload_token}}">
+  <input name="x:account_id" type="hidden" value="{{account_id}}">
+  <input name="x:timestamp" type="hidden" value="{{now_time}}">
+  <input name="x:sonkwo_token" type="hidden" value="{{sonkwo_token}}">
+  <input name="x:bucket_name" type="hidden" value="{{bucket_name}}">
+  <input name="file" type="file" />
+  <input name="submit" type="submit" value="submit">
+</form>
