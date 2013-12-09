@@ -1,0 +1,21 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  admin:
+    titles:
+      games: "Games"
+      servers: "Sever"
+      clients: "Clients"
+      pre_release: "Previous Release"
+      game_files: "Game files"
+      serial: "Serial Numbers"
+      serial_type: "Serial Types"
+      submit_release: "Submit Release"
+    game:
+      id: "ID"
+      name: "NAME"
+      english_name: "ENGLISH NAME"
+    msg:
+      no_game: "Not find any games"
+

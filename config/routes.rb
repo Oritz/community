@@ -90,6 +90,10 @@ SonkwoCommunity::Application.routes.draw do
     get 'game/get_game_serial_number', to: 'game#get_game_serial_number'
     post 'game/register_serial_number', to: 'game#register_serial_number'
     get 'game/get_game_news', to: 'game#get_game_news'
+
   end
   # match ':controller(/:action(/:id))(.:format)'
+  namespace :admin do
+    get 'games', to: 'games#index'
+  end
 end

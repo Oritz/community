@@ -1,0 +1,23 @@
+- if @games
+  = t 'admin.msg.no_game'
+- else
+  table.table.table-striped.table-bordered
+    thead
+      tr
+        th =I18n.t 'admin.game.id'
+        th =I18n.t 'admin.game.name'
+        th =I18n.t 'admin.game.english_name'
+        th =I18n.t 'helpers.actions'
+    tbody
+      - @games.each do |g|
+        tr
+          td =g.id
+          td =g.name
+          td =g.english_name
+          td =link_to I18n.t 'helpers.links.show', "/admin/games/show?id=#{g.id}"
+          td =link_to I18n.t 'admin.titles.pre_release', "/admin/release/pre_release_list?game_id=#{g.id}"
+          td =link_to I18n.t 'admin.titles.submit_release', "/admin/release/download_release?game_id=#{g.id}"
+          td =link_to I18n.t 'admin.titles.serial', admin_game_serial_numbers_path(:game_id =>g.id)
+          td =link_to I18n.t 'admin.titles.serial', "#"
+          td =link_to I18n.t 'admin.titles.serial', "#"
+          td =link_to I18n.t 'admin.titles.serial', "#"
