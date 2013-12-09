@@ -11,6 +11,7 @@ class Talk < ActiveRecord::Base
   api_accessible :post_info do |t|
     t.add :creator
     t.add :id
+    t.add :image_url
     t.add :post_type
     t.add :comment_count
     t.add :recommend_count
@@ -36,6 +37,11 @@ class Talk < ActiveRecord::Base
   #scope :follower_talks, lambda { |account_id, limit_count| joins("INNER JOIN posts ON posts.id=talks.id INNER JOIN friendship ON posts.account_id=friendship.account_id").where("friendship.follower_id=?", account_id).order("posts.created_at DESC").limit(limit_count).includes(post: [:creator]) }
 
   # Methods
+  def image_url
+    return "" unless self.post_image
+    self.post_image.url
+  end
+
   private
   def default_values
     unless self.id

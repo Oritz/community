@@ -3,7 +3,7 @@ require 'sonkwo/exp'
 class Subject < ActiveRecord::Base
   attr_accessible :title, :content
 
-  acts_as_post find_options: {include: [:group]}
+  acts_as_post
   #acts_as_behavior_provider author_key: "posts.account_id",
   #  timestamp: "posts.created_at",
   #  status: "posts.status",
@@ -21,7 +21,6 @@ class Subject < ActiveRecord::Base
     t.add :updated_at
     t.add :content
     t.add :title
-    t.add :group
   end
   #exp_hookable account: "self.creator", setting_name: "exp_subject_value"
 

@@ -18,6 +18,9 @@ SonkwoCommunity::Application.routes.draw do
       delete 'unlike'
       post 'recommend'
     end
+    collection do
+      get 'templates'
+    end
   end
 
   resource :talks, only: [:show, :create]

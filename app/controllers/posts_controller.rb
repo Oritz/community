@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  #before_filter :sonkwo_authenticate_account
+  before_filter :sonkwo_authenticate_account, except: [:destroy, :templates]
   before_filter :check_post_available, only: [:show, :like, :unlike, :recommend, :destroy]
 
   #layout "community"
@@ -108,6 +108,17 @@ class PostsController < ApplicationController
         format.json { render json: { status: "fail", data: @recommend.errors.full_messages } }
       end
     end
+  end
+
+  def templates
+    templates = {
+      talk: MustacheTemplate.talk,
+      subject: MustacheTemplate.subject,
+      recommend_talk: MustacheTemplate.recommend_talk,
+      recommend_subject: MustacheTemplate.recommend_subject
+    }
+
+    render json: { status: 'success', data: templates }
   end
 
   protected

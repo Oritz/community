@@ -14,6 +14,8 @@
 //= require jquery_ujs
 //= require messenger
 //= require messenger-theme-future
+//= require_tree ../../../vendor/assets/javascripts
+//= require post
 
 function change_nav_height($block) {
   nav_height = $(window).height() - 40;
@@ -36,26 +38,6 @@ function toggle_nav($block, position) {
     return;
   $block.animate(properties, 100, function() {
     $block.attr("is_hide", (is_hide+1)%2);
-  });
-}
-
-function fetch_posts() {
-  $.ajax({
-    url: "/home/posts.json",
-    cache: false
-  }).done(function(data) {
-    status = data.status;
-    if(status == "success") {
-      posts = data.data;
-      $.each(posts, function(index, post) {
-        var creator = post.creator;
-        alert(post.content);
-      });
-    }
-    else
-      alert("error");
-  }).fail(function() {
-    alert("error");
   });
 }
 
@@ -90,9 +72,45 @@ $.fn.nav_float = function() {
   });
 };
 
+function fetch_posts(templates) {
+}
 
 $(document).ready(function() {
-  fetch_posts();
+  // cascading initialize
+  var $wrapper = $("#wrapper").masonry();
+  $.get('/posts/templates').done(function(data) {
+    if(data.status != "success")
+      return;
+    var templates = data.data;
+    $.ajax({
+      url: "/home/posts.json",
+      cache: false
+    }).done(function(data) {
+      status = data.status;
+      if(status == "success") {
+        posts = data.data;
+        $.each(posts, function(index, post) {
+          var template = templates.talk;
+          if(post.post_type == 0)
+            template = templates.talk;
+          else if(post.post_type == 1)
+            template = templates.subject;
+          else if(post.original.post_type == 0)
+            template = templates.recommend_talk;
+          else
+            template = templates.recommend_subject;
+          var $output = $(Mustache.render(template, post));
+          $wrapper.append($output).imagesLoaded(function() {
+            $wrapper.masonry('appended', $output);
+          });
+        });
+      }
+      else
+        alert("error");
+    }).fail(function() {
+      alert("error");
+    });
+  });
   change_nav_height($("#sns_nav .nav-left1"));
   change_nav_height($("#sns_nav .nav-right1"));
   $(window).resize(function() {
