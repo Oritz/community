@@ -13,17 +13,18 @@
       </p>
       <div class="area-turn-text">
         <div id="msgBox">
-          <form>
+          <form accept-charset="UTF-8" action="/posts/{{id}}/recommend" method="post">
             <div class="countTxt_block"><span class="countTxt">还能输入</span><strong class="maxNum">140</strong><span>个字</span></div>
             <div class="conBoxwidth1">
-              <textarea id="conBox" class="f-text"  name="conBox"></textarea>
+              <textarea class="f-text" id="recommend_content" name="recommend[content]"></textarea>
             </div>
             <div class="sendBtn_tr_width1">
               <div class="sendBtn_tr">
                 <div class="sendBtn_tr_R">
-                  <div class="sendBtn_tr_R"><span class="emotion"><a href="#">表情</a></span>
-                  <input id="sendBtn" type="button" value="发 布" title="快捷键 Ctrl+Enter" />
-                  <input id="" class="cancelBtn" type="button" value="取 消" title="快捷键 Ctrl+Enter" />
+                  <div class="sendBtn_tr_R">
+                    <span class="emotion"><a href="#">表情</a></span>
+                    <input name="commit" type="submit" value="发 布" />
+                    <input class="cancelBtn" type="button" value="取 消" />
                   </div>
                 </div>
               </div>

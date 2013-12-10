@@ -239,6 +239,11 @@ function post_success(data, statusText, xhr, $form) {
   }
 }
 
+function recommend_post($form) {
+  var form_str = $form.formSeriaize();
+  alert(form_str);
+}
+
 function like_or_unlike_post($post, op) {
   var post_id = $post.attr("post_id");
   if(typeof post_id == "undefined")
