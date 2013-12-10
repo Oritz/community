@@ -5,9 +5,6 @@
         .radius3px.sns_release_data_top_tx.top_txvip
           = image_tag(current_account.avatar, height: 60, width: 60)
           .sns_release_data_top_tx_vip
-          a href="#"
-            img src="images/img/sns_tx_vip1.png" /
-            sup 10
       .sns_release_data_top_r
         .sns_release_data_top_dj
           span.top_dj_id
@@ -20,8 +17,8 @@
         .sns_release_data_top_cj
           span.top_dj_dj
             = link_to "Lv #{level(current_account.exp)}", "#"
-          span.top_dj_dj_sj
-            i.top_dj_dj_sj_jdt
+          span.top_dj_dj_sj.total-level
+            i.top_dj_dj_sj_jdt.level level=current_account.level
     .sns_release_data_con
       ul
         li.sns_release_data_con_fs

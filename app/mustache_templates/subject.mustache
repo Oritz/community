@@ -1,32 +1,59 @@
 <div class="item_Container">
   <div class="item item_GR">
-    <!--头像head-->
     <div class="item_GR_top">
       <div class="item_GR_top_tx_kuang">
-        <div class="radius3px item_GR_top_tx top_txvip"><img src={{creator.avatar}} width="60" height="60">
+        <div class="radius3px item_GR_top_tx top_txvip">
+          <img src="{{creator.avatar}}" width="60" height="60">
         </div>
       </div>
       <div class="item_GR_sns_release_data_top_r">
-        <div class="item_GR_sns_release_data_top_dj"><span class="item_GR_top_dj_id"><a class="snshideid">{{creator.nick_name}}</a>
-        <div class="snsshowid">
-          <p><a href="#">举报</a></p>
+        <div class="item_GR_sns_release_data_top_dj">
+          <span class="item_GR_top_dj_id">
+            <a class="snshideid" href="/users/{{creator.id}}">{{creator.nick_name}}</a>
+            <div class="snsshowid">
+              <p><a href="#">举报</a></p>
+            </div>
+          </span>
         </div>
-        </span></div>
-        <div class="item_GR_sns_release_data_top_cj"> <span class="item_GR_top_dj_dj"><a href="#" target="_blank">Lv {{creator.level}}</a></span> <span class="item_GR_top_dj_dj_sj"><i class="item_GR_top_dj_dj_sj_jdt"></i></span> </div>
+        <div class="item_GR_sns_release_data_top_cj">
+          <span class="item_GR_top_dj_dj">
+            <a href="javascript:void(0);" target="_blank">Lv {{creator.level}}</a>
+          </span>
+          <span class="item_GR_top_dj_dj_sj">
+            <i class="item_GR_top_dj_dj_sj_jdt"></i>
+          </span>
+        </div>
       </div>
-    </div>
-    <!--头像head end-->
-    <div class="forward_cent">
     </div>
     <div class="article_cent">
-      <h2><a href="#" target="_blank">{{title}}</a></h2>
       <div class="article_cent_text">
-        <p><a href="#" target="_blank">{{content}}</a></p>
+        <p>{{content}}</p>
       </div>
-      <div class="article_cent_text_xx"> <span class="text_xx_time">2013-10-17  12:00</span> <span class="text_xx_report"><a href="#" target="_blank">举报</a></span> <span class="text_xx_full"><a href="#" target="_blank">全文</a></span> </div>
+      <div class="article_cent_text_xx">
+        <span class="text_xx_time">{{created_at}}</span>
+        <span class="text_xx_report">
+          <a href="#" target="_blank">举报</a>
+        </span>
+      </div>
     </div>
-    <div class="img_cent"><a href="#" target="_blank"><img src="images/banner/tutu1.png"></a></div>
-    <div class="article_cent_comment"> <span class="article_cent_comment_up"><a href="#">99999</a></span> <span class="article_cent_comment_zhuan"><a href="#">99999</a></span> <span class="article_cent_comment_huifu up1"><a>点击我</a></span> </div>
+    <div class="img_cent">
+      <a href="#" target="_blank">
+        {{#image_url}}
+          <img src="{{image_url}}?imageView/2/w/326">
+        {{/image_url}}
+      </a>
+    </div>
+    <div class="article_cent_comment">
+      <span class="article_cent_comment_up">
+        <a href="javascript:void(0);">{{like_count}}</a>
+      </span>
+      <span class="article_cent_comment_zhuan">
+        <a href="javascript:void(0);">{{recommend_count}}</a>
+      </span>
+      <span class="article_cent_comment_huifu up1">
+        <a href="javascript:void(0);">{{comment_count}}</a>
+      </span>
+    </div>
   </div>
   <div class="up_mian">
     <div class="up_mian_bj"></div>
@@ -34,10 +61,20 @@
       <div class="up_mian_con_input">
         <div class="up_mian_con_input_center">
           <textarea name="" cols="" rows="" class="up_mian_con_input_style" placeholder="请输入您要回复的内容"></textarea>
-          <span><a class="up_mian_con_buttonQ up1">取消</a></span> <span><a class="up_mian_con_buttonE">回复</a></span> </div>
+          <span><a class="up_mian_con_buttonQ up1">取消</a></span>
+          <span><a class="up_mian_con_buttonE">回复</a></span>
+        </div>
       </div>
       <div class="up_mian_con_reply">
-        <div class="up_mian_con_reply_tx"> <span class="up_mian_con_reply_tx_tx"><a href="#" target="_blank"></a></span> <span class="up_mian_con_reply_tx_id"><a href="#" target="_blank">我就是我哈哈</a></span> <span class="up_mian_con_reply_tx_time">2013-10-17 12:00</span> </div>
+        <div class="up_mian_con_reply_tx">
+          <span class="up_mian_con_reply_tx_tx">
+            <a href="#" target="_blank"></a>
+          </span>
+          <span class="up_mian_con_reply_tx_id">
+            <a href="#" target="_blank">我就是我哈哈</a>
+          </span>
+          <span class="up_mian_con_reply_tx_time">2013-10-17 12:00</span>
+        </div>
         <div class="up_mian_con_reply_text">
           <p>我说了什么？我不知道！！我说了什么我不知道！！
             我真的不知道我说了什么！！</p>

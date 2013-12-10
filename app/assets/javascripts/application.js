@@ -75,7 +75,44 @@ $.fn.nav_float = function() {
 function fetch_posts(templates) {
 }
 
+function load_posts(posts, index, templates, $wrapper) {
+  if(posts.length <= index)
+    return;
+  var post = posts[index];
+  var template = templates.talk;
+  if(post.post_type == 0)
+    template = templates.talk;
+  else if(post.post_type == 1)
+    template = templates.subject;
+  else if(post.original.post_type == 0)
+    template = templates.recommend_talk;
+  else
+    template = templates.recommend_subject;
+  var $output = $(Mustache.render(template, post));
+  $wrapper.append($output).imagesLoaded(function() {
+    $wrapper.masonry('appended', $output).masonry();
+    show_level($output);
+    load_posts(posts, index+1, templates, $wrapper);
+  });
+}
+
+function show_level($block) {
+  var total_level = 20;
+  var $level = $block.find(".total-level .level");
+  var $total_level = $block.find(".total-level");
+  if($level.length <= 0 || $total_level.length <= 0)
+    return;
+  var level_count = $level.attr("level");
+  if(typeof level_count == undefined)
+    return;
+  level_count = parseInt(level_count);
+  var level_width = $total_level.width() * level_count / total_level;
+  $level.width(level_width);
+}
+
 $(document).ready(function() {
+  // calculate level
+  show_level($(".total-level").parent());
   // cascading initialize
   var $wrapper = $("#wrapper").masonry({
     columnWidth: 341,
@@ -91,27 +128,7 @@ $(document).ready(function() {
     }).done(function(data) {
       status = data.status;
       if(status == "success") {
-        posts = data.data;
-        var i = 0;
-        for(i = 0; i < posts.length; ++i) {
-          var post = posts[i];
-          var template = templates.talk;
-          if(post.post_type == 0)
-            template = templates.talk;
-          else if(post.post_type == 1)
-            template = templates.subject;
-          else if(post.original.post_type == 0)
-            template = templates.recommend_talk;
-          else
-            template = templates.recommend_subject;
-          var $output = $(Mustache.render(template, post));
-          $wrapper.append($output).masonry('appended', $output, true);
-          /*
-          $wrapper.append($output).imagesLoaded(function() {
-            $wrapper.masonry('appended', $output).masonry();
-          });
-           */
-        }
+        load_posts(data.data, 0, templates, $wrapper);
       }
       else
         alert("error");
