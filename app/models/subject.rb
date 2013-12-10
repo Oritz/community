@@ -36,7 +36,7 @@ class Subject < ActiveRecord::Base
   #belongs_to :group
 
   # Scopes
-  scope :pending_of_account, lambda { |account| joins("INNER JOIN posts ON posts.id=subjects.id").where(account_id: account.id, status: Post::STATUS_PENDING) }
+  scope :pending_of_account, lambda { |account| joins("INNER JOIN posts ON posts.id=subjects.id").where("account_id=? AND status=?", account.id, Post::STATUS_PENDING) }
   #scope :sort_by_time_in_group, lambda { |group_id| where("group_id=? AND status=?", group_id, Post::STATUS_NORMAL).includes(post: [:creator]).order("posts.created_at DESC") }
   #scope :sort_by_like_in_group, lambda { |group_id| where("group_id=? AND status=?", group_id, Post::STATUS_NORMAL).includes(post: [:creator]).order("posts.like_count DESC") }
   #scope :sort_by_comment_in_group, lambda { |group_id| where("group_id=? AND status=?", group_id, Post::STATUS_NORMAL).includes(post: [:creator]).order("posts.comment_count DESC") }
