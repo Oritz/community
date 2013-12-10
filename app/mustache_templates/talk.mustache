@@ -1,4 +1,4 @@
-<div class="item_Container">
+<div class="item_Container post-item" post_id={{id}} creator_id={{creator.id}} creator_name={{creator.nick_name}}>
   <div class="item item_GR">
     <div class="item_GR_top">
       <div class="item_GR_top_tx_kuang">
@@ -27,7 +27,7 @@
     </div>
     <div class="article_cent">
       <div class="article_cent_text">
-        <p>{{content}}</p>
+        <p class="post-content">{{content}}</p>
       </div>
       <div class="article_cent_text_xx">
         <span class="text_xx_time">{{created_at}}</span>
@@ -44,15 +44,15 @@
       </a>
     </div>
     <div class="article_cent_comment">
-      <span class="article_cent_comment_up">
-        <a href="javascript:void(0);">{{like_count}}</a>
-      </span>
-      <span class="article_cent_comment_zhuan">
-        <a href="javascript:void(0);">{{recommend_count}}</a>
-      </span>
-      <span class="article_cent_comment_huifu up1">
-        <a href="javascript:void(0);">{{comment_count}}</a>
-      </span>
+      <a class="article_cent_comment_up like-op" href="javascript:void(0);">
+        <span class="like-count">{{like_count}}</span>
+      </a>
+      <a class="article_cent_comment_zhuan recommend-op" href="javascript:void(0);">
+        <span class="recommend-count">{{recommend_count}}</span>
+      </a>
+      <a class="article_cent_comment_huifu up1 comment-op" href="javascript:void(0);">
+        <span class="comment-count">{{comment_count}}</span>
+      </a>
     </div>
   </div>
   <div class="up_mian">

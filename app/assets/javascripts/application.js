@@ -16,6 +16,8 @@
 //= require messenger-theme-future
 //= require_tree ../../../vendor/assets/javascripts
 //= require post
+//= require flash_message
+//= require misc
 
 function change_nav_height($block) {
   nav_height = $(window).height() - 40;
@@ -72,70 +74,9 @@ $.fn.nav_float = function() {
   });
 };
 
-function fetch_posts(templates) {
-}
-
-function load_posts(posts, index, templates, $wrapper) {
-  if(posts.length <= index)
-    return;
-  var post = posts[index];
-  var template = templates.talk;
-  if(post.post_type == 0)
-    template = templates.talk;
-  else if(post.post_type == 1)
-    template = templates.subject;
-  else if(post.original.post_type == 0)
-    template = templates.recommend_talk;
-  else
-    template = templates.recommend_subject;
-  var $output = $(Mustache.render(template, post));
-  $wrapper.append($output).imagesLoaded(function() {
-    $wrapper.masonry('appended', $output).masonry();
-    show_level($output);
-    load_posts(posts, index+1, templates, $wrapper);
-  });
-}
-
-function show_level($block) {
-  var total_level = 20;
-  var $level = $block.find(".total-level .level");
-  var $total_level = $block.find(".total-level");
-  if($level.length <= 0 || $total_level.length <= 0)
-    return;
-  var level_count = $level.attr("level");
-  if(typeof level_count == undefined)
-    return;
-  level_count = parseInt(level_count);
-  var level_width = $total_level.width() * level_count / total_level;
-  $level.width(level_width);
-}
-
 $(document).ready(function() {
   // calculate level
   show_level($(".total-level").parent());
-  // cascading initialize
-  var $wrapper = $("#wrapper").masonry({
-    columnWidth: 341,
-    itemSelector: ".item_Container"
-  });
-  $.get('/posts/templates').done(function(data) {
-    if(data.status != "success")
-      return;
-    var templates = data.data;
-    $.ajax({
-      url: "/home/posts.json",
-      cache: false
-    }).done(function(data) {
-      status = data.status;
-      if(status == "success") {
-        load_posts(data.data, 0, templates, $wrapper);
-      }
-      else
-        alert("error");
-    }).fail(function() {
-      alert("error");
-    });
-  });
   change_nav_height($("#sns_nav .nav-left1"));
   change_nav_height($("#sns_nav .nav-right1"));
   $(window).resize(function() {
@@ -151,6 +92,10 @@ $(document).ready(function() {
 
   $("#sns_nav").nav_float();
 
-  // Fetch posts
-
+  // bind close btn on popbox
+  $(document).on("click", ".pop-box .pop-box-closebtn", function() {
+    $.fancybox.close();
+  }).on("click", ".pop-box .cancelBtn", function() {
+    $.fancybox.close();
+  });
 });
