@@ -1,6 +1,5 @@
 class SubjectsController < ApplicationController
   before_filter :sonkwo_authenticate_account, only: [:create]
-  layout "home"
 
   def show
     # Show the content of a post and comments
@@ -13,7 +12,7 @@ class SubjectsController < ApplicationController
   end
 
   def new
-    @subject = Subject.new
+    @subject = current_account.pending_subject
     if params[:group_id]
       @group = Group.find(params[:group_id])
       @subject.group = @group
@@ -26,19 +25,18 @@ class SubjectsController < ApplicationController
   end
 
   def create
-    @subject = Subject.new(params[:subject])
-    @subject.creator = current_account
+    @subject = current_account.pending_subject
     if params[:group_id]
       @group = Group.find(params[:group_id])
       @subject.group = @group
     end
 
     respond_to do |format|
-      if @subject.save
-        format.html { redirect_to @subject.post, notice: 'Subject war successfully created.' }
+      if @subject.post_pending
+        format.html { redirect_to @subject.post, notice: 'Subject was successfully created.' }
         format.json { render json: @subject, status: :created, location: @subject }
       else
-        format.html { raise "TODO:" } #TODO: 
+        format.html { redirect_to :new } #TODO: 
         format.json { raise "TODO:" } #TODO:
       end
     end
@@ -51,7 +49,7 @@ class SubjectsController < ApplicationController
 
   def update
     @subject = Subject.find(params[:id])
-    return unless check_access?(subject: @subject)
+    #return unless check_access?(subject: @subject)
 
     respond_to do |format|
       if @subject.update_attributes(params[:subject])
