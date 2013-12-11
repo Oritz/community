@@ -97,6 +97,16 @@ SonkwoCommunity::Application.routes.draw do
   end
   # match ':controller(/:action(/:id))(.:format)'
   namespace :admin do
-    get 'games', to: 'games#index'
+    resources :games do
+      member do
+        get :pre_release_list
+        get :submit_release
+        get :new_pre_release
+        get :audit_release
+        post :pre_release
+        post :submit_release
+      end
+    end
+
   end
 end

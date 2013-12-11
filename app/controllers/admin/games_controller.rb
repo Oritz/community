@@ -4,13 +4,15 @@ class Admin::GamesController < AdminController
   def index
     query = params[:query] ? params[:query].lstrip.rstrip : nil
     auditing_games = nil
-    page = params[:page] || 1
 
     if query == "" || query == nil
-      @games = Game.all
+      @games = Game.paginate(
+          :page => params[:page],
+          :per_page =>20
+      )
     else
       @games = Game.paginate(
-          :conditions => "name LIKE '%#{query}%' OR english_name LIKE '%#{query}%'",
+          :conditions => "title LIKE '%#{query}%' OR alias_name LIKE '%#{query}%'",
           :page => params[:page],
           :per_page =>10
       )
@@ -27,7 +29,7 @@ class Admin::GamesController < AdminController
   def show
     @game = Game.find(
         :all,
-        :select => "games.id AS id, ext_id, name, ext_platform",
+        :select => "games.id AS id, ext_id, title, ext_platform",
         :joins => "LEFT JOIN game_ext_ids ON games.id = game_ext_ids.game_id",
         :conditions => ["games.id =?", params[:id]]
     )
@@ -107,12 +109,399 @@ class Admin::GamesController < AdminController
     @admin_games = Game.paginate(
         :page => params[:page],
         :per_page =>10,
-        :conditions => ["name like ?", "%"+params[:query]+"%"]
+        :conditions => ["title like ?", "%"+params[:query]+"%"]
     )
 
     render :index
   end
 
+  # 列出game_id对应的预发布历史
+  def pre_release_list
+    id = params[:id]
+    @game = Game.find(id)
+    @prev_game_files = GameFile.where('game_id=?', id).order('created_at DESC').limit(10)
+
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => @prev_game_files }
+    end
+  end
+
+
+  # 游戏预发布——上传游戏game_shell/game_ini，生成游戏种子、P2P下载包
+  def new_pre_release
+    game_id = params[:id]
+
+    game_shell = params[:game_shell]
+    game_ini = params[:game_ini]
+    file_dir = params[:file_dir]
+    crypt_type = params[:crypt_type]
+    exe_path_name = params[:exe_path_name]
+
+    @game = Game.find(game_id)
+    @have_released = GameFile.select('id').where('game_id=? AND (status =? OR status = ?)', game_id, GameFile::STATUS_NEW, GameFile::STATUS_TO_VERIFY).first
+    @prev_game_files = GameFile.where('game_id=?', game_id).order('created_at DESC')
+    @game_file = @game.game_files.new
+
+    @crypt_types = []
+    i=0
+    t('admin.game.crypt_types').each do |sta|
+      @crypt_types << [sta, i]
+      i += 1
+    end
+
+    # 获取远程文件服务器上游戏对应目录下的版本目录列表
+    p "------#{Settings.sys_params.file_server_host}-------------#{Settings.sys_params.file_server_port}---------------------"
+    socket = TCPSocket.new(Settings.sys_params.file_server_host, Settings.sys_params.file_server_port)
+    socket.puts("LIST_DIR##{@game.alias_name}")
+    dirs_json = socket.gets
+    puts "~~~~~~~~~~~~#{dirs_json}~~~~~~"
+    socket.close
+
+    @release_dirs = ActiveSupport::JSON.decode(dirs_json)
+
+    #判断是否存在已经发布成功的版本，如果有不允许再发布原游戏。
+    prev_valideted_game_files = GameFile.where('game_id=? AND status=?', game_id, GameFile::STATUS_VALIDATED).order('created_at DESC')
+
+    @release_dirs.delete("initial") unless prev_valideted_game_files.empty?
+
+    if request.post?
+      ActiveRecord::Base.transaction do
+        if !game_ini && !game_shell && !crypt_type
+          @game_file.errors[:base] << t('admin.err.release_content_missing')
+          return
+        end
+
+        @game_file.game_id = game_id
+        latest_game_file = GameFile.where('game_id=?', game_id).order('created_at DESC').lock('LOCK IN SHARE MODE')
+
+        if latest_game_file
+          prev_ini_ver = latest_game_file.ini_ver
+          prev_shell_ver = latest_game_file.shell_ver
+          prev_patch_ver = latest_game_file.patch_ver
+        else
+          prev_ini_ver = 0
+          prev_shell_ver = 0
+          prev_patch_ver = -1
+        end
+
+        if game_shell
+          @game_file.game_shell = game_shell.read
+          @game_file.shell_digest = Digest::SHA1.hexdigest(@game_file.game_shell)
+          @game_file.shell_ver = prev_shell_ver + 1
+        elsif latest_game_file
+          @game_file.game_shell = latest_game_file.game_shell
+          @game_file.shell_digest = latest_game_file.shell_digest
+          @game_file.shell_ver = prev_shell_ver
+        else
+          @game_file.errors[:base] << t('admin.err.game_shell_not_exist')
+        end
+
+        if game_ini
+          @game_file.game_ini = game_ini.read
+          @game_file.ini_digest = Digest::SHA1.hexdigest(@game_file.game_ini)
+          @game_file.ini_ver = prev_ini_ver + 1
+        elsif latest_game_file
+          @game_file.game_ini = latest_game_file.game_ini
+          @game_file.ini_digest = latest_game_file.ini_digest
+          @game_file.ini_ver = prev_ini_ver
+        else
+          @game_file.errors[:base] << t('admin.err.game_ini_not_exist')
+        end
+
+
+        if file_dir
+          if file_dir.strip.length == 0
+            @game_file.errors[:base] << t('admin.err.game_dir_not_specified')
+          end
+
+          # 选择了重新加密和制作下载文件
+          @game_file.file_dir = file_dir
+          @game_file.crypt_type = crypt_type
+
+          if crypt_type.to_i != Launcher::CRYPT_TYPE_EXTERNAL
+            if exe_path_name == nil || exe_path_name.strip.length == 0
+              @game_file.errors[:base] << t('admin.err.game_exe_not_specified')
+            else
+              @game_file.exe_path_name = exe_path_name
+            end
+          else
+            @game_file.exe_path_name = ""	# 不加密，EXE文件名允许为空
+          end
+
+          @game_file.patch_ver = prev_patch_ver + 1
+          @game_file.status = GameFile::STATUS_NEW
+        elsif latest_game_file
+          # 和上次加密EXE、加密方式和下载包相同
+          @game_file.file_dir = latest_game_file.file_dir
+          @game_file.crypt_type = latest_game_file.crypt_type
+          @game_file.exe_path_name = latest_game_file.exe_path_name
+
+          @game_file.game_key = latest_game_file.game_key
+          @game_file.game_key_iv = latest_game_file.game_key_iv
+          @game_file.key_digest = latest_game_file.key_digest
+
+          @game_file.launcher_ver = latest_game_file.launcher_ver
+          @game_file.patch_ver = prev_patch_ver
+          @game_file.seed_content = latest_game_file.seed_content
+          @game_file.seed_digest = latest_game_file.seed_digest
+          @game_file.file_size = latest_game_file.file_size
+          @game_file.status = GameFile::STATUS_TO_VERIFY
+        else
+          @game_file.errors[:base]  << t('admin.err.game_dir_not_specified')
+        end
+
+
+        if @game_file.errors.size == 0
+          @game_file.save!
+
+          if file_dir
+            # 同时做加密、生成下载等任务
+            Delayed::Job.enqueue(PreReleaseJob.new(@game_file.id), :queue=>"PreRelease")
+          end
+
+          redirect_to pre_release_list_admin_game_path(game_id), flash: t('admin.msg.success')
+        end
+      end
+    end
+  end
+
+
+  # 撤销预发布
+  def cancel_pre_release
+    if request.post?
+      game_file_id = params[:game_file_id]
+
+      ActiveRecord::Base.transaction do
+        game_file = GameFile.find(game_file_id, lock: true)
+
+        if !game_file
+          err = t('admin.err.game_file_not_exist')
+        else
+          game = Game.find(game_file.game_id)
+
+          flow_status = {}
+          flow_status[GameFile::STATUS_NEW] = "STATUS_NEW"
+          flow_status[GameFile::STATUS_TO_VERIFY] = "STATUS_TO_VERIFY"
+
+          if game_file.status != GameFile::STATUS_NEW && game_file.status != GameFile::STATUS_TO_VERIFY
+
+          else
+            new_status, rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", flow_status[game_file.status], "on_cancel", {:game_name => game.title, :game_file_id => game_file.id})
+            game_file.status = eval("GameFile::#{new_status}")
+            game_file.save!
+
+            flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
+            # raise ActiveRecord::Rollback if flow_err
+          end
+
+          if err
+            flash[:error] = err
+          else
+            flash[:notice] = "Successfully canceled."
+          end
+
+          redirect_to pre_release_list_admin_game_path(game_file.game_id)
+          return
+        end
+      end
+    end
+  end
+
+
+  # 查询远程game_name的release_dir目录下的EXE
+  def get_exe_files
+    socket = TCPSocket.new(Settings.sys_params.file_server_host, Settings.sys_params.file_server_port)
+    socket.puts("LIST_EXE##{params[:game_name]}##{params[:file_dir]}")
+
+    exes_json = socket.gets
+    socket.close
+
+    render :json => exes_json
+  end
+
+  # 查询待审核游戏
+  def release_search
+    @release_to_audit_cnt = GameFile.status_to_verify.count
+    @release_to_audit_cnts = GameFile.select('status, COUNT(id) AS release_count').group('status')
+    @select_options = []
+    i=0
+
+    t('admin.game.audit_status').each do |sta|
+      @select_options << [sta, i]
+      i += 1
+    end
+
+    @search_reault = nil
+
+
+    conditions = ['title LIKE ?', params[:game_name]]
+
+    if params[:audit_status] != "-1"
+      conditions[0] += ' AND game_files.status=?'
+      conditions << params[:audit_status]
+    end
+
+    @search_reault = Game.joins(:game_files).where(conditions).paginate(
+        :select=>"game_files.id, game_id, isbn, title, created_at, crypt_type, file_dir, exe_path_name, process_start_time, process_finish_time, process_result, ini_ver, shell_ver, patch_ver, game_files.status, created_at",
+        :order=>"created_at DESC",
+        :per_page => 10,
+        :page => params[:page]
+    )
+
+    # render :layout => false
+  end
+
+  # 游戏审核发布——确认下载包、game_shell、game_ini的正式发布
+  def audit_release
+
+    game_id = nil
+    game_file_id = params[:game_file_id]
+    new_status = params[:new_status]
+    comment = params[:comment]	# 仅在不通过或回滚时才有
+
+    @new_status = new_status.to_i
+
+    status = case @new_status
+               when GameFile::STATUS_VALIDATED, GameFile::STATUS_REJECTED
+                 GameFile::STATUS_TO_VERIFY
+               when GameFile::STATUS_ROLLBACKED
+                 GameFile::STATUS_VALIDATED
+             end
+
+    @game_file = Game.joins(:game_files).select(
+        'game_files.id, game_id, isbn, title, created_at, crypt_type, file_dir, exe_path_name, process_start_time, process_finish_time, process_result, ini_ver, shell_ver, patch_ver, game_files.status'
+    ).where('game_files.id=? AND game_files.status=?', game_file_id, status).first
+
+    if request.get?
+      unless @game_file
+        flash[:error] = t('admin.err.game_file_not_exist')
+      end
+    elsif request.post?
+      ActiveRecord::Base.transaction do
+        case @new_status
+          when GameFile::STATUS_VALIDATED
+            # 审核通过
+            game_file = GameFile.lock(true).where('id=? AND status=?', game_file_id, GameFile::STATUS_TO_VERIFY).first
+
+            not_null_fields = []
+            unless game_file
+              err = I18n.t("ERRORS.ERR_GAME_FILE_NOT_EXIST")
+            else
+              # 验证应有字段是否完整
+              not_null_fields = [game_file.seed_content, game_file.seed_digest, game_file.file_size]
+
+              #有加密方式不为不加密的时,增加game_key , game_key_iv
+              if game_file.crypt_type != Launcher::CRYPT_TYPE_EXTERNAL
+                not_null_fields.join(game_file.game_key)
+                not_null_fields.join(game_file.game_key_iv)
+                not_null_fields.join(game_file.key_digest)
+                not_null_fields.join(game_file.launcher_ver)
+              end
+
+              not_null_fields.each do |n|
+                if !n
+                  err = I18n.t("ERRORS_ERR_GAME_FIELD_MISSING")
+                end
+              end
+
+              unless err
+                previous_release = GameFile.lock(true).where('game_id=? AND created_at < ? AND (status=? OR status=?)', game_file.game_id, game_file.created_at, GameFile::STATUS_NEW, GameFile::STATUS_TO_VERIFY)
+
+                #将之前未来得及审核的版本标记为取消发布状态
+                previous_release.each do |p|
+                  p.status = GameFile::STATUS_CANCELED
+                  p.save!
+                end
+
+                #发送工作流任务初始化
+                game = Game.find(game_file.game_id).select('title')
+
+
+                new_flow_status , rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", "STATUS_TO_VERIFY", "on_pass", {:game_name => game.title, :game_file_id => game_file.id})
+                game_file.status =  eval("GameFile::#{new_flow_status}")
+                game_file.save!
+
+                flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
+                # raise ActiveRecord::Rollback if flow_err
+              end
+            end
+
+          when GameFile::STATUS_REJECTED
+            # 审核不通过
+            game_file = GameFile.lock(true).where('id=? AND status=?', game_file_id, GameFile::STATUS_TO_VERIFY).first
+            latest_game_file = GameFile.where('game_id=?', game_file.game_id).select('created_at').order('created_at DESC').first
+
+            if !game_file
+              err = I18n.t("ERRORS.ERR_GAME_FILE_NOT_EXIST")
+            elsif comment == nil || comment.strip.length == 0
+              err = I18n.t("ERRORS.ERR_MISSING_AUDIT_REJECT_COMMENT")
+            elsif game_file.created_at < latest_game_file.created_at
+              err = I18n.t("ERRORS.ERR_MISSING_AUDIT_REJECT_COMMENT")
+            else
+
+              game = Game.find(game_file.game_id).select('title').first
+
+              new_flow_status , rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", "STATUS_TO_VERIFY", "on_rejected", {:game_name => game.title, :game_file_id => game_file.id})
+              game_file.status = eval("GameFile::#{new_flow_status}")
+              game_file.comment = comment
+              game_file.save!
+
+              flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
+              # raise ActiveRecord::Rollback if flow_err
+            end
+
+          when GameFile::STATUS_ROLLBACKED
+            # 审核回滚
+            game_file = GameFile.lock(true).where('id=? AND status=?', game_file_id, GameFile::STATUS_VALIDATED)
+            game = Game.find(game_file.game_id).select('title')
+            if !game_file
+              err = I18n.t("ERRORS.ERR_GAME_FILE_NOT_EXIST")
+            elsif comment == nil || comment.strip.length == 0
+              err = I18n.t("ERRORS.ERR_MISSING_AUDIT_ROLLBACK_COMMENT")
+            else
+              new_flow_status , rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", "STATUS_VALIDATED", "on_rollback", {:game_name => game.title, :game_file_id => game_file.id})
+
+              game_file.status = eval("GameFile::#{new_flow_status}")
+              game_file.comment = comment
+              game_file.save!
+
+              flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
+              # raise ActiveRecord::Rollback if flow_err
+            end
+          else
+            err = I18n.t("ERRORS.ERR_INVALID_AUDIT_STATUS")
+        end
+      end
+
+
+      if err
+        @error = err
+      else
+        show_msg(I18n.t("page.admin.release_success"))
+      end
+    end
+  end
+
+
+
+  # 下载发布——将下载内容发布到各个下载服务器
+  def submit_release
+    game_id = params[:id]
+    @game = Game.select('id, title, alias_name').find(game_id)
+    @download_servers = Admin::DownloadServer.all
+
+    if request.post?
+      server_ids = params[:server_ids]
+
+      server_ids.each do |server_id|
+        Delayed::Job.enqueue(PublishReleaseFilesJob.new(game_id, @game.alias_name, server_id), :queue=>"PublishRelease")
+      end
+      #	TODO: 调用通知工具
+
+      flash[:notice] = t('admin.msg.success')
+    end
+  end
 
   # 管理成就
   def manage_achievement
@@ -146,7 +535,7 @@ class Admin::GamesController < AdminController
 
     @game = Game.find(
         :first,
-        :select => "id, english_name, name",
+        :select => "id, alias_name, title",
         :conditions => ["id = ?", game_id]
     )
 
@@ -743,5 +1132,6 @@ class Admin::GamesController < AdminController
       nil
     end
   end
+
 end
 

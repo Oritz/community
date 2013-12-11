@@ -1,0 +1,49 @@
+= javascript_include_tag "admin/new_pre_release"
+=render 'nav'
+-content_for :content do
+  h1
+    =@game.title
+  input#game_name type="hidden" value=@game.alias_name
+  /use for display histories
+  =form_tag(nil, :multipart =>true) do
+    input name="game_id" type="hidden" value=@game.id
+    table.table-striped.table-bordered
+      tbody
+        tr
+          td
+            =check_box_tag "upload_game_shell", "1", params[:upload_game_shell] == "1", {:onclick=>"$('#game_shell').attr('disabled', !$('#upload_game_shell').attr('checked'));"}
+            =t('admin.game.update_game_shell')
+          td
+            =t('admin.game.file')
+            =file_field_tag 'game_shell', {:disabled=>params[:upload_game_shell]!="1"}
+          td=t('admin.tips.if_no_shell_update_use_latest')
+        tr
+          td
+            =check_box_tag "upload_game_ini", "1", params[:upload_game_ini]=="1", {:onclick=>"$('#game_ini').attr('disabled', !$('#upload_game_ini').attr('checked'));"}
+            =t('admin.game.update_game_ini')
+          td
+            =t('admin.game.file')
+            =file_field_tag "game_ini", {:disabled=>params[:upload_game_ini]!="1"}
+          td=t('admin.tips.if_no_ini_update_use_latest')
+        tr
+          td
+            =check_box_tag "update_game_files", "1", params[:update_game_files]=="1", {:onclick=>"on_update_game_files_click();"}
+            =t('admin.game.update_game_file')
+          td
+            =t('admin.game.file_folder')
+            =select_tag "file_dir", options_for_select(((@release_dirs.size > 0)? @release_dirs.collect{|dir| [dir, dir]} : [[t('admin.tips.no_files_found'), ""]]), params[:file_dir]), {:onchange=>"on_crypt_change($('#crypt_type').val());"}
+          td=t('admin.tips.tips_for_game_file')
+        tr
+          td=t('admin.game.crypt_type')
+          td=select_tag "crypt_type", options_for_select(@crypt_types, params[:crypt_type].to_i), {:onchange=>"on_crypt_change($('#crypt_type').val());"}
+        tr
+          td=t('admin.game.crypt_ext')
+          td=select_tag "exe_path_name"
+          td=t('admin.tips_for_crypt_exe')
+        tr
+          - if @have_released
+            td=t('admin.tips.can_not_release_new_for_last_not_be_audit')
+          - else
+            td.text-center.btn
+              =submit_tag t('helpers.links.submit')
+  = link_to t('helpers.links.back'), pre_release_list_admin_game_path(@game.id), class: 'btn'

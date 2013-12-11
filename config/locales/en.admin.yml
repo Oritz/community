@@ -16,6 +16,7 @@ en:
       id: "ID"
       name: "NAME"
       english_name: "ENGLISH NAME"
+      crypt_types: ["no crypt", "crypt(for test)"]
     msg:
       no_game: "Not find any games"
 

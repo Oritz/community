@@ -1,13 +1,11 @@
--content_for :sidebar do
-  li= link_to I18n.t 'admin.titles.games', admin_games_path
-  li= link_to I18n.t 'admin.titles.games', "/path2"
-  li= link_to "Link 3", "/path3"
+=render 'nav'
 
 -content_for :content do
   h1 =I18n.t 'admin.titles.games'
   =form_tag '/admin/games/search', :method => :get do
     span
       input#search_text name='query' type='text' /
+      '
     span
       input.btn.btn-primary type='submit'  value =I18n.t 'helpers.links.search' /
 
