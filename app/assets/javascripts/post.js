@@ -60,14 +60,12 @@ function posts(options) {
 
     var post = items[index];
     var template = templates.talk;
-    if(post.post_type == 0)
+    if(post.detail_type == "Talk")
       template = templates.talk;
-    else if(post.post_type == 1)
+    else if(post.detail_type == "Subject")
       template = templates.subject;
-    else if(post.original.post_type == 0)
-      template = templates.recommend_talk;
     else
-      template = templates.recommend_subject;
+      template = templates.recommend;
     var $output = $(Mustache.render(template, post));
     $wrapper.append($output).imagesLoaded(function() {
       $wrapper.masonry('appended', $output).masonry();
@@ -207,6 +205,8 @@ $(document).ready(function() {
         id: post_id,
         content: content
       }));
+      var csrf = $('meta[name="csrf-token"]').attr('content');
+      $output.find("[name='authenticity_token']").attr("value", csrf);
       $.fancybox.open($output, {
         closeBtn: false,
         padding: 0,
@@ -240,8 +240,19 @@ function post_success(data, statusText, xhr, $form) {
 }
 
 function recommend_post($form) {
-  var form_str = $form.formSeriaize();
-  alert(form_str);
+  $form.ajaxSubmit({
+    url: "/posts/recommend.json",
+    success: function(data, statusText, xhr, $form) {
+      if(data.status == "success") {
+        Messenger().post("转发成功");
+      }
+      else if(data.status == "error") {
+        Messenger().post(data.message);
+      }
+      else {
+      }
+    }
+  });
 }
 
 function like_or_unlike_post($post, op) {

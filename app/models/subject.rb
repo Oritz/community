@@ -3,7 +3,8 @@ require 'sonkwo/exp'
 class Subject < ActiveRecord::Base
   attr_accessible :title, :content
 
-  acts_as_post
+  acts_as_polymorphic class_name: 'Post', name: 'detail', association: 'post'
+  #acts_as_post
   #acts_as_behavior_provider author_key: "posts.account_id",
   #  timestamp: "posts.created_at",
   #  status: "posts.status",
@@ -13,7 +14,6 @@ class Subject < ActiveRecord::Base
   api_accessible :post_info do |t|
     t.add :creator
     t.add :id
-    t.add :post_type
     t.add :comment_count
     t.add :recommend_count
     t.add :like_count
@@ -25,7 +25,6 @@ class Subject < ActiveRecord::Base
   #exp_hookable account: "self.creator", setting_name: "exp_subject_value"
 
   # Callbacks
-  after_initialize :default_values
   before_save :add_subject_count, :add_exp
 
   # Validations
@@ -34,6 +33,7 @@ class Subject < ActiveRecord::Base
 
   # Associations
   #belongs_to :group
+  has_one :post, as: :detail
 
   # Scopes
   scope :pending_of_account, lambda { |account| joins("INNER JOIN posts ON posts.id=subjects.id").where("account_id=? AND status=?", account.id, Post::STATUS_PENDING) }
@@ -60,13 +60,6 @@ class Subject < ActiveRecord::Base
   end
 
   private
-  def default_values
-    unless self.id
-      self.post = Post.new
-      self.post_type = Post::TYPE_SUBJECT
-    end
-  end
-
   def add_subject_count
     if @is_post_pending || (new_record? && self.status != Post::STATUS_PENDING)
       self.creator.subject_count += 1

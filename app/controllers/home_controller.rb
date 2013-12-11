@@ -42,7 +42,6 @@ class HomeController < ApplicationController
       else
         @posts = fetcher.behaviors(limit: 2, status: Post::STATUS_NORMAL, order: "created_at DESC")
       end
-      @posts = Post.downcast(@posts)
     elsif params[:type] == "groups"
       @posts = Subject.subjects_in_groups_added(current_account.id, 2)
       @posts = @posts.where("subjects.id < ?", params[:end_id]) if params[:end_id]
@@ -52,7 +51,7 @@ class HomeController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render_for_api :post_info, json: @posts, root: "data", meta: {status: "success"} }
+      format.json { render_for_api :posts_info, json: @posts, root: "data", meta: {status: "success"} }
     end
   end
 

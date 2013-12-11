@@ -1,15 +1,16 @@
 class Post < ActiveRecord::Base
   # Plugins
-  acts_as_postcastable
   acts_as_behavior_provider author_key: "account_id",
     timestamp: "created_at",
     status: "status",
-    find_options: {include: [:creator]}
+    find_options: {include: [:detail, :creator]}
+  acts_as_polymorphic name: "detail"
   acts_as_api
-  api_accessible :post_info do |t|
+  api_accessible :posts_info do |t|
     t.add :creator
     t.add :id
-    t.add :post_type
+    t.add :detail
+    t.add :detail_type
     t.add :comment_count
     t.add :recommend_count
     t.add :like_count
@@ -30,9 +31,9 @@ class Post < ActiveRecord::Base
   PRIVILEGE_PRIVATE = 1
 
   # Post Type
-  TYPE_TALK = 0
-  TYPE_SUBJECT = 1
-  TYPE_RECOMMEND = 2
+  #TYPE_TALK = 0
+  #TYPE_SUBJECT = 1
+  #TYPE_RECOMMEND = 2
 
   # Callbacks
   after_initialize :default_values
@@ -44,9 +45,9 @@ class Post < ActiveRecord::Base
   has_many :comments, class_name: 'Comment'
   has_many :recommend_posts, class_name: 'Recommend', foreign_key: 'parent_id'
   belongs_to :group
+  #belongs_to :detail, polymorphic: true
 
   # Validations
-  validates :post_type, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::TYPE_RECOMMEND }
   validates :privilege, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::PRIVILEGE_PRIVATE }
   validates :status, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::STATUS_DELETED }
   validates :comment_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
@@ -54,6 +55,8 @@ class Post < ActiveRecord::Base
   validates :like_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :creator, presence: true
   validates :comment, length: { maximum: 140 }
+  #validates :detail_type, presence: true
+  #validates :detail_id, presence: true
   validate :group_should_be_added
   validate :only_one_pending_post
 
@@ -77,6 +80,7 @@ class Post < ActiveRecord::Base
   end
 
   def only_one_pending_post
+    return unless self.creator
     pending_item = self.class.where(account_id: self.creator.id, status: self.class::STATUS_PENDING).first
     if pending_item && self.status == self.class::STATUS_PENDING
       errors[:base] << I18n.t("post.more_than_one_pending_post")

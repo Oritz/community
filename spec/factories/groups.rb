@@ -4,7 +4,7 @@ FactoryGirl.define do
   factory :group do
     sequence(:name) { |n| "group#{n}" }
     description "group description"
-    logo ""
+    logo "logo"
     association :creator, factory: :account
   end
 end

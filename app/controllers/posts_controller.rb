@@ -90,9 +90,8 @@ class PostsController < ApplicationController
     @recommend = Recommend.new(params[:recommend])
     @recommend.creator = current_account
 
-    if @post.post_type == Post::TYPE_RECOMMEND
-      p = @post.cast
-      @recommend.original = p.original
+    if @post.detail_type == Recommend.to_s
+      @recommend.original = @post.original
       @recommend.parent = @post
     else
       @recommend.original = @post
@@ -102,7 +101,7 @@ class PostsController < ApplicationController
     respond_to do |format|
       if @recommend.save
         format.html { redirect_to url_for(action: :show, type: 'recommend'), notice: 'Post was successfully recommended.' }
-        format.json { render json: { status: "success", data: { post: @recommend } } }
+        format.json { render_for_api :post_info, json: @recommend, root: "data", meta: { status: "success" } }
       else
         format.html { redirect_to :back, alert: 'Recommend failed.' }
         format.json { render json: { status: "fail", data: @recommend.errors.full_messages } }

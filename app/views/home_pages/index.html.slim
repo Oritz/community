@@ -17,7 +17,7 @@ html xmlns="http://www.w3.org/1999/xhtml"
         ul.www_nav_font
           li
             - if current_account
-              = link_to current_account.nick_name, user_path(current_account)
+              = link_to current_account.nick_name, home_index_path
             - else
               = link_to "登录", new_account_session_path
           li

@@ -97,5 +97,8 @@ $(document).ready(function() {
     $.fancybox.close();
   }).on("click", ".pop-box .cancelBtn", function() {
     $.fancybox.close();
+  }).on("submit", ".pop-box form", function() {
+    recommend_post($(this));
+    return false;
   });
 });
