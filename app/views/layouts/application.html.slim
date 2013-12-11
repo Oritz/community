@@ -2,6 +2,7 @@ doctype html
 html
   head
     meta content=("text/html; charset=utf-8") http-equiv="Content-Type"
+    = csrf_meta_tags
     = stylesheet_link_tag "application", media: "all"
     title= @title
   body
@@ -100,4 +101,17 @@ html
     .container
       = yield
     #footer
+    div.flash-messages style="display: none;"
+      - if flash[:error]
+        p.flash-error
+          = flash[:error]
+      - if flash[:alert]
+        p.flash-alert
+          = flash[:alert]
+      - if flash[:notice]
+        p.flash-notice
+          = flash[:notice]
+      - if flash[:success]
+        p.flash-success
+          = flash[:success]
     = javascript_include_tag "application"

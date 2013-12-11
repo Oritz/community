@@ -26,24 +26,39 @@ class Subject < ActiveRecord::Base
 
   # Callbacks
   after_initialize :default_values
-  before_create :add_subject_count
-  #before_create :check_group, :add_subject_count
-  after_create { Sonkwo::Exp.increase("exp_post_subject", self.creator, self.created_at) }
+  before_save :add_subject_count, :add_exp
 
   # Validations
-  validates :content, presence: true
-  validates :title, presence: true, length: { maximum: 64 }
+  validates :content, presence: true, if: Proc.new { |a| a.status != Post::STATUS_PENDING }
+  validates :title, presence: true, length: { maximum: 64 }, if: Proc.new { |a| a.status != Post::STATUS_PENDING }
 
   # Associations
   #belongs_to :group
 
   # Scopes
+  scope :pending_of_account, lambda { |account| joins("INNER JOIN posts ON posts.id=subjects.id").where("account_id=? AND status=?", account.id, Post::STATUS_PENDING) }
   #scope :sort_by_time_in_group, lambda { |group_id| where("group_id=? AND status=?", group_id, Post::STATUS_NORMAL).includes(post: [:creator]).order("posts.created_at DESC") }
   #scope :sort_by_like_in_group, lambda { |group_id| where("group_id=? AND status=?", group_id, Post::STATUS_NORMAL).includes(post: [:creator]).order("posts.like_count DESC") }
   #scope :sort_by_comment_in_group, lambda { |group_id| where("group_id=? AND status=?", group_id, Post::STATUS_NORMAL).includes(post: [:creator]).order("posts.comment_count DESC") }
   #scope :subjects_in_groups_added, lambda { |account_id, subject_count| joins("INNER JOIN posts ON posts.id=subjects.id INNER JOIN groups_accounts ON groups_accounts.group_id=subjects.group_id").where("groups_accounts.account_id=? AND posts.status=?", account_id, Post::STATUS_NORMAL).order("posts.created_at DESC").limit(subject_count).includes([:post, :group]) }
 
   # Methods
+  def post_pending
+    if self.status == Post::STATUS_PENDING
+      self.status = Post::STATUS_NORMAL
+      @is_post_pending = true
+      if self.save
+        @is_post_pending = false
+        true
+      else
+        @is_post_pending = false
+        false
+      end
+    else
+      false
+    end
+  end
+
   private
   def default_values
     unless self.id
@@ -53,8 +68,16 @@ class Subject < ActiveRecord::Base
   end
 
   def add_subject_count
-    self.creator.subject_count += 1
-    self.creator.save!
+    if @is_post_pending || (new_record? && self.status != Post::STATUS_PENDING)
+      self.creator.subject_count += 1
+      self.creator.save!
+    end
+  end
+
+  def add_exp
+    if @is_post_pending || (new_record? && self.status != Post::STATUS_PENDING)
+      Sonkwo::Exp.increase("exp_post_subject", self.creator, self.created_at)
+    end
   end
 
   #def check_group

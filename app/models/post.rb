@@ -55,6 +55,7 @@ class Post < ActiveRecord::Base
   validates :creator, presence: true
   validates :comment, length: { maximum: 140 }
   validate :group_should_be_added
+  validate :only_one_pending_post
 
   # Scopes
   scope :recommend_posts_with_account, lambda { |post_id| where("original_id=? AND status=?", post_id, Post::STATUS_NORMAL).includes(:creator).order("created_at DESC") }
@@ -72,6 +73,13 @@ class Post < ActiveRecord::Base
   def group_should_be_added
     if self.group && self.creator && !self.creator.groups.include?(self.group)
       errors.add(:group, I18n.t("models.post.error_group_not_added"))
+    end
+  end
+
+  def only_one_pending_post
+    pending_item = self.class.where(account_id: self.creator.id, status: self.class::STATUS_PENDING).first
+    if pending_item && self.status == self.class::STATUS_PENDING
+      errors[:base] << I18n.t("post.more_than_one_pending_post")
     end
   end
 end

@@ -15,7 +15,7 @@
 /*列表*/
 .item_4_list{width:328px;height:auto;overflow:hidden;float:left; margin-left:20px;}
 .item_4_list_L_20{margin-left:0px;}
-.item_Container{overflow:hidden;}
+.item_Container{overflow:hidden}
 .item{border-radius: 3px;margin-bottom:20px; -webkit-transition: all 0.3s;-moz-transition: all 0.3s;-o-transition: all 0.3s;-ms-transition: all 0.3s;transition: all 0.3s;}
 .item_GR{width:326px;height:auto;overflow:hidden;background-color: #fff; border: 1px solid #cccccc;}
 .item_GR:hover{box-shadow: 0px 1px 8px rgba(200,200,200,.6); background-color: #fcfafa; border-color: #fff;}
@@ -87,11 +87,11 @@
 /*评论区域*/
 .article_cent_comment{width:326px;height:33px;border-top-width: 1px;border-top-style: solid;border-top-color: #CCCCCC;}
 .article_cent_comment_up{width:108px;height:33px;line-height:33px;border-right-width: 1px;border-right-style: solid;border-right-color: #CCCCCC; float:left; text-align:center;}
-.article_cent_comment_up a{height:33px;line-height:33px;background-image: url(<%= asset_path("img/item_4_list_icon_up.png") %>);background-repeat: no-repeat;text-align:center; padding-left:20px;}
+.article_cent_comment_up span{height:33px;line-height:33px;background-image: url(<%= asset_path("img/item_4_list_icon_up.png") %>);background-repeat: no-repeat;text-align:center; padding-left:20px;}
 .article_cent_comment_zhuan{width:108px;height:33px;line-height:33px;border-right-width: 1px;border-right-style: solid;border-right-color: #CCCCCC; float:left; text-align:center;}
-.article_cent_comment_zhuan a{height:33px;line-height:33px;background-image: url(<%= asset_path("img/item_4_list_icon_zhuan.png") %>);background-repeat: no-repeat;text-align:center; padding-left:20px;}
+.article_cent_comment_zhuan span{height:33px;line-height:33px;background-image: url(<%= asset_path("img/item_4_list_icon_zhuan.png") %>);background-repeat: no-repeat;text-align:center; padding-left:20px;}
 .article_cent_comment_huifu{width:108px;height:33px;line-height:33px; float:left;cursor:pointer;text-align:center;}
-.article_cent_comment_huifu a{height:33px;line-height:33px;background-image: url(<%= asset_path("img/item_4_list_icon_huifu.png") %>);background-repeat: no-repeat;text-align:center; padding-left:20px;}
+.article_cent_comment_huifu span{height:33px;line-height:33px;background-image: url(<%= asset_path("img/item_4_list_icon_huifu.png") %>);background-repeat: no-repeat;text-align:center; padding-left:20px;}
 /*评论弹出层区域*/
 .up_mian{width:328px; height:auto;overflow:hidden; display:none;margin-bottom:20px; margin-top:-20px;}
 .up_mian_bj{width:328px;height:8px;display:block;background-image: url(<%= asset_path("img/article_cent_comment_huifu_bj.png") %>);background-repeat: no-repeat;background-position: 270px top;}
@@ -112,3 +112,21 @@
 .up_mian_con_reply_tx_time{float:right; line-height:30px; padding:0px 5px;}
 .up_mian_con_reply_text{width:276px; overflow:hidden; padding-left:45px; padding-right:5px; padding-bottom:5px;}
 .up_mian_con_reply_text p{line-height:16px;}
+.post-loading {
+	margin:auto;
+	padding:10px 10px 0px 30px;
+	color:#3d4c5b;
+	text-align: center;
+	height:20px;
+	position:relative;
+	top:-28px;
+	left:47%;
+	display:block;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background-image: url(<%= asset_path("img/loading.gif") %>);
+	background-repeat: no-repeat;
+	background-position: 10px 9px;
+	cursor:pointer;
+}

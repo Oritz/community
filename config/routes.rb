@@ -60,7 +60,11 @@ SonkwoCommunity::Application.routes.draw do
     end
   end
 
-  resources :cloud_storages
+  resources :cloud_storages, only: [:new, :create] do
+    collection do
+      get 'template'
+    end
+  end
 
   resources :games, only: [] do
     resources :game_achievements, only: [:index, :show]

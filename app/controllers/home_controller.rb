@@ -4,6 +4,7 @@ class HomeController < ApplicationController
   def index
     @friends = Account.friends(current_account.id).limit(12).order("updated_at DESC")
     @new_talk = Talk.new
+    @cloud_storage_settings = CloudStorage.settings(current_account)
 
     params[:type] ||= "posts"
     #fetcher = Sonkwo::Behavior::Fetcher.new(current_account)

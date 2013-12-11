@@ -13,5 +13,7 @@
  *= require messenger-spinner
  *= require messenger-theme-future
  *= require ./reset
+ *= require ./popbox
  *= require_tree ./community
+ *= require_tree ../../../vendor/assets/stylesheets
  */

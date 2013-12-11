@@ -60,13 +60,13 @@ class PostsController < ApplicationController
     if current_account.like_posts.include?(@post)
       respond_to do |format|
         format.html { redirect_to :back }
-        format.js { render "like", locals: { is_included: true } }
+        format.json { render json: { status: "fail", data: {message: I18n.t("post.is_liked")} } }
       end
     else
       current_account.like_posts << @post
       respond_to do |format|
         format.html { redirect_to :back }
-        format.js { render "like", locals: { is_included: false } }
+        format.json { render json: { status: "success", data: {like_count: @post.like_count} } }
       end
     end
   end
@@ -76,12 +76,12 @@ class PostsController < ApplicationController
       current_account.like_posts.delete @post
       respond_to do |format|
         format.html { redirect_to :back }
-        format.js { render "like", locals: { is_included: true } }
+        format.json { render json: { status: "success", data: {like_count: @post.like_count} } }
       end
     else
       respond_to do |format|
         format.html { redirect_to :back }
-        format.js { render "like", locals: { is_included: false } }
+        format.json { render json: { status: "fail", data: {message: I18n.t("post.is_unliked")} } }
       end
     end
   end
@@ -115,7 +115,8 @@ class PostsController < ApplicationController
       talk: MustacheTemplate.talk,
       subject: MustacheTemplate.subject,
       recommend_talk: MustacheTemplate.recommend_talk,
-      recommend_subject: MustacheTemplate.recommend_subject
+      recommend_subject: MustacheTemplate.recommend_subject,
+      recommend_pop: MustacheTemplate.recommend_pop
     }
 
     render json: { status: 'success', data: templates }

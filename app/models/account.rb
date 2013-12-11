@@ -69,6 +69,16 @@ class Account < ActiveRecord::Base
   scope :friends, lambda { |account_id| joins("INNER JOIN friendship ON follower_id=accounts.id").where("account_id=? AND is_mutual=#{Friendship::IS_MUTUAL}", account_id) }
 
   # Methods
+  def pending_subject
+    subject = Subject.pending_of_account(self).first
+    return subject if subject
+    subject = Subject.new
+    subject.status = Post::STATUS_PENDING
+    subject.creator = self
+    subject.save!
+    subject
+  end
+
   def avatar
     return Settings.images.avatar.default unless self.cloud_storage
     cloud_storage.url
