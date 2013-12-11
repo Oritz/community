@@ -51,7 +51,7 @@ class HomeController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render_for_api :posts_info, json: @posts, root: "data", meta: {status: "success"} }
+      format.json { render_for_api :post_info, json: @posts, root: "data", meta: {status: "success"} }
     end
   end
 

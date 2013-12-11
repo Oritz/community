@@ -91,17 +91,18 @@ class PostsController < ApplicationController
     @recommend.creator = current_account
 
     if @post.detail_type == Recommend.to_s
-      @recommend.original = @post.original
+      @recommend.original = @post.detail.original
       @recommend.parent = @post
     else
       @recommend.original = @post
       @recommend.parent = @post
     end
     @recommend.original_author = @recommend.original.creator
+    @recommend.post.detail = @recommend
     respond_to do |format|
       if @recommend.save
         format.html { redirect_to url_for(action: :show, type: 'recommend'), notice: 'Post was successfully recommended.' }
-        format.json { render_for_api :post_info, json: @recommend, root: "data", meta: { status: "success" } }
+        format.json { render_for_api :post_info, json: @recommend.post, root: "data", meta: { status: "success" } }
       else
         format.html { redirect_to :back, alert: 'Recommend failed.' }
         format.json { render json: { status: "fail", data: @recommend.errors.full_messages } }
@@ -113,8 +114,7 @@ class PostsController < ApplicationController
     templates = {
       talk: MustacheTemplate.talk,
       subject: MustacheTemplate.subject,
-      recommend_talk: MustacheTemplate.recommend_talk,
-      recommend_subject: MustacheTemplate.recommend_subject,
+      recommend: MustacheTemplate.recommend,
       recommend_pop: MustacheTemplate.recommend_pop
     }
 

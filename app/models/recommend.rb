@@ -13,15 +13,9 @@ class Recommend < ActiveRecord::Base
   #  find_options: {include: [post: [:creator], original: [:creator]]}
   acts_as_api
   api_accessible :post_info do |t|
-    t.add :creator
     t.add :id
-    t.add :comment_count
-    t.add :recommend_count
-    t.add :like_count
-    t.add :created_at
-    t.add :updated_at
     t.add :content
-    t.add :original_cast
+    t.add :original
   end
 
   # Callbacks

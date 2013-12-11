@@ -1,5 +1,6 @@
 //= require misc
 //= require image
+//= require qiniu
 
 function posts(options) {
   options = $.extend(true, {
@@ -114,53 +115,7 @@ $(document).ready(function() {
     return false;
   });
 
-  $("form#qiniu_uploader [name='file']").change(function() {
-    if($(this).val() != "")
-      $("form#qiniu_uploader").submit();
-  });
-
-  $("form.new_talk .post-pic").click(function() {
-    var $block = $("#msgBox .image-upload-block");
-    $block.toggle();
-    $(".image-upload-block .image-upload-result span").hide();
-    if($block.is(":visible")) {
-      $(".image-upload-block .image-upload-result .image-upload-before").show();
-      $(".image-upload-block .image-upload-form file").attr("src", "");
-    }
-  });
-
-  $(".image-upload-block .image-upload-btn").click(function() {
-    $("form#qiniu_uploader [name='file']").click();
-  });
-
-  $(".image-upload-block .image-upload-cancel").click(function() {
-    $(".image-upload-block .image-upload-result span").hide();
-    $(".image-upload-block .image-upload-result .image-upload-before").show();
-    $("form#new_talk [name='new_talk[image_url]']").val("");
-  });
-
-  $(".image-upload-block .image-upload-reselect").click(function() {
-    $("form#qiniu_uploader [name='file']").click();
-  });
-
-  $("form#qiniu_uploader").submit(function() {
-    // loading
-    $(".image-upload-block .image-upload-result span").hide();
-    $(".image-upload-block .image-upload-result .image-upload-loading").show();
-
-    $(this).ajaxSubmit({
-      success: function(data) {
-        $("form.new_talk").find("[name='talk[cloud_storage_id]']").attr("value", data["storage_id"]);
-        $(".image-upload-block .image-upload-after img").attr("src", data["dest_url"]+"?imageView/2/w/100");
-        $(".image-upload-block .image-upload-result span").hide();
-        $(".image-upload-block .image-upload-result .image-upload-after").show();
-      },
-      error: function(response) {
-        Messenger.post("上传图片出错了~");
-      }
-    });
-    return false;
-  });
+  handle_image_upload();
 
   // cascading initialize
   var $wrapper = $("#wrapper").masonry({
@@ -181,6 +136,16 @@ $(document).ready(function() {
     });
 
     fetch_posts(templates, $wrapper);
+
+    // bind close btn on popbox
+    $(document).on("click", ".pop-box .pop-box-closebtn", function() {
+      $.fancybox.close();
+    }).on("click", ".pop-box .cancelBtn", function() {
+      $.fancybox.close();
+    }).on("submit", ".pop-box form", function() {
+      recommend_post($(this), templates, $wrapper);
+      return false;
+    });
 
     // post operations
     $(document).on("click", ".post-item .like-op", function() {
@@ -212,7 +177,6 @@ $(document).ready(function() {
         padding: 0,
         closeClick: false,
         modal: true,
-        width: 650,
         helpers: {
           title: {
             type: 'outside'
@@ -222,6 +186,12 @@ $(document).ready(function() {
     });
   });
 });
+
+function add_post_to_wrapper(template, data, $wrapper) {
+  var $output = $(Mustache.render(template, data));
+  show_level($output);
+  $wrapper.prepend($output).masonry('prepended', $output, true);
+}
 
 function post_success(data, statusText, xhr, $form) {
   var status = data.status;
@@ -239,12 +209,14 @@ function post_success(data, statusText, xhr, $form) {
   }
 }
 
-function recommend_post($form) {
+function recommend_post($form, templates, $wrapper) {
   $form.ajaxSubmit({
-    url: "/posts/recommend.json",
+    url: $form.attr("action") + ".json",
     success: function(data, statusText, xhr, $form) {
       if(data.status == "success") {
         Messenger().post("转发成功");
+        add_post_to_wrapper($output, $wrapper);
+        $.fancybox.close();
       }
       else if(data.status == "error") {
         Messenger().post(data.message);

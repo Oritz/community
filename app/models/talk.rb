@@ -11,18 +11,6 @@ class Talk < ActiveRecord::Base
   #  find_options: {include: [post: [:creator], post_image: [:cloud_storage]]}
   acts_as_api
   api_accessible :post_info do |t|
-    t.add :creator
-    t.add :id
-    t.add :post
-    t.add :image_url
-    t.add :comment_count
-    t.add :recommend_count
-    t.add :like_count
-    t.add :created_at
-    t.add :updated_at
-    t.add :content
-  end
-  api_accessible :posts_info do |t|
     t.add :id
     t.add :content
     t.add :image_url

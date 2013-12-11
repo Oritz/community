@@ -6,7 +6,7 @@ class Post < ActiveRecord::Base
     find_options: {include: [:detail, :creator]}
   acts_as_polymorphic name: "detail"
   acts_as_api
-  api_accessible :posts_info do |t|
+  api_accessible :post_info do |t|
     t.add :creator
     t.add :id
     t.add :detail
