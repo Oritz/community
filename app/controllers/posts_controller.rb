@@ -115,7 +115,8 @@ class PostsController < ApplicationController
       talk: MustacheTemplate.talk,
       subject: MustacheTemplate.subject,
       recommend: MustacheTemplate.recommend,
-      recommend_pop: MustacheTemplate.recommend_pop
+      recommend_pop: MustacheTemplate.recommend_pop,
+      comment: MustacheTemplate.comment
     }
 
     render json: { status: 'success', data: templates }
