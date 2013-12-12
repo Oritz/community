@@ -1,5 +1,5 @@
 class SubjectsController < ApplicationController
-  before_filter :sonkwo_authenticate_account, only: [:create]
+  before_filter :sonkwo_authenticate_account, only: [:create, :update]
 
   def show
     # Show the content of a post and comments
@@ -48,13 +48,13 @@ class SubjectsController < ApplicationController
   end
 
   def update
-    @subject = Subject.find(params[:id])
+    @subject = Subject.includes([post: [:post_images]]).find(params[:id])
     #return unless check_access?(subject: @subject)
 
     respond_to do |format|
       if @subject.update_attributes(params[:subject])
         format.html { redirect_to @subject.post, notice: 'Subject was successfully updated.'}
-        format.json { head :no_content }
+        format.json { render_for_api :preview, json: @subject, root: "data", meta: {status: "success"} }
       else
         format.html { render action: "edit" }
         format.json { render json: @subject.errors, status: :unprocessable_entity }

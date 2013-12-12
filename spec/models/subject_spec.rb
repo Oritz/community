@@ -13,6 +13,7 @@ describe Subject do
       subject.creator = account
       expect(subject).to be_valid
       expect { subject.save! }.to change { account.exp }.by(exp_strategy.value)
+      expect(Post.first).to eq subject.post
     end
 
     it "should create a new pending subject" do

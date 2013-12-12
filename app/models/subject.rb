@@ -22,6 +22,12 @@ class Subject < ActiveRecord::Base
     t.add :content
     t.add :title
   end
+  api_accessible :preview do |t|
+    t.add :content
+    t.add :title
+    t.add :post_images
+  end
+
   #exp_hookable account: "self.creator", setting_name: "exp_subject_value"
 
   # Callbacks
@@ -33,7 +39,6 @@ class Subject < ActiveRecord::Base
 
   # Associations
   #belongs_to :group
-  has_one :post, as: :detail
 
   # Scopes
   scope :pending_of_account, lambda { |account| joins("INNER JOIN posts ON posts.id=subjects.id").where("account_id=? AND status=?", account.id, Post::STATUS_PENDING) }

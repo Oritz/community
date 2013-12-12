@@ -2,5 +2,8 @@
 
 FactoryGirl.define do
   factory :post_image do
+    post
+    cloud_storage
+    comment "comment"
   end
 end

@@ -22,7 +22,7 @@ class Talk < ActiveRecord::Base
   after_save :save_post_image
 
   # Associations
-  has_one :post_image, foreign_key: "post_id"
+  #has_one :post_image, foreign_key: "post_id"
   has_one :post, as: :detail
 
   # Validations
@@ -34,8 +34,8 @@ class Talk < ActiveRecord::Base
   # Methods
   def image_url
     return @image_url if @image_url
-    return nil unless self.post_image
-    self.post_image.url
+    return nil if self.post_images.empty?
+    self.post_images[0].url
   end
 
   def image_url=(url)
@@ -44,8 +44,8 @@ class Talk < ActiveRecord::Base
 
   def cloud_storage_id
     return @cloud_storage.id if @cloud_storage
-    return nil unless self.post_image
-    self.post_image.cloud_storage.id
+    return nil if self.post_images.empty?
+    self.post_images[0].cloud_storage.id
   end
 
   def cloud_storage_id=(cloud_storage_id)
@@ -64,19 +64,19 @@ class Talk < ActiveRecord::Base
 
   def save_post_image
     if @image_url && @image_url != ""
-      if self.post_image == nil
+      if self.post_images.empty?
         post_image = PostImage.new(url: @image_url)
         post_image.post_id = self.id
         post_image.save!
-        self.post_image = post_image
+        self.post_images << post_image
       end
     elsif @cloud_storage
-      if self.post_image == nil
+      if self.post_images.empty?
         post_image = PostImage.new
         post_image.post_id = self.id
         post_image.cloud_storage = @cloud_storage
         post_image.save!
-        self.post_image = post_image
+        self.post_images << post_image
       end
     end
   end
