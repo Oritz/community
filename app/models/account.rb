@@ -13,11 +13,10 @@ class Account < ActiveRecord::Base
     t.add :nick_name
     t.add :level
   end
-  api_accessible :posts_info do |t|
+  api_accessible :comment_info do |t|
     t.add :id
     t.add :avatar
     t.add :nick_name
-    t.add :level
   end
 
   EMAIL_NOT_VERIFY = 0

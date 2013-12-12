@@ -8,6 +8,7 @@ function posts(options) {
     endid: undefined,
     templates: undefined,
     wrapper: undefined,
+    csrf: undefined,
     success: function(data) {
     },
     error: function() {
@@ -41,7 +42,7 @@ function posts(options) {
       if(data.data.length == 0)
         posts.status = 2;
       else
-        load_posts(data.data, 0, options.templates, options.wrapper);
+        load_posts(data.data, 0, options.templates, options.wrapper, options.csrf);
       options.success(data.data);
     }
     else {
@@ -53,7 +54,7 @@ function posts(options) {
     options.error();
   });
 
-  function load_posts(items, index, templates, $wrapper) {
+  function load_posts(items, index, templates, $wrapper, csrf) {
     if(items.length <= index) {
       posts.status = 0;
       return;
@@ -68,15 +69,16 @@ function posts(options) {
     else
       template = templates.recommend;
     var $output = $(Mustache.render(template, post));
+    $output.find(".comments-block form [name='authenticity_token']").attr("value", csrf);
     $wrapper.append($output).imagesLoaded(function() {
       $wrapper.masonry('appended', $output).masonry();
       show_level($output);
-      load_posts(items, index+1, templates, $wrapper);
+      load_posts(items, index+1, templates, $wrapper, csrf);
     });
   }
 }
 
-function fetch_posts(templates, $wrapper) {
+function fetch_posts(templates, $wrapper, csrf) {
   var last_id = $wrapper.attr("last_id");
   if(typeof last_id != "undefined") {
     last_id = parseInt(last_id);
@@ -88,6 +90,7 @@ function fetch_posts(templates, $wrapper) {
     endid: last_id,
     templates: templates,
     wrapper: $wrapper,
+    csrf: csrf,
     success: function(data) {
       $(".post-loading").hide();
       if(data.length > 0) {
@@ -106,27 +109,38 @@ function fetch_posts(templates, $wrapper) {
 }
 
 $(document).ready(function() {
-  $("form.new_talk").submit(function() {
-    $(this).ajaxSubmit({
-     url: "/talks.json",
-      success: post_success,
-      resetForm: true
-    });
-    return false;
-  });
-
-  handle_image_upload();
-
   // cascading initialize
   var $wrapper = $("#wrapper").masonry({
     columnWidth: 341,
     itemSelector: ".item_Container"
   });
+
+  handle_image_upload();
+
+  var csrf = $('meta[name="csrf-token"]').attr('content');
   var fetch_posts_status = "unfetched";
   $.get('/posts/templates').done(function(data) {
     if(data.status != "success")
       return;
     var templates = data.data;
+
+    // new_talk form
+    $("form.new_talk").submit(function() {
+      $(this).ajaxSubmit({
+        url: "/talks.json",
+        success: function(data) {
+          show_message(data);
+          var status = data.status;
+          if(status == "success") {
+            $("form.new_talk .post-pic").click();
+            $("form.new_talk [name='talk[content]']").attr("value", "");
+            add_post_to_wrapper(templates.talk, data.data, $wrapper);
+          }
+        },
+        resetForm: true
+      });
+      return false;
+    });
 
     // scroll event
     $(window).scroll(function() {
@@ -135,7 +149,7 @@ $(document).ready(function() {
       }
     });
 
-    fetch_posts(templates, $wrapper);
+    fetch_posts(templates, $wrapper, csrf);
 
     // bind close btn on popbox
     $(document).on("click", ".pop-box .pop-box-closebtn", function() {
@@ -170,7 +184,6 @@ $(document).ready(function() {
         id: post_id,
         content: content
       }));
-      var csrf = $('meta[name="csrf-token"]').attr('content');
       $output.find("[name='authenticity_token']").attr("value", csrf);
       $.fancybox.open($output, {
         closeBtn: false,
@@ -184,44 +197,79 @@ $(document).ready(function() {
         }
       });
     });
+
+    // comment
+    $(document).on("click", ".post-item .comment-op", function() {
+      var $block = $(this).parents(".post-item").find(".comments-block").toggle();
+      $wrapper.masonry();
+      if($block.is(":visible"))
+        fetch_comments(templates.comment, $block.find(".comments"), $wrapper);
+      else
+        $block.find(".comments").html("");
+    }).on("submit", ".post-item .comments-block form", function() {
+      $(this).ajaxSubmit({
+        url: $(this).attr("action") + ".json",
+        success: function(data, statusText, xhr, $form) {
+          show_message(data);
+          if(data.status == "success") {
+          }
+        }
+      });
+      return false;
+    }).on("click", ".post-item .comments-block .comments .comment-reply", function() {
+      var $comment = $(this).parents(".comment-detail");
+      var $original = $(this).parents(".comments-block").find("form [name='original_id']");
+      $original.val($comment.attr("comment_id")).trigger("change");
+    }).on("change", ".post-item .comments-block form [name='original_id']", function() {
+      var comment_id = parseInt($(this).val());
+      if(comment_id > 0) {
+        var nick_name = $(this).parents(".comments-block").find("[comment_id="+comment_id+"]").attr("nick_name");
+        $(this).parent().find(".reply-name").html(nick_name);
+      }
+      else
+        $(this).parent().find(".reply-name").html("");
+    }).on("click", ".post-item .comments-block form .cancel", function() {
+      $(this).parents("form").find("[name='original_id']").val("").trigger("change");
+    });
   });
 });
+
+function fetch_comments(template, $block, $wrapper) {
+  var post_id = $block.parents(".post-item").attr("post_id");
+  $.ajax({
+    url: "/posts/"+post_id+"/comments.json",
+    cache: false,
+    success: function(data) {
+      show_message(data);
+      if(data.status == "success") {
+        var i = 0;
+        for(i = 0; i < data.data.length; ++i) {
+          var item = data.data[i];
+          var $item = $(Mustache.render(template, item));
+          $block.append($item);
+        }
+        $wrapper.masonry();
+      }
+    }
+  });
+}
 
 function add_post_to_wrapper(template, data, $wrapper) {
   var $output = $(Mustache.render(template, data));
   show_level($output);
-  $wrapper.prepend($output).masonry('prepended', $output, true);
-}
-
-function post_success(data, statusText, xhr, $form) {
-  var status = data.status;
-  if(status == "success") {
-    Messenger().post("发布成功");
-    $("form.new_talk .post-pic").click();
-    $("form.new_talk [name='talk[content]']").attr("value", "");
-  }
-  else if(status == "error")
-    Messenger().post(data.message);
-  else {
-    $.each(data.data, function(key, value) {
-      Messenger().post(key + ":" + value);
-    });
-  }
+  $wrapper.prepend($output).imagesLoaded(function() {
+    $wrapper.masonry('prepended', $output, true);
+  });
 }
 
 function recommend_post($form, templates, $wrapper) {
   $form.ajaxSubmit({
     url: $form.attr("action") + ".json",
     success: function(data, statusText, xhr, $form) {
+      show_message(data);
       if(data.status == "success") {
-        Messenger().post("转发成功");
-        add_post_to_wrapper($output, $wrapper);
+        add_post_to_wrapper(templates.recommend, data.data, $wrapper);
         $.fancybox.close();
-      }
-      else if(data.status == "error") {
-        Messenger().post(data.message);
-      }
-      else {
       }
     }
   });
@@ -252,13 +300,10 @@ function like_or_unlike_post($post, op) {
       xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
     },
     success: function(data) {
+      show_message(data);
       if(data.status == "success") {
         $post.find(".like-count").html(data.data.like_count);
       }
-      else if(data.status == "fail")
-        Messenger().post(data.data.message);
-      else
-        Messenger().post(data.message);
     },
     error: function() {
       Messenger().post("网络错误");
