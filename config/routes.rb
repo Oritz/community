@@ -1,5 +1,10 @@
 SonkwoCommunity::Application.routes.draw do
-  devise_for :accounts, :controllers => { :sessions => 'account_sessions' }
+  begin
+    devise_for :accounts, :controllers => { :sessions => 'account_sessions' }
+  rescue Exception => e
+    puts "Devise error: #{e.class}: #{e}"
+  end
+
   root :to => "home_pages#index"
 
   resources :home_pages, only: [:index]

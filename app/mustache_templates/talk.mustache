@@ -27,7 +27,7 @@
     </div>
     <div class="article_cent">
       <div class="article_cent_text">
-        <p class="post-content">{{content}}</p>
+        <p class="post-content">{{detail.content}}</p>
       </div>
       <div class="article_cent_text_xx">
         <span class="text_xx_time">{{created_at}}</span>
@@ -38,9 +38,9 @@
     </div>
     <div class="img_cent">
       <a href="#" target="_blank">
-        {{#image_url}}
-          <img src="{{image_url}}?imageView/2/w/326">
-        {{/image_url}}
+        {{#detail.image_url}}
+          <img src="{{detail.image_url}}?imageView/2/w/326">
+        {{/detail.image_url}}
       </a>
     </div>
     <div class="article_cent_comment">

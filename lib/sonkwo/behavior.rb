@@ -11,7 +11,7 @@ module Sonkwo
         @default_behavior_types ||= []
         @available_behavior_types ||= []
         @providers ||= {}
-        
+
         @available_behavior_types << behavior_type unless @available_behavior_types.include?(behavior_type)
         @default_behavior_types << behavior_type unless options[:default] == false
         providers = options[:class_name] || behavior_type.classify

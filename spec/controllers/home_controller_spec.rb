@@ -6,13 +6,13 @@ describe HomeController do
   end
 
   describe "logged in" do
-    login_account
-
     describe "GET index" do
       it "should show current user's info"
     end
 
     describe "GET groups" do
+      login_account
+
       it "should show groups which are added" do
         groups = create_list(:group, 20)
 
@@ -40,6 +40,7 @@ describe HomeController do
 
     describe "GET posts" do
       it "should show posts which are posted by following users"
+
       it "should show posts which are posted in the groups added"
     end
 

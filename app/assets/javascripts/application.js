@@ -92,11 +92,4 @@ $(document).ready(function() {
   });
 
   $("#sns_nav").nav_float();
-
-  // bind close btn on popbox
-  $(document).on("click", ".pop-box .pop-box-closebtn", function() {
-    $.fancybox.close();
-  }).on("click", ".pop-box .cancelBtn", function() {
-    $.fancybox.close();
-  });
 });

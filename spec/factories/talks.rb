@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :talk do
-    association :post, factory: :talk_post
     content "talk something"
+    creator nil
   end
 end

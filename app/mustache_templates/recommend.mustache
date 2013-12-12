@@ -27,12 +27,15 @@
     </div>
     <div class="forward_cent">
       <div class="forward_cent_mian">
-        <span>{{content}}</span>
+        <span>{{detail.content}}</span>
       </div>
     </div>
     <div class="article_cent">
+      {{#detail.original.detail.title}}
+        <h2><a href="javascript:void(0);">{{detail.original.detail.title}}</a></h2>
+      {{/detail.original.detail.title}}
       <div class="article_cent_text">
-        <p class="post-content">{{original.content}}</p>
+        <p class="post-content">{{detail.original.detail.content}}</p>
       </div>
       <div class="article_cent_text_xx">
         <span class="text_xx_time">{{created_at}}</span>
@@ -43,9 +46,9 @@
     </div>
     <div class="img_cent">
       <a href="#" target="_blank">
-        {{#original.image_url}}
-          <img src="{{original.image_url}}?imageView/2/w/326">
-        {{/original.image_url}}
+        {{#detail.original.detail.image_url}}
+          <img src="{{detail.original.detail.image_url}}?imageView/2/w/326">
+        {{/detail.original.detail.image_url}}
       </a>
     </div>
     <div class="article_cent_comment">
