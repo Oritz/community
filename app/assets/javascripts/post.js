@@ -4,7 +4,7 @@
 
 function posts(options) {
   options = $.extend(true, {
-    url: '/home/post.json',
+    url: undefined,
     endid: undefined,
     templates: undefined,
     wrapper: undefined,
@@ -78,7 +78,7 @@ function posts(options) {
   }
 }
 
-function fetch_posts(templates, $wrapper, csrf) {
+function fetch_posts(templates, $wrapper, csrf, url) {
   var last_id = $wrapper.attr("last_id");
   if(typeof last_id != "undefined") {
     last_id = parseInt(last_id);
@@ -86,7 +86,7 @@ function fetch_posts(templates, $wrapper, csrf) {
       last_id = undefined;
   }
   posts({
-    url: '/home/posts.json',
+    url: url,
     endid: last_id,
     templates: templates,
     wrapper: $wrapper,
@@ -108,7 +108,7 @@ function fetch_posts(templates, $wrapper, csrf) {
   });
 }
 
-$(document).ready(function() {
+function start_posts(url) {
   // cascading initialize
   var $wrapper = $("#wrapper").masonry({
     columnWidth: 341,
@@ -145,11 +145,11 @@ $(document).ready(function() {
     // scroll event
     $(window).scroll(function() {
       if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-        fetch_posts(templates, $wrapper);
+        fetch_posts(templates, $wrapper, csrf, url);
       }
     });
 
-    fetch_posts(templates, $wrapper, csrf);
+    fetch_posts(templates, $wrapper, csrf, url);
 
     // bind close btn on popbox
     $(document).on("click", ".pop-box .pop-box-closebtn", function() {
@@ -232,7 +232,7 @@ $(document).ready(function() {
       $(this).parents("form").find("[name='original_id']").val("").trigger("change");
     });
   });
-});
+}
 
 function fetch_comments(template, $block, $wrapper) {
   var post_id = $block.parents(".post-item").attr("post_id");

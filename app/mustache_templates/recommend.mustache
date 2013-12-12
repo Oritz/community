@@ -68,9 +68,16 @@
     <div class="up_mian_con">
       <div class="up_mian_con_input">
         <div class="up_mian_con_input_center">
-          <textarea name="" class="up_mian_con_input_style"></textarea>
-          <span><a class="up_mian_con_buttonQ up1">取消</a></span>
-          <span><a class="up_mian_con_buttonE">回复</a></span>
+          <form accept-charset="UTF-8" action="/posts/{{id}}/comments" method="post">
+            <input name="authenticity_token" type="hidden" value="">
+            <span class="reply-name"></span>
+            <textarea name="comment[comment]" class="up_mian_con_input_style"></textarea>
+            <input name="original_id" type="hidden" value="">
+            <span><a class="up_mian_con_buttonQ up1 cancel">取消</a></span>
+            <span><input name="commit" type="submit" value="评论" class="up_mian_con_buttonE" /></span>
+          </form>
+        </div>
+        <div class="comments">
         </div>
       </div>
     </div>

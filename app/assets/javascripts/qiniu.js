@@ -5,7 +5,7 @@ function handle_image_upload() {
   });
 
   $("form.new_talk .post-pic").click(function() {
-    var $block = $("#msgBox .image-upload-block");
+    var $block = $(".image-upload-block");
     $block.toggle();
     $(".image-upload-block .image-upload-result span").hide();
     if($block.is(":visible")) {

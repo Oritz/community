@@ -34,7 +34,7 @@ class CommentsController < ApplicationController
     @comment.post = post
     @comment.post_author = post.creator
 
-    if params[:original_id]
+    if params[:original_id] && params[:original_id].to_i > 0
       original_comment = Comment.find(params[:original_id])
       @comment.original = original_comment
       @comment.original_author = original_comment.creator
