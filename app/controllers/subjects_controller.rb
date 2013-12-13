@@ -1,10 +1,10 @@
 class SubjectsController < ApplicationController
-  before_filter :sonkwo_authenticate_account, only: [:create]
+  before_filter :sonkwo_authenticate_account, only: [:create, :new]
 
   def show
     # Show the content of a post and comments
     @subject = Subject.find(params[:id])
-
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @subject }
@@ -13,6 +13,7 @@ class SubjectsController < ApplicationController
 
   def new
     @subject = current_account.pending_subject
+    @cloud_storage_settings = CloudStorage.settings(current_account)
     if params[:group_id]
       @group = Group.find(params[:group_id])
       @subject.group = @group
