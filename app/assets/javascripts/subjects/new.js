@@ -10,6 +10,8 @@ $(document).ready(function() {
       file.after(file.clone().val(''));
       file.remove();
     }
+    
+    $('.upload_img_show').children().remove();
   }
   
   
@@ -22,7 +24,6 @@ $(document).ready(function() {
 			closeBtn: false,
 			closeClick: false,
 			modal: true,
-			autoHeight: true,
 			afterClose: function() {clearFile();},
 		});
 	});
@@ -32,7 +33,10 @@ $(document).ready(function() {
 		if ($('#upload_img_file').val()) {
 		  $('#subject_qiniu_upload').ajaxSubmit({
 		    success: function(response) {
-		      alert('success');
+		      console.log(response);
+		      // Show thumb
+		      $('.upload_img_show').html('<img alt="' + response.img_name +  '" src="' + response.dest_url + '?imageView/2/w/118/h/118">');
+		      $('.upload_img_show').append('<input type="hidden" name="upload_storage_id" value="' + response.storage_id + '">');
 		    },
 		    error: function(response) {
 		      alert(response.status);
@@ -44,8 +48,10 @@ $(document).ready(function() {
 	
 	// Save the image box
   $('#upload_img_save').click(function() {
-    alert('save!');
-    $.fancybox.close();
+    // Save the setting
+
+    //alert('save!');
+    //$.fancybox.close();
   });
           	   
 	// Cancel the image box

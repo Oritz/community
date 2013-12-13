@@ -2,6 +2,9 @@
   .detail_breadNav
     h1 发布图文文章
   .popup_boxs style="display: none;"
+    = form_for subject_post_images_path(@subject) do |f|
+      = f.hidden_field :cloud_storage_id
+    
     .pop-layer.radius3px.brd1.subject_popup#insert_img_box
       .prompt
         .writing
@@ -16,6 +19,7 @@
           input name="x:sonkwo_token" type="hidden" value=@cloud_storage_settings[:sonkwo_token]
           input#upload_img_file name="file" type="file"
           input name="x:bucket_name" type="hidden" value="sonkwo-post"
+      .upload_img_show
       .upload_img_actions
         input#upload_img_save type="button" value="保存"
         input#upload_img_cancel type="button" value="取消"
@@ -33,39 +37,6 @@
         textarea cols="" name="" placeholder="请输入正文" rows=""
       .article_img
         ul
-          li
-            .article_img_bit
-              span.article_close
-                a href="#"
-              .bit_img.fl
-                h3 图片
-                .bit_img_tx
-                  img src="images/banner/tutu.png"
-              .bit_bewrite.fr
-                h3 图片描述
-                textarea cols="" name="" placeholder="请对图片进行描述" rows=""
-          li
-            .article_img_bit
-              span.article_close
-                a href="#"
-              .bit_img.fl
-                h3 图片
-                .bit_img_tx
-                  img src="images/banner/tutu.png"
-              .bit_bewrite.fr
-                h3 图片描述
-                textarea cols="" name="" placeholder="请对图片进行描述" rows=""
-          li
-            .article_img_bit
-              span.article_close
-                a href="#"
-              .bit_img.fl
-                h3 图片
-                .bit_img_tx
-                  img src="images/banner/tutu.png"
-              .bit_bewrite.fr
-                h3 图片描述
-                textarea cols="" name="" placeholder="请对图片进行描述" rows=""
       .article_bn
         span.fr
           a.bn_cancel href="#" 取消
