@@ -2,6 +2,8 @@
   .detail_breadNav
     h1 发布图文文章
   .popup_boxs style="display: none;"
+    = form_tag "/subjects/#{@subject.id}/post_images"  do
+      = hidden_field_tag :cloud_storage_id
     .pop-layer.radius3px.brd1.subject_popup#insert_img_box
       .prompt
         .writing
