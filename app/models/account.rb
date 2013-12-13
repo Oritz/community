@@ -4,7 +4,7 @@ class Account < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :token_authenticatable, :confirmable,
-         :lockable, :timeoutable, :encryptable
+         :lockable, :timeoutable, :encryptable, :async
 
   acts_as_api
   api_accessible :post_info do |t|

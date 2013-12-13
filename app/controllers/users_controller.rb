@@ -6,6 +6,8 @@ class UsersController < ApplicationController
   def show
     @target = Account.find(params[:id])
     @games = AllGame.belong_to_account(@target)
+    @new_talk = Talk.new
+    @cloud_storage_settings = CloudStorage.settings(@target)
 
     respond_to do |format|
       format.html
@@ -29,11 +31,10 @@ class UsersController < ApplicationController
     @target = Account.find(params[:id])
     fetcher = Sonkwo::Behavior::Fetcher.new(current_account, target: @target)
     if params[:end_id]
-      @posts = fetcher.behaviors(limit: 2, max_id: params[:end_id], status: Post::STATUS_NORMAL)
+      @posts = fetcher.behaviors(limit: 2, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
     else
-      @posts = fetcher.behaviors(limit: 2, status: Post::STATUS_NORMAL)
+      @posts = fetcher.behaviors(limit: 2, status: Post::STATUS_NORMAL, order: "created_at DESC")
     end
-    @posts = Post.downcast(@posts)
 
     respond_to do |format|
       format.html

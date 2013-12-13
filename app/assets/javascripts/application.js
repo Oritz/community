@@ -15,7 +15,6 @@
 //= require messenger
 //= require messenger-theme-future
 //= require_tree ../../../vendor/assets/javascripts
-//= require post
 //= require flash_message
 //= require misc
 //= require subject

@@ -99,7 +99,7 @@ html
           li.sns_nav_tab_nav_3
             a href="#"  最新动态
     .container
-      = yield
+      == yield
     #footer
     div.flash-messages style="display: none;"
       - if flash[:error]
@@ -115,3 +115,4 @@ html
         p.flash-success
           = flash[:success]
     = javascript_include_tag "application"
+    = javascript_include_tag "#{params[:controller]}/#{params[:action]}"

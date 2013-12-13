@@ -3,12 +3,12 @@
     .sns_gr_home_top_Ltx
       .sns_gr_home_top_Ltx_png
         .home_top_Ltx_l
-          .home_top_Ltx_l_tx.border_2px_viptx
+          .home_top_Ltx_l_tx.border_2px_viptx.avatar-block user_id=(@target.id)
             a href="#"
               = image_tag(@target.avatar, height: 112, width: 112)
         .home_top_Ltx_r
           .home_top_Ltx_r_id
-            = link_to @target.nick_name, "#"
+            = link_to @target.nick_name, "javascript:void(0);"
             .snsshowid
               p
                 a href="#"
@@ -21,8 +21,8 @@
           .home_top_Ltx_r_id_jdt_kuang
             span.home_top_Ltx_r_id_jdt
               = link_to "Lv #{level(@target.exp)}", "#"
-            span.home_top_Ltx_r_id_jdt_bj
-              i.home_top_Ltx_r_id_jdt_bj1
+            span.home_top_Ltx_r_id_jdt_bj.total-level
+              i.home_top_Ltx_r_id_jdt_bj1.level level=@target.level
       span.sns_gr_home_top_pois
     .sns_gr_home_top_Rzl
       .sns_gr_home_top_Rzl_b
@@ -73,32 +73,50 @@
   .sns_gr_home_editor
     .radius3px.sns_release_enter1
       #msgBox1
-        form
+        = form_for(@new_talk) do |f|
+          = f.hidden_field :cloud_storage_id
           .countTxt_block
             span.countTxt 还能输入
             strong.maxNum 140
             span 个字
-          .conBoxwidth
-            textarea#conBox.f-text name="conBox"
-          .sendBtn_tr_width
+          .conBoxwidth1
+            = f.text_area :content, class: "f-text", style: "height: 110px"
+          .sendBtn_tr_width1
             .sendBtn_tr
               .sendBtn_tr_L
                 span.emotion
-                  a href="#"
+                  a href="#"  表情
                 span.emotion_img
-                  a href="#"
-                span.emotion_ltv
-                  a href="#"
+                  a href="javascript:void(0);" class="post-pic"  图片
                 span.emotion_text
-                  a href="#"
+                  = link_to "长文章", new_subject_path
                 span.emotion_xian
-                span.emotion_more
-                  a.snshide href="#"
-                  .snsshow
-                    p 出来吧大番出来吧大番出来吧大番出来吧大番出来吧大番出来吧大番出来吧大番
               .sendBtn_tr_R
-                span.emotion_more
-                  a.snshide1 href="#"
-                  .snsshow1
-                    p 出来吧大番出来吧大番出来吧大番出来吧大番出来吧大番出来吧大番出来吧大番
-                input#sendBtn title="快捷键 Ctrl+Enter" type="button" value="发布"
+                .snsshow1
+                  p
+                    a href="#"  举报
+                = f.submit("发布")
+        .image-upload-block style="display: none;"
+          .image-upload-form style="display: none;"
+            form#qiniu_uploader method="post" action="http://up.qiniu.com/" enctype="multipart/form-data"
+              input name="token" value=@cloud_storage_settings[:upload_token]
+              input name="x:account_id" value=current_account.id
+              input name="x:timestamp" value=@cloud_storage_settings[:now]
+              input name="x:sonkwo_token" value=@cloud_storage_settings[:sonkwo_token]
+              input name="x:bucket_name" value="sonkwo-post"
+              input name="file" type="file"
+              input name="submit" type="submit"
+          .image-upload-result
+            span.image-upload-before
+              a href="javascript:void(0);" class="image-upload-btn" 上传图片
+            span.image-upload-loading style="display: none;"
+            span.image-upload-after style="display: none;"
+              div
+                img src="" /
+              div
+                span
+                  a href="javascript:void(0);" class="image-upload-cancel" 取消上传
+                span
+                  a href="javascript:void(0);" class="image-upload-reselect" 重新选择
+#wrapper last_id=0
+.post-loading style="display: none;"

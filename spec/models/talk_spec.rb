@@ -25,7 +25,7 @@ describe Talk do
     talk.creator = account
     talk.save!
 
-    post_image = PostImage.where(post_id: talk.id).first
+    post_image = PostImage.where(post_id: talk.post.id).first
     expect(post_image).not_to be_nil
   end
 
@@ -35,7 +35,7 @@ describe Talk do
     talk.creator = account
 
     talk.save!
-    post_image = PostImage.where(post_id: talk.id).first
+    post_image = PostImage.where(post_id: talk.post.id).first
     expect(post_image).not_to be_nil
   end
 

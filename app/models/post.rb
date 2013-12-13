@@ -45,7 +45,7 @@ class Post < ActiveRecord::Base
   has_many :comments, class_name: 'Comment'
   has_many :recommend_posts, class_name: 'Recommend', foreign_key: 'parent_id'
   belongs_to :group
-  #belongs_to :detail, polymorphic: true
+  has_many :post_images
 
   # Validations
   validates :privilege, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::PRIVILEGE_PRIVATE }

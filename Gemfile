@@ -93,3 +93,4 @@ gem 'unicorn'
 gem 'qiniu-rs'
 gem 'jquery-form-rails'
 gem "messengerjs-rails", "~> 1.3.6.2"
+gem "devise-async"
