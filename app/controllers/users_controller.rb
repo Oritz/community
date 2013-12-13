@@ -1,11 +1,10 @@
 require 'sonkwo/behavior/fetcher'
 
 class UsersController < ApplicationController
-  #before_filter :sonkwo_authenticate_account, only: [:follow, :unfollow]
+  before_filter :sonkwo_authenticate_account, only: [:follow, :unfollow]
 
   def show
     @target = Account.find(params[:id])
-    @games = AllGame.belong_to_account(@target)
     @new_talk = Talk.new
     @cloud_storage_settings = CloudStorage.settings(@target)
 
@@ -87,6 +86,18 @@ class UsersController < ApplicationController
         format.html { redirect_to :back, notice: "Unfollow failed." }
         format.json { render json: @friendship }
       end
+    end
+  end
+
+  def games
+    @target = Account.find(params[:id])
+    #@games = @target.other_games.where(status: AllGame::STATUS_NORMAL)
+    #@games = @games | @target.steam_user.games if @target.steam_user
+    @games = AllGame.belong_to_account(@target).where("all_games.status=?", AllGame::STATUS_NORMAL)
+
+    respond_to do |format|
+      format.html
+      format.json { render_for_api :game_basic_info, json: @games, root: "data", meta: {status: "success"} }
     end
   end
 end

@@ -17,6 +17,10 @@ $(document).ready(function() {
 });
 
 function show_message(data) {
+  if(data == "unknow") {
+    Messenger().post("网络错误");
+    return;
+  }
   if(data.status == "error")
     Messenger().post(data.message);
   else if(data.status == "fail") {
