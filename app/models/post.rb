@@ -62,6 +62,7 @@ class Post < ActiveRecord::Base
 
   # Scopes
   scope :recommend_posts_with_account, lambda { |post_id| where("original_id=? AND status=?", post_id, Post::STATUS_NORMAL).includes(:creator).order("created_at DESC") }
+  scope :pending_of_account, lambda { |account| where("account_id=? AND status=?", account.id, Post::STATUS_PENDING) }
 
   # Methods
   protected

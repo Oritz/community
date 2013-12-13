@@ -4,7 +4,6 @@ class SubjectsController < ApplicationController
   def show
     # Show the content of a post and comments
     @subject = Subject.find(params[:id])
-    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @subject }
@@ -15,6 +14,7 @@ class SubjectsController < ApplicationController
     @subject = current_account.pending_subject
     @cloud_storage_settings = CloudStorage.settings(current_account)
     @new_post_image = PostImage.new
+    
     if params[:group_id]
       @group = Group.find(params[:group_id])
       @subject.group = @group

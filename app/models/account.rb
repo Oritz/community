@@ -75,7 +75,7 @@ class Account < ActiveRecord::Base
 
   # Methods
   def pending_subject
-    subject = Subject.pending_of_account(self).first
+    subject = Post.pending_of_account(self).first
     return subject if subject
     subject = Subject.new
     subject.status = Post::STATUS_PENDING
