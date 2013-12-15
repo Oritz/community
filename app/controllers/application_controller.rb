@@ -19,6 +19,10 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+  def not_found
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
   def forbid_callback(*args)
     raise "The action is forbidden"
   end

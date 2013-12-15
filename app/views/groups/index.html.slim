@@ -1,18 +1,25 @@
-p.text-info= I18n.t("Groups")
-ul.unstyled
-  - @groups.each do |group|
-    li
-      div.media
-        = link_to image_tag(group.logo, class: "media-object img-rounded", width: "100px"), group, class: "pull-left"
-        div.media-body
-          h4.media-heading
-            = link_to truncate(group.name, length: 15), group
-          p= t("groups_members", count: group.member_count)
-          div.media= truncate(group.description, length: 100)
-          p
-            - if current_account && group.account_id
-              span= t("Joined")
+.sns_release
+  .groups_inside
+    - @groups.each do |group|
+      .radius3px.sns_groups_data.marAuto
+        .sns_groups_data_top
+          .groups_top_tx
+            a href="/groups/#{group.id}"
+              img src="#{group.logo}"
+          .groups_top_new
+            h1
+              a href="/groups/#{group.id}" =group.name
+              a.set.fr href="/groups/#{group.id}/edit"
+            span
+              a href="/groups/#{group.id}" 已有#{group.member_count}位成员
+            p =group.description
+        .sns_groups_data_bottom
+          .groups_b_jb
+            a href="#" 举报
+          .groups_b_cz
+            - if group.account_id
+              span.groups_b_cz_tc
+                a href="/groups/#{group.id}/remove_user.json" 退出
             - else
-              = link_to 'Add', {action: :add_user, id: group.id}, method: :put
-br/
-= link_to 'New Group', new_group_path
+              span.groups_b_cz_jr
+                a href="/groups/#{group.id}/add_user.json" 加入小组

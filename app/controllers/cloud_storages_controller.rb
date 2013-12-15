@@ -65,7 +65,7 @@ class CloudStoragesController < ApplicationController
     # TODO
     #storage.data
     storage.save!
-    ret = {dest_url: storage.url, storage_id: storage.id}
+    ret = {dest_url: storage.url, storage_id: storage.id, img_name: params['name']}
     render json: ret, status: 200
   end
 end

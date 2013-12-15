@@ -14,6 +14,7 @@
       <div class="area-turn-text">
         <div id="msgBox">
           <form accept-charset="UTF-8" action="/posts/{{id}}/recommend" method="post">
+            <input name="authenticity_token" type="hidden" value="">
             <div class="countTxt_block"><span class="countTxt">还能输入</span><strong class="maxNum">140</strong><span>个字</span></div>
             <div class="conBoxwidth1">
               <textarea class="f-text" id="recommend_content" name="recommend[content]"></textarea>

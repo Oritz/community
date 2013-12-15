@@ -15,7 +15,6 @@
 //= require messenger
 //= require messenger-theme-future
 //= require_tree ../../../vendor/assets/javascripts
-//= require post
 //= require flash_message
 //= require misc
 
@@ -76,7 +75,6 @@ $.fn.nav_float = function() {
 
 $(document).ready(function() {
   // calculate level
-  show_level($(".total-level").parent());
   change_nav_height($("#sns_nav .nav-left1"));
   change_nav_height($("#sns_nav .nav-right1"));
   $(window).resize(function() {
@@ -91,11 +89,4 @@ $(document).ready(function() {
   });
 
   $("#sns_nav").nav_float();
-
-  // bind close btn on popbox
-  $(document).on("click", ".pop-box .pop-box-closebtn", function() {
-    $.fancybox.close();
-  }).on("click", ".pop-box .cancelBtn", function() {
-    $.fancybox.close();
-  });
 });

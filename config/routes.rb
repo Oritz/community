@@ -1,5 +1,10 @@
 SonkwoCommunity::Application.routes.draw do
-  devise_for :accounts, :controllers => { :sessions => 'account_sessions' }
+  begin
+    devise_for :accounts, :controllers => { :sessions => 'account_sessions', :registrations => 'account_registrations' }
+  rescue Exception => e
+    puts "Devise error: #{e.class}: #{e}"
+  end
+
   root :to => "home_pages#index"
 
   resources :home_pages, only: [:index]
@@ -23,13 +28,16 @@ SonkwoCommunity::Application.routes.draw do
     end
   end
 
-  resource :talks, only: [:show, :create]
-  resource :subject, only: [:show, :new, :create, :edit, :update]
+  resources :talks, only: [:show, :create]
+  resources :subjects, only: [:show, :new, :create, :edit, :update] do
+    resources :post_images, only: [:create, :destroy]
+  end
 
   resources :users, only: [:show] do
     collection do
       put 'follow'
       delete 'unfollow'
+      get 'check_name'
     end
     member do
       get 'groups'
@@ -37,7 +45,11 @@ SonkwoCommunity::Application.routes.draw do
       get 'people'
       get 'games'
     end
+    resources :albums, only: [:index, :create, :show, :new] do
+      resources :photos, only: [:index, :create]
+    end
   end
+  post 'photos/screenshot', to: 'photos#screenshot'
 
   resources :home, only: [:index] do
     collection do
@@ -47,6 +59,8 @@ SonkwoCommunity::Application.routes.draw do
       get 'posts'
       get 'notification'
       get 'recommended'
+      put 'tags/:tag_id', to: 'home#add_tag'
+      delete 'tags/:tag_id', to: 'home#remove_tag'
     end
   end
 
@@ -70,10 +84,15 @@ SonkwoCommunity::Application.routes.draw do
     resources :game_achievements, only: [:index, :show]
   end
 
-  resources :albums do
-    resources :photos, only: [:index, :create]
+  resources :informations, only: [:index] do
+    collection do
+      get :groups
+      get :friends
+      get :clients
+      get :tags
+      post :confirm_step
+    end
   end
-  post 'photos/screenshot', to: 'photos#screenshot'
 
   # sidekiq
   require 'sidekiq/web'

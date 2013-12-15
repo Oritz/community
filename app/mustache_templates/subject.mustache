@@ -1,4 +1,4 @@
-<div class="item_Container">
+<div class="item_Container post-item" post_id={{id}} creator_id={{creator.id}} creator_name={{creator.nick_name}}>
   <div class="item item_GR">
     <div class="item_GR_top">
       <div class="item_GR_top_tx_kuang">
@@ -19,65 +19,61 @@
           <span class="item_GR_top_dj_dj">
             <a href="javascript:void(0);" target="_blank">Lv {{creator.level}}</a>
           </span>
-          <span class="item_GR_top_dj_dj_sj">
-            <i class="item_GR_top_dj_dj_sj_jdt"></i>
+          <span class="item_GR_top_dj_dj_sj total-level">
+            <i class="item_GR_top_dj_dj_sj_jdt level" level={{creator.level}}></i>
           </span>
         </div>
       </div>
     </div>
     <div class="article_cent">
+      <h2><a href="javascript:void(0);">{{detail.title}}</a></h2>
       <div class="article_cent_text">
-        <p>{{content}}</p>
+        <p class="post-content">{{detail.content}}</p>
       </div>
       <div class="article_cent_text_xx">
         <span class="text_xx_time">{{created_at}}</span>
         <span class="text_xx_report">
           <a href="#" target="_blank">举报</a>
         </span>
+        <span class="text_xx_full">
+          <a href="/posts/{{id}}" target="_blank">全文</a>
+        </span>
       </div>
     </div>
     <div class="img_cent">
       <a href="#" target="_blank">
-        {{#image_url}}
-          <img src="{{image_url}}?imageView/2/w/326">
-        {{/image_url}}
+        {{#detail.image_url}}
+          <img src="{{detail.image_url}}?imageView/2/w/326">
+        {{/detail.image_url}}
       </a>
     </div>
     <div class="article_cent_comment">
-      <span class="article_cent_comment_up">
-        <a href="javascript:void(0);">{{like_count}}</a>
-      </span>
-      <span class="article_cent_comment_zhuan">
-        <a href="javascript:void(0);">{{recommend_count}}</a>
-      </span>
-      <span class="article_cent_comment_huifu up1">
-        <a href="javascript:void(0);">{{comment_count}}</a>
-      </span>
+      <a class="article_cent_comment_up like-op" href="javascript:void(0);">
+        <span class="like-count">{{like_count}}</span>
+      </a>
+      <a class="article_cent_comment_zhuan recommend-op" href="javascript:void(0);">
+        <span class="recommend-count">{{recommend_count}}</span>
+      </a>
+      <a class="article_cent_comment_huifu up1 comment-op" href="javascript:void(0);">
+        <span class="comment-count">{{comment_count}}</span>
+      </a>
     </div>
   </div>
-  <div class="up_mian">
+  <div class="up_mian comments-block">
     <div class="up_mian_bj"></div>
     <div class="up_mian_con">
       <div class="up_mian_con_input">
         <div class="up_mian_con_input_center">
-          <textarea name="" cols="" rows="" class="up_mian_con_input_style" placeholder="请输入您要回复的内容"></textarea>
-          <span><a class="up_mian_con_buttonQ up1">取消</a></span>
-          <span><a class="up_mian_con_buttonE">回复</a></span>
+          <form accept-charset="UTF-8" action="/posts/{{id}}/comments" method="post">
+            <input name="authenticity_token" type="hidden" value="">
+            <span class="reply-name"></span>
+            <textarea name="comment[comment]" class="up_mian_con_input_style"></textarea>
+            <input name="original_id" type="hidden" value="">
+            <span><a class="up_mian_con_buttonQ up1 cancel">取消</a></span>
+            <span><input name="commit" type="submit" value="评论" class="up_mian_con_buttonE" /></span>
+          </form>
         </div>
-      </div>
-      <div class="up_mian_con_reply">
-        <div class="up_mian_con_reply_tx">
-          <span class="up_mian_con_reply_tx_tx">
-            <a href="#" target="_blank"></a>
-          </span>
-          <span class="up_mian_con_reply_tx_id">
-            <a href="#" target="_blank">我就是我哈哈</a>
-          </span>
-          <span class="up_mian_con_reply_tx_time">2013-10-17 12:00</span>
-        </div>
-        <div class="up_mian_con_reply_text">
-          <p>我说了什么？我不知道！！我说了什么我不知道！！
-            我真的不知道我说了什么！！</p>
+        <div class="comments">
         </div>
       </div>
     </div>

@@ -1,12 +1,14 @@
 //= require misc
 //= require image
+//= require qiniu
 
 function posts(options) {
   options = $.extend(true, {
-    url: '/home/post.json',
+    url: undefined,
     endid: undefined,
     templates: undefined,
     wrapper: undefined,
+    csrf: undefined,
     success: function(data) {
     },
     error: function() {
@@ -35,12 +37,12 @@ function posts(options) {
     url: options.url,
     cache: false
   }).done(function(data) {
-    status = data.status;
+    var status = data.status;
     if(status == "success") {
       if(data.data.length == 0)
         posts.status = 2;
       else
-        load_posts(data.data, 0, options.templates, options.wrapper);
+        load_posts(data.data, 0, options.templates, options.wrapper, options.csrf);
       options.success(data.data);
     }
     else {
@@ -52,7 +54,7 @@ function posts(options) {
     options.error();
   });
 
-  function load_posts(items, index, templates, $wrapper) {
+  function load_posts(items, index, templates, $wrapper, csrf) {
     if(items.length <= index) {
       posts.status = 0;
       return;
@@ -60,24 +62,23 @@ function posts(options) {
 
     var post = items[index];
     var template = templates.talk;
-    if(post.post_type == 0)
+    if(post.detail_type == "Talk")
       template = templates.talk;
-    else if(post.post_type == 1)
+    else if(post.detail_type == "Subject")
       template = templates.subject;
-    else if(post.original.post_type == 0)
-      template = templates.recommend_talk;
     else
-      template = templates.recommend_subject;
+      template = templates.recommend;
     var $output = $(Mustache.render(template, post));
+    $output.find(".comments-block form [name='authenticity_token']").attr("value", csrf);
     $wrapper.append($output).imagesLoaded(function() {
       $wrapper.masonry('appended', $output).masonry();
       show_level($output);
-      load_posts(items, index+1, templates, $wrapper);
+      load_posts(items, index+1, templates, $wrapper, csrf);
     });
   }
 }
 
-function fetch_posts(templates, $wrapper) {
+function fetch_posts(templates, $wrapper, csrf, url) {
   var last_id = $wrapper.attr("last_id");
   if(typeof last_id != "undefined") {
     last_id = parseInt(last_id);
@@ -85,10 +86,11 @@ function fetch_posts(templates, $wrapper) {
       last_id = undefined;
   }
   posts({
-    url: '/home/posts.json',
+    url: url,
     endid: last_id,
     templates: templates,
     wrapper: $wrapper,
+    csrf: csrf,
     success: function(data) {
       $(".post-loading").hide();
       if(data.length > 0) {
@@ -106,83 +108,58 @@ function fetch_posts(templates, $wrapper) {
   });
 }
 
-$(document).ready(function() {
-  $("form.new_talk").submit(function() {
-    $(this).ajaxSubmit({
-     url: "/talks.json",
-      success: post_success,
-      resetForm: true
-    });
-    return false;
-  });
-
-  $("form#qiniu_uploader [name='file']").change(function() {
-    if($(this).val() != "")
-      $("form#qiniu_uploader").submit();
-  });
-
-  $("form.new_talk .post-pic").click(function() {
-    var $block = $("#msgBox .image-upload-block");
-    $block.toggle();
-    $(".image-upload-block .image-upload-result span").hide();
-    if($block.is(":visible")) {
-      $(".image-upload-block .image-upload-result .image-upload-before").show();
-      $(".image-upload-block .image-upload-form file").attr("src", "");
-    }
-  });
-
-  $(".image-upload-block .image-upload-btn").click(function() {
-    $("form#qiniu_uploader [name='file']").click();
-  });
-
-  $(".image-upload-block .image-upload-cancel").click(function() {
-    $(".image-upload-block .image-upload-result span").hide();
-    $(".image-upload-block .image-upload-result .image-upload-before").show();
-    $("form#new_talk [name='new_talk[image_url]']").val("");
-  });
-
-  $(".image-upload-block .image-upload-reselect").click(function() {
-    $("form#qiniu_uploader [name='file']").click();
-  });
-
-  $("form#qiniu_uploader").submit(function() {
-    // loading
-    $(".image-upload-block .image-upload-result span").hide();
-    $(".image-upload-block .image-upload-result .image-upload-loading").show();
-
-    $(this).ajaxSubmit({
-      success: function(data) {
-        $("form.new_talk").find("[name='talk[cloud_storage_id]']").attr("value", data["storage_id"]);
-        $(".image-upload-block .image-upload-after img").attr("src", data["dest_url"]+"?imageView/2/w/100");
-        $(".image-upload-block .image-upload-result span").hide();
-        $(".image-upload-block .image-upload-result .image-upload-after").show();
-      },
-      error: function(response) {
-        Messenger.post("上传图片出错了~");
-      }
-    });
-    return false;
-  });
-
+function start_posts(url) {
   // cascading initialize
   var $wrapper = $("#wrapper").masonry({
     columnWidth: 341,
     itemSelector: ".item_Container"
   });
+
+  handle_image_upload();
+
+  var csrf = $('meta[name="csrf-token"]').attr('content');
   var fetch_posts_status = "unfetched";
   $.get('/posts/templates').done(function(data) {
     if(data.status != "success")
       return;
     var templates = data.data;
 
+    // new_talk form
+    $("form.new_talk").submit(function() {
+      $(this).ajaxSubmit({
+        url: "/talks.json",
+        success: function(data) {
+          show_message(data);
+          var status = data.status;
+          if(status == "success") {
+            $("form.new_talk .post-pic").click();
+            $("form.new_talk [name='talk[content]']").attr("value", "");
+            add_post_to_wrapper(templates.talk, data.data, $wrapper);
+          }
+        },
+        resetForm: true
+      });
+      return false;
+    });
+
     // scroll event
     $(window).scroll(function() {
       if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-        fetch_posts(templates, $wrapper);
+        fetch_posts(templates, $wrapper, csrf, url);
       }
     });
 
-    fetch_posts(templates, $wrapper);
+    fetch_posts(templates, $wrapper, csrf, url);
+
+    // bind close btn on popbox
+    $(document).on("click", ".pop-box .pop-box-closebtn", function() {
+      $.fancybox.close();
+    }).on("click", ".pop-box .cancelBtn", function() {
+      $.fancybox.close();
+    }).on("submit", ".pop-box form", function() {
+      recommend_post($(this), templates, $wrapper);
+      return false;
+    });
 
     // post operations
     $(document).on("click", ".post-item .like-op", function() {
@@ -207,12 +184,12 @@ $(document).ready(function() {
         id: post_id,
         content: content
       }));
+      $output.find("[name='authenticity_token']").attr("value", csrf);
       $.fancybox.open($output, {
         closeBtn: false,
         padding: 0,
         closeClick: false,
         modal: true,
-        width: 650,
         helpers: {
           title: {
             type: 'outside'
@@ -220,28 +197,82 @@ $(document).ready(function() {
         }
       });
     });
-  });
-});
 
-function post_success(data, statusText, xhr, $form) {
-  var status = data.status;
-  if(status == "success") {
-    Messenger().post("发布成功");
-    $("form.new_talk .post-pic").click();
-    $("form.new_talk [name='talk[content]']").attr("value", "");
-  }
-  else if(status == "error")
-    Messenger().post(data.message);
-  else {
-    $.each(data.data, function(key, value) {
-      Messenger().post(key + ":" + value);
+    // comment
+    $(document).on("click", ".post-item .comment-op", function() {
+      var $block = $(this).parents(".post-item").find(".comments-block").toggle();
+      $wrapper.masonry();
+      if($block.is(":visible"))
+        fetch_comments(templates.comment, $block.find(".comments"), $wrapper);
+      else
+        $block.find(".comments").html("");
+    }).on("submit", ".post-item .comments-block form", function() {
+      $(this).ajaxSubmit({
+        url: $(this).attr("action") + ".json",
+        success: function(data, statusText, xhr, $form) {
+          show_message(data);
+          if(data.status == "success") {
+          }
+        }
+      });
+      return false;
+    }).on("click", ".post-item .comments-block .comments .comment-reply", function() {
+      var $comment = $(this).parents(".comment-detail");
+      var $original = $(this).parents(".comments-block").find("form [name='original_id']");
+      $original.val($comment.attr("comment_id")).trigger("change");
+    }).on("change", ".post-item .comments-block form [name='original_id']", function() {
+      var comment_id = parseInt($(this).val());
+      if(comment_id > 0) {
+        var nick_name = $(this).parents(".comments-block").find("[comment_id="+comment_id+"]").attr("nick_name");
+        $(this).parent().find(".reply-name").html(nick_name);
+      }
+      else
+        $(this).parent().find(".reply-name").html("");
+    }).on("click", ".post-item .comments-block form .cancel", function() {
+      $(this).parents("form").find("[name='original_id']").val("").trigger("change");
     });
-  }
+  });
 }
 
-function recommend_post($form) {
-  var form_str = $form.formSeriaize();
-  alert(form_str);
+function fetch_comments(template, $block, $wrapper) {
+  var post_id = $block.parents(".post-item").attr("post_id");
+  $.ajax({
+    url: "/posts/"+post_id+"/comments.json",
+    cache: false,
+    success: function(data) {
+      show_message(data);
+      if(data.status == "success") {
+        var i = 0;
+        for(i = 0; i < data.data.length; ++i) {
+          var item = data.data[i];
+          var $item = $(Mustache.render(template, item));
+          $block.append($item);
+        }
+        $wrapper.masonry();
+      }
+    }
+  });
+}
+
+function add_post_to_wrapper(template, data, $wrapper) {
+  var $output = $(Mustache.render(template, data));
+  show_level($output);
+  $wrapper.prepend($output).imagesLoaded(function() {
+    $wrapper.masonry('prepended', $output, true);
+  });
+}
+
+function recommend_post($form, templates, $wrapper) {
+  $form.ajaxSubmit({
+    url: $form.attr("action") + ".json",
+    success: function(data, statusText, xhr, $form) {
+      show_message(data);
+      if(data.status == "success") {
+        add_post_to_wrapper(templates.recommend, data.data, $wrapper);
+        $.fancybox.close();
+      }
+    }
+  });
 }
 
 function like_or_unlike_post($post, op) {
@@ -269,13 +300,10 @@ function like_or_unlike_post($post, op) {
       xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
     },
     success: function(data) {
+      show_message(data);
       if(data.status == "success") {
         $post.find(".like-count").html(data.data.like_count);
       }
-      else if(data.status == "fail")
-        Messenger().post(data.data.message);
-      else
-        Messenger().post(data.message);
     },
     error: function() {
       Messenger().post("网络错误");

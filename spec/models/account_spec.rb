@@ -29,17 +29,6 @@ describe Account do
     build(:account, password: nil).should_not be_valid
   end
 
-  it 'should have a password with 8..128 length' do
-    too_short_password = "1234567"
-    least_password = "12345678"
-    too_long_password = "0123456789" * 12 + "012345678"
-    longest_password = "0123456789" * 12 + "12345678"
-    build(:account, password: too_short_password).should_not be_valid
-    build(:account, password: too_long_password).should_not be_valid
-    build(:account, password: least_password).should be_valid
-    build(:account, password: longest_password).should be_valid
-  end
-
   it 'should support characters within a password' do
     # build(:account, password: "123pass!@#$%^&*").should be_valid
   end
@@ -57,5 +46,46 @@ describe Account do
     account.save
     album = Album.screenshot_of_account(account)
     expect(album).not_to be_nil
+  end
+
+  context "validate email" do
+    it "is not valid without email" do
+      account = build(:account)
+      account.email = nil
+      expect(account).not_to be_valid
+    end
+
+    it "is not valid with email invalid" do
+      account = build(:account)
+      account.email = "asdf"
+      expect(account).not_to be_valid
+    end
+  end
+
+  context "validate nick_name" do
+    it "is not valid without nick_name" do
+      account = build(:account)
+      account.nick_name = ""
+      expect(account).not_to be_valid
+    end
+
+    it "is not valid with nick_name longer than 30" do
+      account = build(:account)
+      account.nick_name = "s" * 31
+      expect(account).not_to be_valid
+    end
+
+    it "is not valid with nick_name shorter than 2" do
+      account = build(:account)
+      account.nick_name = "s"
+      expect(account).not_to be_valid
+    end
+
+    it "is not valid with nick_name repeated" do
+      account = create(:account)
+      new_account = build(:account)
+      new_account.nick_name = account.nick_name
+      expect(new_account).not_to be_valid
+    end
   end
 end

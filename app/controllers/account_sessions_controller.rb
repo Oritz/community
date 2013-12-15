@@ -1,4 +1,6 @@
 class AccountSessionsController < Devise::SessionsController
+  protect_from_forgery except: :create
+
   def create
     self.resource = warden.authenticate!(auth_options)
     set_flash_message(:notice, :signed_in) if is_navigational_format?
@@ -22,7 +24,7 @@ class AccountSessionsController < Devise::SessionsController
       format.all { head :no_content }
       format.html do
         @destination = redirect_path
-        render "accounts/sessions/sso_signout", :layout => false
+        render "devise/sessions/sso_signout", :layout => false
       end
       format.any(*navigational_formats) { redirect_to redirect_path }
     end

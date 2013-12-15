@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  #before_filter :sonkwo_authenticate_account, except: [:index, :show]
+  before_filter :sonkwo_authenticate_account, except: [:index, :show]
 
   # GET /groups
   # GET /groups.json
@@ -27,6 +27,7 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     @tags = @group.tags
     @newcomers = @group.accounts.order("groups_accounts.created_at DESC").limit(21)
+    @is_added = current_account ? @group.accounts.include?(current_account) : false
     #@subjects = Subject.sort_by_time_in_group(@group.id).paginate(page: params[:page], per_page: 10)
 
     respond_to do |format|
@@ -39,7 +40,7 @@ class GroupsController < ApplicationController
   # GET /groups/new.json
   def new
     return unless check_access?(auth_item: "oper_groups_create")
-    @group = Group.new
+    @group = flash[:group] || Group.new
 
     respond_to do |format|
       format.html # new.html.slim
@@ -65,7 +66,10 @@ class GroupsController < ApplicationController
         format.html { redirect_to @group, notice: 'Group was successfully created.' }
         format.json { render json: @group, status: :created, location: @group }
       else
-        format.html { render action: "new" }
+        format.html do
+          flash[:group] = @group
+          redirect_to action: "new", group: @group
+        end
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end
     end
@@ -106,7 +110,7 @@ class GroupsController < ApplicationController
     @group.accounts << current_account if current_account && !@group.accounts.include?(current_account)
     respond_to do |format|
       format.html { redirect_to :back }
-      format.json { head :no_content }
+      format.json { render json: { status: "success", data: { account_id: current_account.id, group_id: @group.id} } }
     end
   end
 
@@ -116,7 +120,7 @@ class GroupsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to :back }
-      format.json { head :no_content }
+      format.json { render json: { status: "success", data: { account_id: current_account.id, group_id: @group.id } } }
     end
   end
 

@@ -9,6 +9,6 @@ require 'sonkwo/post_type'
 Sonkwo::Behavior.register :posts, class_name: 'Post'
 
 # configurate posts
-Sonkwo::PostType.regist_submodel :talk, class_name: 'Talk', post_type: Post::TYPE_TALK
-Sonkwo::PostType.regist_submodel :subject, class_name: 'Subject', post_type: Post::TYPE_SUBJECT
-Sonkwo::PostType.regist_submodel :recommend, class_name: 'Recommend', post_type: Post::TYPE_RECOMMEND
+#Sonkwo::PostType.regist_submodel :talk, class_name: 'Talk', post_type: Post::TYPE_TALK
+#Sonkwo::PostType.regist_submodel :subject, class_name: 'Subject', post_type: Post::TYPE_SUBJECT
+#Sonkwo::PostType.regist_submodel :recommend, class_name: 'Recommend', post_type: Post::TYPE_RECOMMEND

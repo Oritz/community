@@ -2,34 +2,28 @@ require 'sonkwo/exp'
 
 class Talk < ActiveRecord::Base
   attr_accessible :content, :image_url, :cloud_storage_id
-  acts_as_post
+  acts_as_polymorphic class_name: 'Post', name: 'detail', association: 'post'
+  #acts_as_post
   #acts_as_behavior_provider author_key: "posts.account_id",
   #  timestamp: "posts.created_at",
   #  status: "posts.status",
   #  joins: "INNER JOIN posts ON posts.id=talks.id",
-  #  find_options: {include: [post: [:creator]]}
+  #  find_options: {include: [post: [:creator], post_image: [:cloud_storage]]}
   acts_as_api
   api_accessible :post_info do |t|
-    t.add :creator
     t.add :id
-    t.add :image_url
-    t.add :post_type
-    t.add :comment_count
-    t.add :recommend_count
-    t.add :like_count
-    t.add :created_at
-    t.add :updated_at
     t.add :content
+    t.add :image_url
   end
 
   # Callbacks
-  after_initialize :default_values
   before_create :add_talk_count
   after_create { Sonkwo::Exp.increase("exp_post_talk", self.creator, self.created_at) }
   after_save :save_post_image
 
   # Associations
-  has_one :post_image, foreign_key: "post_id"
+  #has_one :post_image, foreign_key: "post_id"
+  has_one :post, as: :detail
 
   # Validations
   validates :content, presence: true, length: { maximum: 140 }
@@ -40,8 +34,8 @@ class Talk < ActiveRecord::Base
   # Methods
   def image_url
     return @image_url if @image_url
-    return nil unless self.post_image
-    self.post_image.url
+    return nil if self.post_images.empty?
+    self.post_images[0].url
   end
 
   def image_url=(url)
@@ -50,8 +44,8 @@ class Talk < ActiveRecord::Base
 
   def cloud_storage_id
     return @cloud_storage.id if @cloud_storage
-    return nil unless self.post_image
-    self.post_image.cloud_storage.id
+    return nil if self.post_images.empty?
+    self.post_images[0].cloud_storage.id
   end
 
   def cloud_storage_id=(cloud_storage_id)
@@ -63,13 +57,6 @@ class Talk < ActiveRecord::Base
   end
 
   private
-  def default_values
-    unless self.id
-      self.post = Post.new
-      self.post_type = Post::TYPE_TALK
-    end
-  end
-
   def add_talk_count
     self.creator.talk_count += 1
     self.creator.save!
@@ -77,19 +64,19 @@ class Talk < ActiveRecord::Base
 
   def save_post_image
     if @image_url && @image_url != ""
-      if self.post_image == nil
+      if self.post_images.empty?
         post_image = PostImage.new(url: @image_url)
         post_image.post_id = self.id
         post_image.save!
-        self.post_image = post_image
+        self.post_images << post_image
       end
     elsif @cloud_storage
-      if self.post_image == nil
+      if self.post_images.empty?
         post_image = PostImage.new
         post_image.post_id = self.id
         post_image.cloud_storage = @cloud_storage
         post_image.save!
-        self.post_image = post_image
+        self.post_images << post_image
       end
     end
   end

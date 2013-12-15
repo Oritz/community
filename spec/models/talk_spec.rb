@@ -4,7 +4,14 @@ describe Talk do
   let(:account) { create(:account) }
   let(:cloud_storage) { create(:cloud_storage) }
 
-  it "is valid with valid attributes and creates post at the same time"
+  it "should create a talk and a post at the same time" do
+    talk = Talk.new(content: "content")
+    talk.creator = account
+
+    talk.save!
+    expect(Talk.first).to eq talk
+    expect(Post.first).to eq talk.post
+  end
 
   it "should create a new item without image_url" do
     talk = Talk.new(content: "content")
@@ -18,7 +25,7 @@ describe Talk do
     talk.creator = account
     talk.save!
 
-    post_image = PostImage.where(post_id: talk.id).first
+    post_image = PostImage.where(post_id: talk.post.id).first
     expect(post_image).not_to be_nil
   end
 
@@ -28,7 +35,7 @@ describe Talk do
     talk.creator = account
 
     talk.save!
-    post_image = PostImage.where(post_id: talk.id).first
+    post_image = PostImage.where(post_id: talk.post.id).first
     expect(post_image).not_to be_nil
   end
 

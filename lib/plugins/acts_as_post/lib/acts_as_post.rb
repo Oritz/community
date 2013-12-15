@@ -38,7 +38,7 @@ module Sonkwo
               def #{attr}=(value)
                 post.#{attr} = value
               end
-              
+
               def #{attr}?
                 post.#{attr}?
               end
@@ -51,7 +51,7 @@ module Sonkwo
         def self.included(base)
           base.extend ClassMethods
         end
-        
+
         def method_missing(meth, *args, &blk)
           post.send(meth, *args, &blk)
         rescue NoMethodError

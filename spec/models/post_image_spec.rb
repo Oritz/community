@@ -1,8 +1,10 @@
 require 'spec_helper'
 
 describe PostImage do
-  let(:post) { create(:talk_post) }
-  let(:cloud_storage) { create(:cloud_storage_image) }
+  let(:account) { create(:account) }
+  let(:talk) { talk = Talk.new(content: "content"); talk.creator = account; talk.save!; talk }
+  let(:post) { talk.post}
+  let(:cloud_storage) { create(:cloud_storage_image, account: account) }
 
   it "is valid using valid attributes" do
     post_image = PostImage.new(comment: "comment")
@@ -41,5 +43,19 @@ describe PostImage do
     post_image.save!
 
     expect(post_image.cloud_storage.id).not_to eq cloud_storage.id
+  end
+
+  it "is not valid if create more than one images with talk" do
+    talk = Talk.new(content: "content", cloud_storage_id: cloud_storage.id)
+    talk.creator = account
+    talk.save!
+
+    post_image = PostImage.new
+    post_image.post = talk.post
+    post_image.cloud_storage = create(:cloud_storage)
+
+    post_image.valid?
+
+    expect(post_image).not_to be_valid
   end
 end

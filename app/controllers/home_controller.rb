@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
   before_filter :sonkwo_authenticate_account
+  before_filter :check_update_tag, only: [:index]
 
   def index
     @friends = Account.friends(current_account.id).limit(12).order("updated_at DESC")
@@ -42,7 +43,6 @@ class HomeController < ApplicationController
       else
         @posts = fetcher.behaviors(limit: 2, status: Post::STATUS_NORMAL, order: "created_at DESC")
       end
-      @posts = Post.downcast(@posts)
     elsif params[:type] == "groups"
       @posts = Subject.subjects_in_groups_added(current_account.id, 2)
       @posts = @posts.where("subjects.id < ?", params[:end_id]) if params[:end_id]
@@ -73,5 +73,28 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html
     end
+  end
+
+  def add_tag
+    @tag = Tag.find(params[:tag_id])
+    if current_account.tags.exists?(@tag) || current_account.tags << @tag
+      render json: { status: "success", data: { id: @tag.id } }
+    else
+      render json: { status: "error", message: I18n.t("common.unknow_error") }
+    end
+  end
+
+  def remove_tag
+    @tag = Tag.find(params[:tag_id])
+    if !current_account.tags.exists?(@tag) || current_account.tags.delete(@tag)
+      render json: { status: "success", data: { id: @tag.id } }
+    else
+      render json: { status: "error", message: I18n.t("common.unknow_error") }
+    end
+  end
+
+  private
+  def check_update_tag
+    redirect_to controller: :informations if current_account.update_tag.to_i < Account::UPDATE_TAG_FINISH
   end
 end
