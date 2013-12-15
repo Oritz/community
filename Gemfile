@@ -19,6 +19,7 @@ group :assets do
 
   gem 'uglifier', '>= 1.0.3'
   gem 'twitter-bootstrap-rails'
+  gem 'bootstrap-datetimepicker-rails'
 end
 
 gem 'jquery-rails'
@@ -45,7 +46,7 @@ gem 'json'
 gem 'zip'
 gem 'spreadsheet'
 gem 'uuidtools'
-
+gem 'rails3-active_form', '~> 2.0.0'
 #gem 'rmagick'
 
 group :development do

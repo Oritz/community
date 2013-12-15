@@ -10,6 +10,7 @@ en:
       edit: "Edit"
       search: "Search"
       show: "Show"
+      submit: "Submit"
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"

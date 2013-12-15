@@ -1,0 +1,32 @@
+=render 'admin/games/nav'
+=content_for :content
+  h3 =t('admin.titles.serial_type')
+  - unless @serial_types.empty?
+    table.table.table-striped.table-bordered
+      thead
+        th=t('admin.titles.serial_type')
+        th=t('helpers.actions')
+      tbody
+        - @serial_types.each do |serial_type|
+          tr
+            td=serial_type.type_name
+            td
+              .btn-toolbar
+                a.btn.btn-small.btn-warning href=edit_admin_serial_type_path(serial_type)
+                  i.icon-edit
+                =link_to(admin_serial_type_path(serial_type), :class=>'btn btn-small btn-warning', :confirm => t('helpers.links.confirm'), :method => :delete) do
+                  i.icon-remove
+  - else
+    =t('admin.msg.no_data')
+  div
+    a.btn.btn-primary href=new_admin_serial_type_path data-target='#modal' data-toggle='modal'
+      =t('admin.titles.new_serial_type')
+  #modal.modal.hide.fade role='dialog'
+    .modal-header
+      button.close data-dismiss='modal' aria-hidden='true'
+        |
+          &times;
+      h3 =yield :modal_title
+    .modal-body
+
+

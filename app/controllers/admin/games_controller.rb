@@ -1,25 +1,27 @@
 # -*- encoding : utf-8 -*-
 require 'uuidtools'
+#require 'common/workflow_service'
 class Admin::GamesController < AdminController
   def index
-    query = params[:query] ? params[:query].lstrip.rstrip : nil
+    query = params[:query] ? params[:query].chomp : nil
     auditing_games = nil
 
     if query == "" || query == nil
-      @games = Game.paginate(
-          :page => params[:page],
-          :per_page =>20
+      @games = GameFile.select('id, game_id, status, created_at').includes(:game).paginate(
+          :per_page => 10,
+          :page => params[:page]
       )
     else
-      @games = Game.paginate(
-          :conditions => "title LIKE '%#{query}%' OR alias_name LIKE '%#{query}%'",
-          :page => params[:page],
-          :per_page =>10
+      conditions =  "title LIKE '%#{query}%' OR alias_name LIKE '%#{query}%'"
+      @games = GameFile.select('id, game_id, status, created_at').includes(:game).where(conditions).paginate(
+          :per_page => 10,
+          :page => params[:page]
       )
+
     end
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html # index.html.slim
       format.xml  { render :xml => @admin_games }
     end
   end
@@ -37,7 +39,7 @@ class Admin::GamesController < AdminController
     @ext_servers = YAML.load_file("#{Rails.root}/config/app_data/ext_platforms.yml")
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.slim
       format.xml  { render :xml => @game }
     end
   end
@@ -48,7 +50,7 @@ class Admin::GamesController < AdminController
     @game = Game.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html # new.html.slim
       format.xml  { render :xml => @game }
     end
   end
@@ -94,17 +96,29 @@ class Admin::GamesController < AdminController
   # DELETE /admin_games/1.xml
   def destroy
     @game = Game.find(params[:id])
-    @game.destroy
+    form_data = params[:admin_game_serial_number_delete_form]
+    #start_time = Time.parse(form_data[:start_time])
+    #end_time = Time.parse(form_data[:end_time])
 
-    respond_to do |format|
-      format.html { redirect_to(admin_games_url) }
-      format.xml  { head :ok }
+    @delete_form = Admin::GameSerialNumberDeleteForm.new(form_data)
+
+    game_id = params[:admin_game_serial_number_delete_form][:game_id]
+    @game = Game.find(game_id)
+
+    if @delete_form.valid?
+      ActiveRecord::Base.transaction do
+        @all_count = GameSerialNumber.where("game_id=? AND batch_number=? AND serial_type=? AND created_at>=? AND created_at<=?", @delete_form.game_id, @delete_form.batch_number, @delete_form.serial_type, @delete_form.start_time, @delete_form.end_time).count
+        @used_count = GameSerialNumber.where("status<>? AND game_id=? AND batch_number=? AND serial_type=? AND created_at>=? AND created_at<=?", GameSerialNumber::STATUS_FRESH, @delete_form.game_id, @delete_form.batch_number, @delete_form.serial_type, @delete_form.start_time, @delete_form.end_time).count
+        GameSerialNumber.destroy_all(["status=? AND game_id=? AND batch_number=? AND serial_type=? AND created_at>=? AND created_at<=?", GameSerialNumber::STATUS_FRESH, @delete_form.game_id, @delete_form.batch_number, @delete_form.serial_type, @delete_form.start_time, @delete_form.end_time])
+      end
+    else
+      flash[:error] = t('admin.serial.delete_failed')
     end
+    flash[:notice] = t('admin.msg.success')
+    redirect_to game_serial_numbers_admin_game_path(@game)
   end
 
 
-
-  # 按名字查找游戏
   def search
     @admin_games = Game.paginate(
         :page => params[:page],
@@ -115,7 +129,6 @@ class Admin::GamesController < AdminController
     render :index
   end
 
-  # 列出game_id对应的预发布历史
   def pre_release_list
     id = params[:id]
     @game = Game.find(id)
@@ -127,8 +140,6 @@ class Admin::GamesController < AdminController
     end
   end
 
-
-  # 游戏预发布——上传游戏game_shell/game_ini，生成游戏种子、P2P下载包
   def new_pre_release
     game_id = params[:id]
 
@@ -149,18 +160,13 @@ class Admin::GamesController < AdminController
       @crypt_types << [sta, i]
       i += 1
     end
-
-    # 获取远程文件服务器上游戏对应目录下的版本目录列表
-    p "------#{Settings.sys_params.file_server_host}-------------#{Settings.sys_params.file_server_port}---------------------"
     socket = TCPSocket.new(Settings.sys_params.file_server_host, Settings.sys_params.file_server_port)
     socket.puts("LIST_DIR##{@game.alias_name}")
     dirs_json = socket.gets
-    puts "~~~~~~~~~~~~#{dirs_json}~~~~~~"
     socket.close
 
     @release_dirs = ActiveSupport::JSON.decode(dirs_json)
 
-    #判断是否存在已经发布成功的版本，如果有不允许再发布原游戏。
     prev_valideted_game_files = GameFile.where('game_id=? AND status=?', game_id, GameFile::STATUS_VALIDATED).order('created_at DESC')
 
     @release_dirs.delete("initial") unless prev_valideted_game_files.empty?
@@ -173,7 +179,7 @@ class Admin::GamesController < AdminController
         end
 
         @game_file.game_id = game_id
-        latest_game_file = GameFile.where('game_id=?', game_id).order('created_at DESC').lock('LOCK IN SHARE MODE')
+        latest_game_file = GameFile.where('game_id=?', game_id).order('created_at DESC').lock('LOCK IN SHARE MODE').first
 
         if latest_game_file
           prev_ini_ver = latest_game_file.ini_ver
@@ -215,7 +221,6 @@ class Admin::GamesController < AdminController
             @game_file.errors[:base] << t('admin.err.game_dir_not_specified')
           end
 
-          # 选择了重新加密和制作下载文件
           @game_file.file_dir = file_dir
           @game_file.crypt_type = crypt_type
 
@@ -226,13 +231,12 @@ class Admin::GamesController < AdminController
               @game_file.exe_path_name = exe_path_name
             end
           else
-            @game_file.exe_path_name = ""	# 不加密，EXE文件名允许为空
+            @game_file.exe_path_name = ""
           end
 
           @game_file.patch_ver = prev_patch_ver + 1
           @game_file.status = GameFile::STATUS_NEW
         elsif latest_game_file
-          # 和上次加密EXE、加密方式和下载包相同
           @game_file.file_dir = latest_game_file.file_dir
           @game_file.crypt_type = latest_game_file.crypt_type
           @game_file.exe_path_name = latest_game_file.exe_path_name
@@ -254,22 +258,16 @@ class Admin::GamesController < AdminController
 
         if @game_file.errors.size == 0
           @game_file.save!
-
-          if file_dir
-            # 同时做加密、生成下载等任务
-            Delayed::Job.enqueue(PreReleaseJob.new(@game_file.id), :queue=>"PreRelease")
-          end
-
-          redirect_to pre_release_list_admin_game_path(game_id), flash: t('admin.msg.success')
+          Admin::PreReleaseWorker.perform_async(@game_file.id) if file_dir
+          redirect_to pre_release_list_admin_game_path(game_id), notice: t('admin.msg.success')
         end
       end
     end
   end
 
-
-  # 撤销预发布
   def cancel_pre_release
     if request.post?
+      game_id = params[:id]
       game_file_id = params[:game_file_id]
 
       ActiveRecord::Base.transaction do
@@ -278,7 +276,7 @@ class Admin::GamesController < AdminController
         if !game_file
           err = t('admin.err.game_file_not_exist')
         else
-          game = Game.find(game_file.game_id)
+          game = Game.find(game_id)
 
           flow_status = {}
           flow_status[GameFile::STATUS_NEW] = "STATUS_NEW"
@@ -287,11 +285,11 @@ class Admin::GamesController < AdminController
           if game_file.status != GameFile::STATUS_NEW && game_file.status != GameFile::STATUS_TO_VERIFY
 
           else
-            new_status, rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", flow_status[game_file.status], "on_cancel", {:game_name => game.title, :game_file_id => game_file.id})
-            game_file.status = eval("GameFile::#{new_status}")
+            #new_status, rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", flow_status[game_file.status], "on_cancel", {:game_name => game.title, :game_file_id => game_file.id})
+            game_file.status = GameFile::STATUS_CANCELED   #eval("GameFile::#{new_status}")
             game_file.save!
 
-            flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
+            #flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
             # raise ActiveRecord::Rollback if flow_err
           end
 
@@ -308,8 +306,6 @@ class Admin::GamesController < AdminController
     end
   end
 
-
-  # 查询远程game_name的release_dir目录下的EXE
   def get_exe_files
     socket = TCPSocket.new(Settings.sys_params.file_server_host, Settings.sys_params.file_server_port)
     socket.puts("LIST_EXE##{params[:game_name]}##{params[:file_dir]}")
@@ -320,7 +316,6 @@ class Admin::GamesController < AdminController
     render :json => exes_json
   end
 
-  # 查询待审核游戏
   def release_search
     @release_to_audit_cnt = GameFile.status_to_verify.count
     @release_to_audit_cnts = GameFile.select('status, COUNT(id) AS release_count').group('status')
@@ -343,7 +338,7 @@ class Admin::GamesController < AdminController
     end
 
     @search_reault = Game.joins(:game_files).where(conditions).paginate(
-        :select=>"game_files.id, game_id, isbn, title, created_at, crypt_type, file_dir, exe_path_name, process_start_time, process_finish_time, process_result, ini_ver, shell_ver, patch_ver, game_files.status, created_at",
+        :select=>"game_files.id, game_id, title, created_at, crypt_type, file_dir, exe_path_name, process_start_time, process_finish_time, process_result, ini_ver, shell_ver, patch_ver, game_files.status, created_at",
         :order=>"created_at DESC",
         :per_page => 10,
         :page => params[:page]
@@ -352,46 +347,39 @@ class Admin::GamesController < AdminController
     # render :layout => false
   end
 
-  # 游戏审核发布——确认下载包、game_shell、game_ini的正式发布
-  def audit_release
 
-    game_id = nil
+  def audit_release
+    err = nil
+    game_id = params[:id]
+    @game = Game.select('id, title').where('id = ?', game_id).first
     game_file_id = params[:game_file_id]
     new_status = params[:new_status]
-    comment = params[:comment]	# 仅在不通过或回滚时才有
+    comment = params[:comment]
 
     @new_status = new_status.to_i
-
-    status = case @new_status
-               when GameFile::STATUS_VALIDATED, GameFile::STATUS_REJECTED
-                 GameFile::STATUS_TO_VERIFY
-               when GameFile::STATUS_ROLLBACKED
-                 GameFile::STATUS_VALIDATED
-             end
-
-    @game_file = Game.joins(:game_files).select(
-        'game_files.id, game_id, isbn, title, created_at, crypt_type, file_dir, exe_path_name, process_start_time, process_finish_time, process_result, ini_ver, shell_ver, patch_ver, game_files.status'
-    ).where('game_files.id=? AND game_files.status=?', game_file_id, status).first
-
     if request.get?
+      status = case @new_status
+                 when GameFile::STATUS_VALIDATED, GameFile::STATUS_REJECTED
+                   GameFile::STATUS_TO_VERIFY
+                 when GameFile::STATUS_ROLLBACKED
+                   GameFile::STATUS_VALIDATED
+               end
+
+      @game_file = GameFile.select('id, created_at, crypt_type, file_dir, exe_path_name, process_start_time, process_finish_time, process_result, ini_ver, shell_ver, patch_ver, status').where('id=? AND status =?', game_file_id, status).first
       unless @game_file
-        flash[:error] = t('admin.err.game_file_not_exist')
+        flash[:error] = t('admin.errors.game_file_not_exist')
       end
     elsif request.post?
       ActiveRecord::Base.transaction do
         case @new_status
           when GameFile::STATUS_VALIDATED
-            # 审核通过
             game_file = GameFile.lock(true).where('id=? AND status=?', game_file_id, GameFile::STATUS_TO_VERIFY).first
 
             not_null_fields = []
             unless game_file
-              err = I18n.t("ERRORS.ERR_GAME_FILE_NOT_EXIST")
+              err = t('admin.errors.game_file_not_exist')
             else
-              # 验证应有字段是否完整
               not_null_fields = [game_file.seed_content, game_file.seed_digest, game_file.file_size]
-
-              #有加密方式不为不加密的时,增加game_key , game_key_iv
               if game_file.crypt_type != Launcher::CRYPT_TYPE_EXTERNAL
                 not_null_fields.join(game_file.game_key)
                 not_null_fields.join(game_file.game_key_iv)
@@ -401,28 +389,24 @@ class Admin::GamesController < AdminController
 
               not_null_fields.each do |n|
                 if !n
-                  err = I18n.t("ERRORS_ERR_GAME_FIELD_MISSING")
+                  err = t('admin.errors.game_fields_missing')
                 end
               end
 
               unless err
                 previous_release = GameFile.lock(true).where('game_id=? AND created_at < ? AND (status=? OR status=?)', game_file.game_id, game_file.created_at, GameFile::STATUS_NEW, GameFile::STATUS_TO_VERIFY)
-
-                #将之前未来得及审核的版本标记为取消发布状态
                 previous_release.each do |p|
                   p.status = GameFile::STATUS_CANCELED
                   p.save!
                 end
 
-                #发送工作流任务初始化
-                game = Game.find(game_file.game_id).select('title')
 
-
-                new_flow_status , rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", "STATUS_TO_VERIFY", "on_pass", {:game_name => game.title, :game_file_id => game_file.id})
-                game_file.status =  eval("GameFile::#{new_flow_status}")
+                #game = Game.find(game_file.game_id).select('title')
+                #new_flow_status , rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", "STATUS_TO_VERIFY", "on_pass", {:game_name => game.title, :game_file_id => game_file.id})
+                game_file.status =  GameFile::STATUS_VALIDATED #eval("GameFile::#{new_flow_status}")
                 game_file.save!
 
-                flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
+                #flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
                 # raise ActiveRecord::Rollback if flow_err
               end
             end
@@ -433,69 +417,59 @@ class Admin::GamesController < AdminController
             latest_game_file = GameFile.where('game_id=?', game_file.game_id).select('created_at').order('created_at DESC').first
 
             if !game_file
-              err = I18n.t("ERRORS.ERR_GAME_FILE_NOT_EXIST")
+              err = t('admin.errors.game_file_not_exist')
             elsif comment == nil || comment.strip.length == 0
-              err = I18n.t("ERRORS.ERR_MISSING_AUDIT_REJECT_COMMENT")
+              err = t('admin.errors.audit_comment_missing')
             elsif game_file.created_at < latest_game_file.created_at
-              err = I18n.t("ERRORS.ERR_MISSING_AUDIT_REJECT_COMMENT")
+              err = t('admin.errors.history_release_canot_be_release')
             else
-
-              game = Game.find(game_file.game_id).select('title').first
-
-              new_flow_status , rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", "STATUS_TO_VERIFY", "on_rejected", {:game_name => game.title, :game_file_id => game_file.id})
-              game_file.status = eval("GameFile::#{new_flow_status}")
+              #new_flow_status , rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", "STATUS_TO_VERIFY", "on_rejected", {:game_name => game.title, :game_file_id => game_file.id})
+              game_file.status = GameFile::STATUS_REJECTED  #eval("GameFile::#{new_flow_status}")
               game_file.comment = comment
               game_file.save!
 
-              flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
+              #flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
               # raise ActiveRecord::Rollback if flow_err
             end
 
           when GameFile::STATUS_ROLLBACKED
-            # 审核回滚
-            game_file = GameFile.lock(true).where('id=? AND status=?', game_file_id, GameFile::STATUS_VALIDATED)
-            game = Game.find(game_file.game_id).select('title')
+            game_file = GameFile.lock(true).where('id=? AND status=?', game_file_id, GameFile::STATUS_VALIDATED).first
             if !game_file
-              err = I18n.t("ERRORS.ERR_GAME_FILE_NOT_EXIST")
+              err = t('admin.errors.game_file_not_exist')
             elsif comment == nil || comment.strip.length == 0
-              err = I18n.t("ERRORS.ERR_MISSING_AUDIT_ROLLBACK_COMMENT")
+              err = t('admin.errors.audit_comment_missing')
             else
-              new_flow_status , rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", "STATUS_VALIDATED", "on_rollback", {:game_name => game.title, :game_file_id => game_file.id})
+              #new_flow_status , rcpt, cc, msg_title, msg_body = WorkflowService.process("release_game", "STATUS_VALIDATED", "on_rollback", {:game_name => game.title, :game_file_id => game_file.id})
 
-              game_file.status = eval("GameFile::#{new_flow_status}")
+              game_file.status = GameFile::STATUS_ROLLBACKED #eval("GameFile::#{new_flow_status}")
               game_file.comment = comment
               game_file.save!
 
-              flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
+              #flow_err = WorkflowService.send_notification(rcpt, cc, msg_title, msg_body)
               # raise ActiveRecord::Rollback if flow_err
             end
           else
-            err = I18n.t("ERRORS.ERR_INVALID_AUDIT_STATUS")
+            err = t('admin.errors.invalid_release_status')
         end
       end
-
-
-      if err
-        @error = err
-      else
-        show_msg(I18n.t("page.admin.release_success"))
-      end
+      redirect_to admin_games_path, :notice => t('admin.msg.success')
     end
   end
 
-
-
-  # 下载发布——将下载内容发布到各个下载服务器
   def submit_release
     game_id = params[:id]
     @game = Game.select('id, title, alias_name').find(game_id)
     @download_servers = Admin::DownloadServer.all
+    game_file = Game.includes(:game_files).where('games.id = ? AND (game_files.status = ? OR game_files.status =?)', game_id, GameFile::STATUS_TO_VERIFY, GameFile::STATUS_VALIDATED).order('game_files.created_at DESC').first
+    unless game_file
+      flash.now[:notice] = t('game_files_not_do_prelease')
+    end
 
     if request.post?
       server_ids = params[:server_ids]
 
       server_ids.each do |server_id|
-        Delayed::Job.enqueue(PublishReleaseFilesJob.new(game_id, @game.alias_name, server_id), :queue=>"PublishRelease")
+        Admin::PublishReleaseFilesWorker.perform_async(game_id, @game.alias_name, server_id)
       end
       #	TODO: 调用通知工具
 
@@ -503,7 +477,171 @@ class Admin::GamesController < AdminController
     end
   end
 
-  # 管理成就
+  def game_serial_numbers
+    query = params[:query] ? params[:query].gsub(/\s+/, "") : nil
+    status = params[:status].to_i # 0: fresh 1: used 2: allocated
+    game_id = params[:id]
+    @game = Game.find(game_id)
+    if query
+      @admin_serial_numbers = GameSerialNumber.select('id, serial_number, serial_type, status, created_at, updated_at').includes(:serial_type).where("game_id=? AND serial_number LIKE ?", game_id, "%#{query}%").paginate(
+          :per_page => 10,
+          :page => params[:page]
+      )
+    else
+      @admin_serial_numbers = GameSerialNumber.select('id, serial_number, serial_type, status, created_at, updated_at').includes(:serial_type).where('game_id=? AND status=?', game_id, status).paginate(
+          :per_page => 10,
+          :page => params[:page]
+      )
+    end
+
+    @serial_number_types = []
+    (0..GameSerialNumber::STATUS-2).each do |i|
+      temp_status = GameSerialNumber.select('status, count(*) as number, serial_type').includes(:serial_type).where('game_id=? AND status=?', game_id, i).group('serial_type').all
+      temp_status.each do |item|
+        number = @serial_number_types[item.serial_type.id] ? @serial_number_types[item.serial_type.id][:number] : []
+        number[i] = item.number || 0
+        @serial_number_types[item.serial_type.id] = {:type_name => item.serial_type.type_name, :type_desc => item.serial_type.type_desc, :number => number}
+      end
+    end
+    puts @serial_number_types
+
+    @serial_number_counts = GameSerialNumber.select('status, count(*) AS totalcount').where('game_id=?', game_id).group('status').all
+    @serial_number_total_count = GameSerialNumber.where('game_id=?', game_id).count
+
+    @serial_types = SerialType.select('serial_types.id, type_name').joins('LEFT JOIN game_serial_types AS gt ON gt.serial_type = serial_types.id').where('type_cat=? or game_id=?', SerialType::TYPE_BASIC, game_id).group('serial_types.id')
+
+    @serial_type = SerialType.new
+    @serial_type.type_cat = SerialType::TYPE_PRIVATE
+
+    respond_to do |format|
+      format.html # index.html.slim
+      format.xml  { render :xml => @admin_serial_numbers }
+    end
+  end
+
+  def game_serial_type
+    game_id = params[:id]
+    @game = Game.find(game_id)
+    @public_serial_types = SerialType.where('type_cat =?', SerialType::TYPE_PUBLIC).all
+    @private_serial_types = SerialType.where('type_cat =?', SerialType::TYPE_PRIVATE).all
+    @basic_serial_types = SerialType.where('type_cat =?', SerialType::TYPE_BASIC).all
+    game_serial_type_arr = GameSerialType.select('serial_type').where('game_id=?', game_id).all
+
+    game_serial_type_arr.each do |serial|
+      @game.serial_type_arr.push(serial.serial_type)
+    end
+
+    if request.put?
+      begin
+        ActiveRecord::Base.transaction do
+          old_serial_type_arr = @game.serial_type_arr
+
+          param_types = params[:game][:serial_type_arr]
+          new_type_arr = Array.new
+          param_types.each do |k, v|
+            new_type_arr << k.to_i if v.to_i > 0
+          end
+          # exclude the basic type
+          exclude_serial_types = @basic_serial_types.collect{|t| t.id.to_i}
+          new_type_arr = new_type_arr - exclude_serial_types
+
+          @game.serial_type_arr = new_type_arr
+          deleted_serial_type_arr = old_serial_type_arr - @game.serial_type_arr
+
+          deleted_serial_type_arr.each do |serial_type|
+            deteled_serial_type = GameSerialType.where('game_id=? AND serial_type=?', @game.id, serial_type).first
+            deteled_serial_type.destroy if deteled_serial_type
+          end
+
+          new_serial_type_arr = @game.serial_type_arr - old_serial_type_arr
+
+          new_serial_type_arr.each do |serial_type|
+            game_serial_type = GameSerialType.new(
+                :game_id=>@game.id,
+                :serial_type=>serial_type
+            )
+
+            game_serial_type.save!
+          end
+        end
+
+        flash[:notice] = t('admin.msg.success')
+        redirect_to game_serial_numbers_admin_game_path(@game)
+      rescue
+        #puts $!.to_s
+        #puts $!.backtrace
+      end
+    end
+  end
+
+  def delete_selection
+    @delete_form = Admin::GameSerialNumberDeleteForm.new(:game_id => params[:id])
+    @game = Game.find(params[:id])
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def import_serials
+    err =nil
+    game_id = params[:id].to_i
+    serial_type = params[:serial_type].to_i
+    serial_file = params[:serial_file].tempfile
+    serial_status = params[:serial_status].to_i
+    batch_number = params[:batch_number].to_i
+
+    unless serial_file
+      err = I18n.t("ERRORS.ERROR_HAVE_NOT_CHOOSE_A_SERIAL_FILE")
+    end
+
+    if serial_status < 0 || serial_status >= GameSerialNumber::STATUS
+      err = I18n.t("ERRORS.ERROR_INVALID_SERIAL_STATUS")
+    end
+
+    serial_numbers = []
+    File.open(serial_file, 'r').each_line do |line|
+      serial_numbers << line
+    end
+    #ret = GameSerialNumber.import(serial_numbers, game_id, serial_type, serial_status, batch_number)
+
+    #respond_to do |format|
+    #end
+
+    sql_str = ""
+    connection = ActiveRecord::Base.connection
+    serial_numbers = []
+    File.open(serial_file, 'r').each_line do |line|
+      serial_numbers << line
+    end
+    begin
+      ActiveRecord::Base.transaction do
+        serial_numbers.each_with_index do |serial_number, index|
+          serial_number = serial_number.gsub(/\s+/, "")
+          sql_str << "(NULL,#{game_id},#{serial_type},#{batch_number},'#{serial_number}',#{serial_status},NOW(),NOW())," unless serial_number == ""
+          if sql_str != "" && ((index+1) % 50 == 0 || (index+1) == serial_numbers.count)
+            sql_str = "INSERT INTO game_serial_numbers VALUES "  + sql_str[0..-2]
+            connection.execute(sql_str)
+            sql_str = ""
+          end
+        end
+      end
+    rescue
+      puts $!.inspect
+      puts $!.backtrace
+      err = $!.inspect
+    end
+
+    if err == nil
+      flash[:notice] = t('admin.msg.success')
+      data = {}
+    else
+      flash[:error] = t('admin.msg.failed')
+    end
+
+    redirect_to game_serial_numbers_admin_game_path(game_id)
+  end
+
   def manage_achievement
     game_id = params[:id]
 
@@ -521,7 +659,7 @@ class Admin::GamesController < AdminController
     end
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.slim
       format.xml  { render :xml => @achievements }
     end
   end

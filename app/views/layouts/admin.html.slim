@@ -27,9 +27,10 @@ html lang="en"
           a.brand href="#"Sonkwo Dashboard
           .container.nav-collapse
             ul.nav
-              li= link_to I18n.t 'admin.titles.games', admin_games_path
-              li= link_to I18n.t 'admin.titles.clients', "http://www.baidu.com"
-              li= link_to I18n.t 'admin.titles.servers', "http://www.sonkwo.com"
+              li= link_to t('admin.titles.my_page'), admin_path
+              li= link_to t('admin.titles.games'), admin_games_path
+              li= link_to t('admin.titles.clients'), admin_clients_path
+              li= link_to t('admin.titles.servers'), admin_download_servers_path
               li.divider
             ul.nav.pull-right
               li= link_to t('helpers.links.logout'), destroy_account_session_path
@@ -42,13 +43,13 @@ html lang="en"
     .container
 
       .row
-        .span3
+        .span2
           .well.sidebar-nav
             h3 Sidebar
             ul.nav.nav-list
               li.nav-header Sidebar
               = yield :sidebar
-        .span9
+        .span10
           = bootstrap_flash
           = yield :content
 
@@ -57,5 +58,5 @@ html lang="en"
         p &copy; Sonkwo 2013
 
     = javascript_include_tag "admin"
-    = javascript_include_tag "http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js"
+    = yield :js_files
 

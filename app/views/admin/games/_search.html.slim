@@ -4,14 +4,37 @@
   table.table.table-striped.table-bordered.table-condensed
     thead
       tr
-        th =I18n.t 'admin.game.id'
-        th =I18n.t 'admin.game.name'
-        th =I18n.t 'helpers.actions'
+        th =t 'admin.game.id'
+        th =t 'admin.game.name'
+        th =t 'admin.game.status'
+        th.text-center colspan=3  =t 'admin.game.release_process'
+        th =t 'admin.serial.serials'
     tbody
       - @games.each do |g|
-        tr
-          td =g.id
-          td title=g.alias_name =g.title
-          td =link_to t('admin.titles.pre_release'), pre_release_list_admin_game_path(g.id)
-          td =link_to t('admin.titles.submit_release'), submit_release_admin_game_path(g.id)
-          td =link_to t('admin.titles.audit_release'), audit_release_admin_game_path(g.id)
+        tr class=tr_with_status(g.status)
+          td =g.game.id
+          td title=g.game.alias_name =g.game.title
+          td.danger =t('admin.game.release_status')[g.status]
+          td
+            - if g.status == GameFile::STATUS_TO_VERIFY || g.status == GameFile::STATUS_NEW
+              =t('admin.titles.pre_release')
+            -else
+              =link_to t('admin.titles.pre_release') + ' ', pre_release_list_admin_game_path(g.game.id)
+              i.icon-arrow-right
+          td
+            - if g.status == GameFile::STATUS_TO_VERIFY || g.status == GameFile::STATUS_VALIDATED
+              =link_to t('admin.titles.submit_release') + ' ', submit_release_admin_game_path(g.game.id)
+              i.icon-arrow-right
+            - else
+              =t('admin.titles.submit_release')
+          td
+            - if g.status == GameFile::STATUS_TO_VERIFY
+              =link_to t('admin.game.release_pass'), audit_release_admin_game_path(:id => g.game.id, :game_file_id => g.id, :new_status => GameFile::STATUS_VALIDATED)
+              |
+              =link_to t('admin.game.release_not_pass'), audit_release_admin_game_path(:id => g.game.id, :game_file_id => g.id, :new_status => GameFile::STATUS_REJECTED)
+            - elsif g.status == GameFile::STATUS_VALIDATED
+              =link_to t('admin.game.rollback'), audit_release_admin_game_path(:id => g.game.id, :game_file_id => g.id, :new_status => GameFile::STATUS_ROLLBACKED)
+            - else
+              =t('admin.tips.no_release')
+          td
+            =link_to t('admin.game.serial_number'), game_serial_numbers_admin_game_path(g.game.id)

@@ -1,17 +1,11 @@
 =render 'nav'
 -content_for :content do
-  h1 =@game.title
+  h3 =@game.title
   - if @prev_game_files && !@prev_game_files.empty?
-    table.table.table-striped.table-bordered
+    table.table.table-striped.table-bordered.table-condensed
       thead
         tr
           th =t 'admin.game.release.pre_release_time'
-          th =t 'admin.game.release.encrype_type'
-          th =t 'admin.game.release.do_pre_release_start_time'
-          th =t 'admin.game.release.do_pre_release_end_time'
-          th =t 'admin.game.release.pre_release_result'
-          th =t 'admin.game.release.ini_version'
-          th =t 'admin.game.release.shell_version'
           th =t 'admin.game.release.release_status'
           th =t 'admin.game.release.audit_result'
           th =t 'helpers.actions'
@@ -19,21 +13,13 @@
         - @prev_game_files.each do |game_file|
           tr
             td =sonkwo_time_format(game_file.created_at)
-            td =t 'admin.game.crypt_types'[game_file.crypt_type]
-            td =sonkwo_time_format(game_file.process_start_time) if game_file.process_finish_time
-            td =sonkwo_time_format(game_file.process_finish_time) if game_file.process_finish_time
-            td =game_file.process_result
-            td =game_file.ini_ver
-            td =game_file.shell_ver
-            td =game_file.patch_ver
-            td =t 'admin.game.audit_status'[game_file.status]
+            td =t('admin.game.audit_status')[game_file.status]
             td =game_file.comment
             td
               - if game_file.status == GameFile::STATUS_NEW || game_file.status == GameFile::STATUS_TO_VERIFY
-			    = button_to t ('admin.game.release.cancel_release'), action:'cancel_pre_release', game_file_id:game_file.id
-  - else
-    = t 'admin.msg.no_release'
-
-  p
-    a.btn.btn-info href =new_pre_release_admin_game_path
-      =t 'admin.game.release.new_pre_release'
+			    = button_to t('admin.game.release.cancel_release'), cancel_pre_release_admin_game_path(:game_file_id => game_file.id, :class => 'btn')
+              - else
+                = t 'admin.msg.no_release'
+    p
+      a.btn.btn-info href =new_pre_release_admin_game_path
+        =t 'admin.game.release.new_pre_release'

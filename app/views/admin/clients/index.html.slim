@@ -1,0 +1,19 @@
+=render 'nav'
+=content_for(:content) do
+  - unless @admin_clients.empty?
+    table.table.table-bordered.table-condensed.table-striped
+      thead
+        tr
+          th=t('admin.client.ver')
+          th=t('admin.data.created_at')
+          th
+      tbody
+        -@admin_clients.each do |client|
+          tr
+            td="#{client.major_ver}.#{client.minor_ver}.#{client.tiny_ver}"
+            td= sonkwo_time_format(client.created_at)
+            td
+              =link_to(admin_client_path(client), :class=>"btn btn-small btn-warning", :confirm => t('helpers.links.confirm'), :method => :delete) do
+                i.icon-remove
+  -else
+    =t('admin.msg.no_data')

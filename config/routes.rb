@@ -107,10 +107,23 @@ SonkwoCommunity::Application.routes.draw do
         get :submit_release
         get :new_pre_release
         get :audit_release
-        post :pre_release
+        get :game_serial_numbers
+        get :delete_selection
+        get :game_serial_type
+        post :pre_release_list
         post :submit_release
+        post :new_pre_release
+        post :cancel_pre_release
+        post :audit_release
+        put :import_serials
+        put :game_serial_type
       end
     end
+
+    resources :serial_types
+    resources :download_servers
+    resources :clients
+    get '/', to: 'admin#index'
 
   end
 end

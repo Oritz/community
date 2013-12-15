@@ -147,6 +147,63 @@ default: &defaults
       time_limit: 0
       value: 50
       bonus: 10
+  sys_params:
+    file_server_host: 10.1.1.22
+    file_server_port: 8800
+  tools:
+    entrypt_tool_name: ["", "F:\\Bin_ReleaseTool\\protectors\\protect.exe"]
+    entrypt_tool_cmds: ["", "\"#{tools_config['entrypt_tool_name']}\" \"#{exe_path_name}\" #{game_id} #{current_game_file.ver} #{current_game_file.game_key} #{current_game_file.game_key_iv}"]
+    release_tool: "F:\\Bin_ReleaseTool\\DownloadReleaseTool.exe"
+    files_root_dir: "C:\\P2PDownload"
+    file_meta_dir: "C:/P2PDownload/Meta"
+    down_release_tool: "F:\\Bin_ReleaseTool\\dist_server.py"
+
+  release_game_workflows:
+    desc: release_workflows
+    statuses:
+      STATUS_NEW:
+        on_pass:
+          to_status: STATUS_TO_VERIFY
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          cc: guangxing.wang@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}pre_release success，Game file id：{{game_file_id}}"
+        on_failed:
+          to_status: STATUS_NEW
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}pre_release failed，Game file id：{{game_file_id}}"
+        on_cancel:
+          to_status: STATUS_CANCELED
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}pre_release canceled，Game file id：{{game_file_id}}。"
+      STATUS_TO_VERIFY:
+        on_pass:
+          to_status: STATUS_VALIDATED
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}audit passed，Game file id：{{game_file_id}}。"
+        on_cancel:
+          to_status: STATUS_CANCELED
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}canceled，Game file id：{{game_file_id}}。"
+        on_rejected:
+          to_status: STATUS_REJECTED
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "游戏{{game_name}}not pass，Game file id：{{game_file_id}}。"
+      STATUS_VALIDATED:
+        on_rollback:
+          to_status: STATUS_ROLLBACKED
+          rcpt: zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}have rolled back，Game file id：{{game_file_id}}。"
+        on_uploaded:
+          rcpt: zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}game seed have been uploaded：{{download_server}}。"
 
 development:
   <<: *defaults

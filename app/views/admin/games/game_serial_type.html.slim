@@ -1,0 +1,32 @@
+=render 'nav'
+-content_for(:content) do
+  h3 =@game.title
+  = form_for(@game, :url => {:action => :game_serial_type}, :class=>'form-horizontal', :method => 'PUT') do |f|
+    - @game.errors.any?
+      - @game.errors.full_messages.each do |msg|
+        =msg
+    .control-group
+      label.control-label
+        =t('admin.serial.serial_types')[SerialType::TYPE_BASIC]
+      .controls
+        - @basic_serial_types.each do |serial_type|
+          = check_box("game[serial_type_arr]", serial_type.id, {:checked=>true, :disabled =>true})
+          = serial_type.type_name
+    .control-group
+      label.control-label
+        =t('admin.serial.serial_types')[SerialType::TYPE_PUBLIC]
+      .controls
+        - @public_serial_types.each do |serial_type|
+          = check_box 'game[serial_type_arr]', serial_type.id, {:checked=>@game.serial_type_arr.include?(serial_type.id) }
+          = serial_type.type_name
+    .control-group
+      label.control-label for='type_desc'
+        =t('admin.serial.serial_types')[SerialType::TYPE_BASIC]
+      .controls
+        - @private_serial_types.each do |serial_type|
+          = check_box 'game[serial_type_arr]', serial_type.id, {:checked=>@game.serial_type_arr.include?(serial_type.id) }
+          = serial_type.type_name
+    .control-group
+      .controls
+        = f.submit t('helpers.links.submit'), :class=>'btn btn-primary'
+

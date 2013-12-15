@@ -1,0 +1,14 @@
+=render 'nav'
+-content_for :content do
+  h3=@game.title
+  =form_tag( :action => 'submit_release') do
+    div
+      input type='hidden' name='game_id' value=@game.id
+    -if @download_servers.empty?
+      div.alert.alert-warning =t('admin.tips.no_download_servers')
+    -else
+      - @download_servers.each do |download_server|
+          div
+            input name='server_ids[]' type='checkbox' value=download_server.id
+            =download_server.comment
+      input.btn type='submit' value=t('helpers.links.submit')

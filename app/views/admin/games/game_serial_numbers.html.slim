@@ -1,0 +1,95 @@
+=render 'nav'
+-content_for(:content) do
+  h3=@game.title
+  - unless @serial_number_types.empty?
+    table.table.table-bordered.table-condensed
+      thead
+        th=t('admin.titles.serial_type')
+        - index = (0..GameSerialNumber::STATUS-2) #include all tag
+        - index.each do |i|
+          th=t('admin.serial.status')[i]
+      tbody
+        - @serial_number_types.each do |s|
+          - next unless s
+          tr
+            td=s[:type_desc]
+            - index.each do |i|
+              td=s[:number][i] || 0
+        tr
+          td=t('admin.serial.serial_types')[GameSerialNumber::STATUS_ALL]
+          td= @serial_number_total_count
+
+  .btn-toolbar
+    button.btn.btn-primary name="import_link" href="#import_div" data-toggle='modal' =t('admin.serial.import_serial_number')
+    =link_to t('admin.serial.delete_serials'), delete_selection_admin_game_path(@game.id), :class => "btn btn-primary"
+  =form_tag game_serial_numbers_admin_game_path, :method => :get, :class => 'form-search form-inline pull-right' do
+    input name="game_id" value=@game.id type="hidden"/
+    span
+      input#search_text.input-medium.search-query name="query" type="text"/
+    span
+      input.btn.btn-primary type="submit" value=t('helpers.links.search') /
+  ul#my_tab.nav.nav-tabs
+    - @serial_number_counts.each do |s|
+      li id=s.status
+        =link_to(t('admin.serial.status')[s.status],game_serial_numbers_admin_game_path(@game, :status =>s.status))
+  - unless @admin_serial_numbers.empty?
+    table.table.table-bordered.table-condensed.table-striped
+      thead
+        th=t('admin.titles.serial_type')
+        th=t('admin.serial.serial_number')
+        th=t('admin.serial.created_at')
+        th=t('admin.serial.updated_at')
+      tbody
+        -@admin_serial_numbers.each do |serial_number|
+          tr
+            td= serial_number.serial_type.type_desc
+            td= serial_number.serial_number
+            td= sonkwo_time_format(serial_number.created_at)
+            td= sonkwo_time_format(serial_number.updated_at)
+    div=will_paginate @admin_serial_numbers, :class =>'pagination', :previous_label => "&laquo; #{t('helpers.links.previous')}", :next_label => "#{t('helpers.links.next')} &raquo;"
+  -else
+    =t('admin.msg.no-data')
+  #import_div.modal.hide.fade role='dialog'
+    .modal-header
+      button.close data-dismiss='modal' aria-hidden='true'
+        |
+          &times;
+      h3 =t('admin.titles.import_serial_numbers')
+    =form_for(@game, :html => {:multipart => true, :id=>'import_form', :class=>'form-horizontal'},  :url => { :action => 'import_serials' }, :method => 'put') do |g|
+      .modal-body
+          .control-group
+            label.control-label for='batch_number'
+              =t('admin.serial.batch')
+            .controls
+              =select_tag('batch_number', options_for_select((0..34), 0))
+          .control-group
+            label.control-label for='serial_type'
+              =t('admin.titles.serial_type')
+            .controls
+              =select_tag('serial_type', options_from_collection_for_select(@serial_types,'id', 'type_name'), prompt: t('helpers.tip.select_something'))
+              =link_to(t('admin.serial.bind_new_type'), game_serial_type_admin_game_path)
+              /<a id="bind_new_type_link" href="<%= admin_serial_types_path(:game_id => @game.id) -%>">绑定新类型</a>
+          .control-group
+            label.control-label for='serial_status'
+              =t('admin.serial.status')[GameSerialNumber::STATUS]
+            .controls
+              =select_tag('serial_status', options_from_collection_for_select(select_from_local_arrary(t('admin.serial.status')[0..2]),'value', 'content' ))
+          .control-group
+            .controls
+              .alert.fade.in
+                button.close data-dismiss='alert' type='button'
+                strong
+                  =t('helpers.tips.tip')
+                  |:
+                  =t('admin.tips.allocated_for_third_part')
+          .control-group
+            label.control-label for='serial_file'
+              =t('admin.serial.serial_file')
+            .controls
+              =file_field_tag 'serial_file'
+      .modal-footer
+        input.btn.btn-primary type='submit' value=t('helpers.links.submit') /
+-unless @admin_serial_numbers.empty?
+  -content_for(:js_files) do
+    javascript:
+      $("##{@admin_serial_numbers.first.status}").addClass('active');

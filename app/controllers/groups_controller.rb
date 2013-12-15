@@ -15,7 +15,7 @@ class GroupsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html # index.html.slim
       format.json { render json: @groups }
     end
   end
@@ -30,7 +30,7 @@ class GroupsController < ApplicationController
     #@subjects = Subject.sort_by_time_in_group(@group.id).paginate(page: params[:page], per_page: 10)
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.slim
       format.json { render json: @group }
     end
   end
@@ -42,7 +42,7 @@ class GroupsController < ApplicationController
     @group = Group.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html # new.html.slim
       format.json { render json: @group }
     end
   end

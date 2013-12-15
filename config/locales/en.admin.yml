@@ -17,6 +17,13 @@ en:
       name: "NAME"
       english_name: "ENGLISH NAME"
       crypt_types: ["no crypt", "crypt(for test)"]
+      release_status: ["Not Release", "New Release", "Passed", "Not Pass", "Canceled", "Rollbacked"]
+      release_comment: "Comment"
+    serial:
+      status: ["fresh", "used", "allocated", "all", "status"]
+      serial_types: ["public", "private", "basic", "all"]
     msg:
       no_game: "Not find any games"
-
+      success: "Done Success"
+    client:
+      upload_tip: "file name must be formatted as：Sonkwo_major_ver.minor_ver.tiny_ver.msi,如：Sonkwo_1.0.0.msi"

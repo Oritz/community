@@ -15,3 +15,9 @@ zh:
       id: "游戏ID"
       name: "游戏名"
       english_name: "英文名"
+      relese_status: ["未发布", "新建预发布", "审核通过", "审核未通过", "取消发布", "回滚"]
+      status: "状态"
+    msg:
+      success: "操作成功"
+    client:
+      upload_tip: "请务必按照格式来命名文件，标准格式为：Sonkwo_major_ver.minor_ver.tiny_ver.msi,如：Sonkwo_1.0.0.msi"
