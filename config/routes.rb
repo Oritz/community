@@ -44,7 +44,11 @@ SonkwoCommunity::Application.routes.draw do
       get 'people'
       get 'games'
     end
+    resources :albums, only: [:index, :create, :show, :new] do
+      resources :photos, only: [:index, :create]
+    end
   end
+  post 'photos/screenshot', to: 'photos#screenshot'
 
   resources :home, only: [:index] do
     collection do
@@ -76,11 +80,6 @@ SonkwoCommunity::Application.routes.draw do
   resources :games, only: [] do
     resources :game_achievements, only: [:index, :show]
   end
-
-  resources :albums do
-    resources :photos, only: [:index, :create]
-  end
-  post 'photos/screenshot', to: 'photos#screenshot'
 
   # sidekiq
   require 'sidekiq/web'
