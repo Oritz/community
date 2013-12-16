@@ -12,10 +12,30 @@ class PostImagesController < ApplicationController
     respond_to do |format|
       if post_image.save
         format.html
-        format.json { render json: { status: "success", data: { url: post_image.url } } }
+        format.json { render json: { status: "success", data: { id: post_image.id } } }
       else
         format.html
         foramt.json { render json: { status: "fail", data: post_image.errors } }
+      end
+    end
+  end
+
+  def destroy
+    subject = Subject.find(params[:subject_id])
+    post_image = PostImage.find(params[:id])
+
+    if(post_image.post_id != subject.post.id)
+      render json: { status: "error", message: I18n.t("subject.image_is_not_belongs_to") }
+      return
+    else
+      respond_to do |format|
+        if post_image.destroy
+          format.html
+          format.json { render json: { status: "success", data: { id: post_image.id } } }
+        else
+          format.html
+          format.json { render json: {status: "fail", data: post_image.errors } }
+        end
       end
     end
   end
