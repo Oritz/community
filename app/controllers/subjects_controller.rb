@@ -11,10 +11,13 @@ class SubjectsController < ApplicationController
   end
 
   def new
-    @subject = current_account.pending_subject
+    @post = current_account.pending_subject
+    @subject = @post.detail
+    @subject.post = @post
     @cloud_storage_settings = CloudStorage.settings(current_account)
     @new_post_image = PostImage.new
-
+    @post_images = @subject.post.post_images.includes(:cloud_storage)
+    
     if params[:group_id]
       @group = Group.find(params[:group_id])
       @subject.group = @group
