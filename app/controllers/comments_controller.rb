@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
   # GET /comments/index.json
   def index
     @post = Post.find(params[:post_id])
-    @comments = Comment.comments_of_a_post(@post).includes(:creator, :original_author).order("created_at DESC").paginate(page: params[:page], per_page: 10)
+    @comments = Comment.of_a_post(@post).includes(:creator, :original_author).order("created_at DESC").paginate(page: params[:page], per_page: 10)
 
     respond_to do |format|
       format.html

@@ -3,6 +3,7 @@
 //= require ../../../../vendor/assets/javascripts/jquery.waterwheelCarousel.min
 
 $(document).ready(function() {
+  show_level($(".total-level").parent());
   var user_id = $(".avatar-block").attr("user_id");
 
   // fetch posts

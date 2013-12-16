@@ -106,7 +106,7 @@ class GroupsController < ApplicationController
     @group.accounts << current_account if current_account && !@group.accounts.include?(current_account)
     respond_to do |format|
       format.html { redirect_to :back }
-      format.json { head :no_content }
+      format.json { render json: { status: "success", data: { account_id: current_account.id, group_id: @group.id} } }
     end
   end
 
@@ -116,7 +116,7 @@ class GroupsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to :back }
-      format.json { head :no_content }
+      format.json { render json: { status: "success", data: { account_id: current_account.id, group_id: @group.id } } }
     end
   end
 
