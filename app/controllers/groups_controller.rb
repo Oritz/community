@@ -39,7 +39,7 @@ class GroupsController < ApplicationController
   # GET /groups/new.json
   def new
     return unless check_access?(auth_item: "oper_groups_create")
-    @group = Group.new
+    @group = flash[:group] || Group.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -65,7 +65,10 @@ class GroupsController < ApplicationController
         format.html { redirect_to @group, notice: 'Group was successfully created.' }
         format.json { render json: @group, status: :created, location: @group }
       else
-        format.html { render action: "new" }
+        format.html do
+          flash[:group] = @group
+          redirect_to action: "new", group: @group
+        end
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end
     end
