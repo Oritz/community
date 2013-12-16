@@ -1,0 +1,37 @@
+.my-assets
+  .top_explanation
+    span.fl
+      h3.explanation_h3.fl 相册
+    span.fr
+      = link_to "创建相册", "#", class: "album-bn rs3"
+  .my-album
+    ul.my-album-block
+      - @albums.each do |album|
+        li
+          .album-block-list.rs3
+            span.album-block-list-img
+              a href="#"
+                img src="images/img/album_tu.png"
+            h3= album.name
+            p
+              | 共#{album.photos_count}张图片
+            span.album-block-list-set.fl
+              span.fr
+                = link_to "查看", user_albums_path(album), class: "list-set-bn rs3"
+    .next-page
+      a href="#?page=#"
+        img src="images/img/page.png"
+      a href="#?page=1"
+      a href="#?page=2"
+      a href="#?page=3"
+      a href="#?page=4"
+      a href="#?page=5"
+      a href="#?page=6"
+      a href="#?page=7"
+      | \...
+      a href="#?page=199"
+      a href="#?page=200"
+      a href="#?page=#"
+        img src="images/img/Next.png"
+      input.width-30 name="" type="text"
+      a href="#"

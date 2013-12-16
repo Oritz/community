@@ -35,7 +35,7 @@ html
             span#info.sns_logo_user_tx_fl.sns_logo_user_tx_id
               = link_to current_account.nick_name, "#"
             span.sns_logo_user_tx_fl.sns_logo_user_tx_tuichu
-              = link_to "退出", destroy_account_session_path
+              = link_to "退出", destroy_account_session_path, method: :delete
         - else
           span.sns_login_dl
             = link_to "登录", new_account_session_path, class: "sns_login_dl_dl"

@@ -64,6 +64,7 @@ class Account < ActiveRecord::Base
   belongs_to :cloud_storage, class_name: "CloudStorage", foreign_key: "avatar_id"
   has_many :accounts_other_games
   has_many :other_games, through: :accounts_other_games, source: :game
+  has_many :albums
 
   # Validations
   validates :exp, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }

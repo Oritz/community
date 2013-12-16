@@ -1,0 +1,44 @@
+doctype
+html xmlns="http://www.w3.org/1999/xhtml"
+  head
+    meta content="text/html; charset=utf-8" http-equiv="Content-Type"
+    = csrf_meta_tags
+    = stylesheet_link_tag "center", media: "all"
+    title= @title
+  body
+    .citic_topNav
+      .citic_topNav_head
+        ul
+          li
+            = link_to "欢迎页", home_pages_path
+          li
+            = link_to "商城", Settings.subdomains.store
+          li
+            = link_to "社区", "#"
+          li
+            = link_to "论坛", Settings.subdomains.forum
+          li
+            a href="#" target="_blank" 客户端
+    .citic_topLogo
+      .citic_topLogo_head
+        .citic_topLogo_logo
+          a href="#" target="_blank"
+            img src="/logo.png"
+        .citic_topLogo_login
+          - if current_account
+            .fl.personal_style.rs3
+              = image_tag current_account.avatar
+            span#info.fl.personal_style_tx_id
+              = link_to current_account.nick_name, "#"
+            span.fl.personal_style_tx_tuichu
+              = link_to "退出", destroy_account_session_path, method: :delete
+          - else
+            span.sns_login_dl
+              = link_to "登录", new_account_session_path, class: "sns_login_dl_dl"
+            span.sns_login_dl
+              = link_to "注册", new_account_registration_path, class: "sns_login_dl_dl"
+    .personal_container
+      .personal_area
+        .personal_R
+          .personal_R_detail
+            == yield

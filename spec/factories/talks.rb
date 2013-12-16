@@ -3,6 +3,6 @@
 FactoryGirl.define do
   factory :talk do
     content "talk something"
-    creator nil
+    association :creator, factory: :account
   end
 end
