@@ -30,7 +30,7 @@ SonkwoCommunity::Application.routes.draw do
 
   resource :talks, only: [:show, :create]
   resource :subject, only: [:show, :new, :create, :edit, :update] do
-    resources :post_images, only: [:create]
+    resources :post_images, only: [:create, :destroy]
   end
 
   resources :users, only: [:show] do

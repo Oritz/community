@@ -2,8 +2,9 @@
   .detail_breadNav
     h1 发布图文文章
   .popup_boxs style="display: none;"
-    = form_tag "/subjects/#{@subject.id}/post_images"  do
+    = form_tag "/subject/post_images.json", id:"post_subject_image"  do
       = hidden_field_tag :cloud_storage_id
+      = hidden_field_tag :subject_id, @subject.id
     .pop-layer.radius3px.brd1.subject_popup#insert_img_box
       .prompt
         .writing
@@ -18,46 +19,49 @@
           input name="x:sonkwo_token" type="hidden" value=@cloud_storage_settings[:sonkwo_token]
           input#upload_img_file name="file" type="file"
           input name="x:bucket_name" type="hidden" value="sonkwo-post"
+      .upload_img_show
       .upload_img_actions
         input#upload_img_save type="button" value="保存"
         input#upload_img_cancel type="button" value="取消"
     .pop-layer.radius3px.brd1.subject_popup#insert_link_box
-      a href="javascript:void(0);" Hello, world
+      .prompt
+        .writing
+          h3 添加链接
+        .prompt-bn
+          a.subject_popup_closebtn href="javascript:void(0);"
+      .link_text
+        input#link_text_desc type="text" placeholder="输入链接描述"
+      .link_url
+        input#link_text_url type="text" placeholder="输入链接网址"
+      .link_actions
+        input#link_save type="button" value="确定"
+        input#link_cancel type="button" value="取消"
   .editing_article.radius3px
-    form action="" method="get"
+    = form_tag "/subject", id:"post_subject", method: :put  do
+      = hidden_field_tag :id, @subject.id
       .article_title
         h3 标题
-        input name="" placeholder="请输入标题" type="text"
+        = text_field_tag "subject_title", nil, placeholder:"请输入标题"
       .article_text
         span.article_text_link.fl
           a.text_link_img#insert_img href="javascript:void(0);" title="插入图片" 图 片
           a.text_link_link#insert_link href="javascript:void(0);" title="插入链接" 链 接
-        textarea cols="" name="" placeholder="请输入正文" rows=""
+        = text_area_tag "subject_body", nil, placeholder:"请输入正文"
       .article_img
         ul
-          li
-            .article_img_bit
-              span.article_close
-                a href="#"
-              .bit_img.fl
-                h3 图片
-                .bit_img_tx
-                  img src="images/banner/tutu.png"
-              .bit_bewrite.fr
-                h3 图片描述
-                textarea cols="" name="" placeholder="请对图片进行描述" rows=""
-          li
-            .article_img_bit
-              span.article_close
-                a href="#"
-              .bit_img.fl
-                h3 图片
-                .bit_img_tx
-                  img src="images/banner/tutu.png"
-              .bit_bewrite.fr
-                h3 图片描述
-                textarea cols="" name="" placeholder="请对图片进行描述" rows=""
-          li
+          - for post_image in @post_images do
+            li(id="images_block_#{post_image.id}")
+              .article_img_bit
+                span.article_close
+                  a.remove_image href="javascript:void(0);"
+                .bit_img.fl
+                  h3 图片#{post_image.id}
+                  .bit_img_tx
+                    img src="#{post_image.url}?imageView/2/w/118/h/118"
+                .bit_bewrite.fr
+                  h3 图片描述
+                  textarea cols="" name="" placeholder="请对图片进行描述" rows="" value="#{post_image.comment}"       
+          li#hidden_img_block
             .article_img_bit
               span.article_close
                 a href="#"
@@ -70,9 +74,11 @@
                 textarea cols="" name="" placeholder="请对图片进行描述" rows=""
       .article_bn
         span.fr
-          a.bn_cancel href="#" 取消
+          = button_tag "取消", class: "bn_cancel"
         span.fr
-          a.bn_submit href="#" 发布
+          = button_tag "发布", class: "bn_post"
+        span.fr
+          = button_tag "保存", class: "bn_save"
         span.fr
           a.snshide1 公开
           .snsshow1
