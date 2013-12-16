@@ -75,7 +75,6 @@ $.fn.nav_float = function() {
 
 $(document).ready(function() {
   // calculate level
-  show_level($(".total-level").parent());
   change_nav_height($("#sns_nav .nav-left1"));
   change_nav_height($("#sns_nav .nav-right1"));
   $(window).resize(function() {

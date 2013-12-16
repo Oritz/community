@@ -1,6 +1,5 @@
-//= require ../post
+//= require "../misc"
 
 $(document).ready(function() {
   show_level($(".total-level").parent());
-  start_posts("/home/posts.json");
 });

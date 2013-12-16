@@ -37,7 +37,7 @@ function posts(options) {
     url: options.url,
     cache: false
   }).done(function(data) {
-    status = data.status;
+    var status = data.status;
     if(status == "success") {
       if(data.data.length == 0)
         posts.status = 2;

@@ -39,7 +39,7 @@ class Comment < ActiveRecord::Base
   belongs_to :original_author, class_name: 'Account', foreign_key: 'original_author_id'
 
   # Scopes
-  scope :comments_of_a_post, lambda { |post| where("post_id=? AND status=?", post.id, Comment::STATUS_NORMAL).includes(:creator, :original_author).order("created_at DESC") }
+  scope :of_a_post, lambda { |post| where("post_id=? AND status=?", post.id, Comment::STATUS_NORMAL).includes(:creator, :original_author).order("created_at DESC") }
   scope :account_in, lambda { |account_id| where("(original_author_id=? OR post_author_id=?) AND author_id<>? AND status=?", account_id, account_id, account_id, Comment::STATUS_NORMAL).includes(:creator, :post, :original).order("created_at DESC") }
   scope :account_out, lambda { |account_id| where("author_id=? AND status=?", account_id, Comment::STATUS_NORMAL).includes(:creator, :post, :original).order("created_at DESC") }
 

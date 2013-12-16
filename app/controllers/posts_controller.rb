@@ -18,24 +18,13 @@ class PostsController < ApplicationController
   # GET /posts/1
   # GET /posts/1.json
   def show
-    @common_post = @post
-    @post = @common_post.cast
-    @new_recommend = Recommend.new
+    @post = Post.find(params[:id])
+    not_found if @post.detail_type != Subject.to_s
 
     @original = @post.original.cast if @post.is_a?(Recommend)
 
-    case params[:type].to_s.upcase
-    when "RECOMMEND"
-      @page_type = "recommends"
-      @recommends = Recommend.recommend_posts_with_account(@post.id).paginate(page: params[:page], per_page: 10)
-    when "LIKE"
-      @page_type = "likers"
-      @likers = Account.post_likers(@post.id).select("id, nick_name").paginate(page: params[:page], per_page: 10)
-    else # COMMENT
-      @page_type = "comments"
-      @comments = Comment.comments_with_account(@post.id).paginate(page: params[:page], per_page: 10)
-      @new_comment = @post.comments.build
-    end
+    @comments = Comment.of_a_post(@post).paginate(page: params[:page], per_page: 10)
+    @new_comment = @post.comments.build
 
     respond_to do |format|
       format.html
