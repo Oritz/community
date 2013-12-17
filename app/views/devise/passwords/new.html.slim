@@ -1,9 +1,15 @@
-h2 Forgot your password?
-= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f|
-  = devise_error_messages!
-  div
-    = f.label :email
-    br/
-    = f.email_field :email, :autofocus => true
-  div= f.submit "Send me reset password instructions"
-= render "accounts/shared/links"
+.log_mian
+  .log_center
+    .log_center_h1 找回密码
+    .log_success_mian
+      .formbox-style-changepwd
+        = form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f|
+          .form
+            .item
+              span.label 帐号
+              .fl
+                = f.email_field :email, autofocus: true, placeholder: "请输入您的账号"
+                span.clear
+                #mail_error
+            .item
+              = f.submit "完成", class: "yellow_button"
