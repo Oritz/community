@@ -105,10 +105,11 @@ class UsersController < ApplicationController
   end
 
   def check_name
-    if Account.check_nick_name(params[:nick_name])
+    account = Account.new(params[:account])
+    if !account.valid? && account.errors[:nick_name] == []
       render json: { status: "success", data: nil }
     else
-      render json: { status: "fail", data: I18n.t("account.nick_name_is_used") }
+      render json: { status: "fail", data: account.errors[:nick_name] }
     end
   end
 end

@@ -28,7 +28,7 @@ class Account < ActiveRecord::Base
   GENDER_GIRL = 1
   TYPE_NORMAL = 0
 
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :nick_name, :gender
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :nick_name, :gender, :tos_agreement
   #attr_accessor :crop_x, :crop_y, :crop_w, :crop_h, :avatar_upload_width, :avatar_upload_height
 
   #mount_uploader :avatar, AvatarUploader
@@ -70,25 +70,15 @@ class Account < ActiveRecord::Base
   validates :exp, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :bonus, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :nick_name, presence: true, length: { in: 2..30 }, uniqueness: { case_sensitive: false, message: I18n.t("account.nick_name_is_used") }
-  validates :email, presence: true, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, message: I18n.t("account.email_invalidate") }, length: { maximum: 128 }, uniqueness: { case_sensitive: false, message: I18n.t("account.email_is_used") }
-  validates :password, presence: true, format: { with: /\A.*(?=.{8,})(?=.*[a-zA-Z0-9!\#$%&?"]).*\z/, message: I18n.t("account.email_invalidate") }
+  validates :email, presence: true, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, message: I18n.t("account.email_invalidate") }, length: { maximum: 128 }, uniqueness: { case_sensitive: false, message: I18n.t("account.email_is_used") }, allow_blank: false
+  validates :password, presence: true, format: { with: /\A.*(?=.{8,})(?=.*[a-zA-Z0-9!\#$%&?"]).*\z/, message: I18n.t("account.email_invalidate") }, on: :create
+  validates :tos_agreement, acceptance: { accept: true }, on: :create
 
   # Scopes
   scope :post_likers, lambda { |post_id| where("post_id=?", post_id).joins("INNER JOIN accounts_like_posts ON accounts_like_posts.account_id=accounts.id").order("accounts_like_posts.created_at DESC") }
   scope :friends, lambda { |account_id| joins("INNER JOIN friendship ON follower_id=accounts.id").where("account_id=? AND is_mutual=#{Friendship::IS_MUTUAL}", account_id) }
 
   # Methods
-  class << self
-    def check_nick_name(nick_name)
-      account = Account.where(nick_name: nick_name).first
-      if account
-        false
-      else
-        true
-      end
-    end
-  end
-
   def pending_subject
     subject = Post.pending_of_account(self).first
     return subject if subject
