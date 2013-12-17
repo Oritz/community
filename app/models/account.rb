@@ -1,5 +1,8 @@
 require "devise/encryptors/custom_sha1"
 class Account < ActiveRecord::Base
+  #include Humanizer
+  #require_human_on :create
+
   control_access
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
@@ -72,7 +75,7 @@ class Account < ActiveRecord::Base
   validates :nick_name, presence: true, length: { in: 2..30 }, uniqueness: { case_sensitive: false, message: I18n.t("account.nick_name_is_used") }
   validates :email, presence: true, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, message: I18n.t("account.email_invalidate") }, length: { maximum: 128 }, uniqueness: { case_sensitive: false, message: I18n.t("account.email_is_used") }, allow_blank: false
   validates :password, presence: true, format: { with: /\A.*(?=.{8,})(?=.*[a-zA-Z0-9!\#$%&?"]).*\z/, message: I18n.t("account.email_invalidate") }, on: :create
-  validates :tos_agreement, acceptance: { accept: true }, on: :create
+  validates :tos_agreement, acceptance: { accept: 'true' }, on: :create
 
   # Scopes
   scope :post_likers, lambda { |post_id| where("post_id=?", post_id).joins("INNER JOIN accounts_like_posts ON accounts_like_posts.account_id=accounts.id").order("accounts_like_posts.created_at DESC") }
