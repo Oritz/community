@@ -18,7 +18,10 @@ class UsersController < ApplicationController
     @target = Account.find(params[:id])
     @type = "GROUPS"
 
-    @groups = @target.groups.order("created_at DESC").paginate(page: params[:page], per_page: 10)
+    @groups = @target.groups.joins("LEFT JOIN groups_accounts AS g ON g.group_id=id AND g.account_id=#{current_account ? current_account.id : 0}")
+                            .select("groups.*, g.account_id AS gaid")
+                            .order("created_at DESC")
+                            .paginate(page: params[:page], per_page: 10)
 
     respond_to do |format|
       format.html

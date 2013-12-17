@@ -30,21 +30,7 @@ class SubjectsController < ApplicationController
   end
 
   def create
-    @subject = current_account.pending_subject
-    if params[:group_id]
-      @group = Group.find(params[:group_id])
-      @subject.group = @group
-    end
-
-    respond_to do |format|
-      if @subject.post_pending
-        format.html { redirect_to @subject.post, notice: 'Subject was successfully created.' }
-        format.json { render json: @subject, status: :created, location: @subject }
-      else
-        format.html { redirect_to :new } #TODO: 
-        format.json { raise "TODO:" } #TODO:
-      end
-    end
+    
   end
 
   def edit
@@ -53,16 +39,21 @@ class SubjectsController < ApplicationController
   end
 
   def update
-    @subject = Subject.includes([post: [:post_images]]).find(params[:id])
-    #return unless check_access?(subject: @subject)
+    @subject = current_account.pending_subject
+    if params[:group_id]
+      @group = Group.find(params[:group_id])
+      @subject.group = @group
+    end
+    
+    @subject.status = Post::STATUS_NORMAL if params[:status] == Post::STATUS_NORMAL
 
     respond_to do |format|
-      if @subject.update_attributes(params[:subject])
-        format.html { redirect_to @subject.post, notice: 'Subject was successfully updated.'}
-        format.json { render_for_api :preview, json: @subject, root: "data", meta: {status: "success"} }
+      if @subject.
+        format.html { redirect_to @subject.post, notice: 'Subject was successfully created.' }
+        format.json { render json: @subject, status: :created, location: @subject }
       else
-        format.html { render action: "edit" }
-        format.json { render json: @subject.errors, status: :unprocessable_entity }
+        format.html { redirect_to :new } #TODO: 
+        format.json { raise "TODO:" } #TODO:
       end
     end
   end
