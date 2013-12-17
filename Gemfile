@@ -77,7 +77,7 @@ gem 'foreigner'
 gem 'composite_primary_keys'
 gem 'therubyracer'
 
-gem 'truncate_html', '~> 0.9.2'
+#gem 'truncate_html', '~> 0.9.2'
 gem 'figaro', '~> 0.7.0'
 gem 'devise', '~> 3.0.2'
 gem 'devise-encryptable', '~> 0.1.2'
@@ -95,3 +95,4 @@ gem 'jquery-form-rails'
 gem "messengerjs-rails", "~> 1.3.6.2"
 gem "devise-async"
 gem 'negative_captcha'
+gem "parsley-rails"

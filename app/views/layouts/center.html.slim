@@ -42,3 +42,5 @@ html xmlns="http://www.w3.org/1999/xhtml"
         .personal_R
           .personal_R_detail
             == yield
+    = javascript_include_tag "center"
+    = javascript_include_tag "#{params[:controller]}/#{params[:action]}"

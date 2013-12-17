@@ -100,4 +100,12 @@ class UsersController < ApplicationController
       format.json { render_for_api :game_basic_info, json: @games, root: "data", meta: {status: "success"} }
     end
   end
+
+  def check_name
+    if Account.check_nick_name(params[:nick_name])
+      render json: { status: "success", data: nil }
+    else
+      render json: { status: "fail", data: I18n.t("account.nick_name_is_used") }
+    end
+  end
 end

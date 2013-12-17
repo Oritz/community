@@ -64,4 +64,5 @@ html xmlns="http://www.w3.org/1999/xhtml"
         p.flash-success
           = flash[:success]
 
-  = javascript_include_tag "devise"
+    = javascript_include_tag "devise"
+    = javascript_include_tag "#{params[:controller]}/#{params[:action]}"

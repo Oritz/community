@@ -1,6 +1,6 @@
 SonkwoCommunity::Application.routes.draw do
   begin
-    devise_for :accounts, :controllers => { :sessions => 'account_sessions' }
+    devise_for :accounts, :controllers => { :sessions => 'account_sessions', :registrations => 'account_registrations' }
   rescue Exception => e
     puts "Devise error: #{e.class}: #{e}"
   end
@@ -37,6 +37,7 @@ SonkwoCommunity::Application.routes.draw do
     collection do
       put 'follow'
       delete 'unfollow'
+      get 'check_name'
     end
     member do
       get 'groups'
