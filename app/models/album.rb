@@ -12,6 +12,8 @@ class Album < ActiveRecord::Base
 
   # Associations
   belongs_to :account
+  has_one :cover, class_name: "Photo", foreign_key: "album_id"
+  has_many :photos, class_name: "Photo", foreign_key: "album_id"
 
   # Validations
   validates :account, presence: true

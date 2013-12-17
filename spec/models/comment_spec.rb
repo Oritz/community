@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe Comment do
   let(:creator) { create(:account) }
-  let(:post) { create(:talk).post }
+  let(:talk) { create(:talk) }
+  let(:post) { talk.post }
 
   it "is valid with valid attributes" do
     comment = Comment.new(comment: "comment")
@@ -52,7 +53,7 @@ describe Comment do
   end
 
   context "validate post author" do
-    it "is not valid withort post author" do
+    it "is not valid without post author" do
       comment = Comment.new(comment: "comment")
       comment.creator = creator
       comment.post = post
@@ -69,7 +70,7 @@ describe Comment do
       c.save
       Timecop.return
     end
-    expect(Comment.comments_with_account(post.id)).to eq comments.reverse
+    expect(Comment.of_a_post(post)).to eq comments.reverse
   end
 
   it "should list comments commented by a certain user and sorted by time"

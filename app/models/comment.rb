@@ -3,7 +3,7 @@ require 'sonkwo/exp'
 class Comment < ActiveRecord::Base
   attr_accessible :comment
 
-  acts_as_notificable callbacks: ["after_create"], slot: "commented", from: "creator", tos: ["original_author", "post_author"]
+  #acts_as_notificable callbacks: ["after_create"], slot: "commented", from: "creator", tos: ["original_author", "post_author"]
   acts_as_api
   api_accessible :comment_info do |t|
     t.add :creator
