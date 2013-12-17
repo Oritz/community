@@ -35,6 +35,26 @@ describe SubjectsController do
       expect(JSON.parse(response.body)["status"]).to eq "success"
     end
 
+    it "should post a subject" do
+      params = {format: :json, subject: {content: "content_new", title: "title_new"}, id: subject.id, is_post: 1}
+      put :update, params
+
+      ret = { status: "success", data: { id: subject.id, post: {id: subject.post.id} } }
+      expect(response.body).to eq ret.to_json
+      expect(subject.status).to eq Post::STATUS_NORMAL
+    end
+
+    it "should failed if post a subject which is deleted" do
+      subject.status = Post::STATUS_DELETED
+      subject.save!
+
+      params = {format: :json, subject: {content: "content_new", title: "title_new"}, id: subject.id, is_post: 1}
+      put :update, params
+
+      ret = { status: "error", message: I18n.t("post.is_deleted") }
+      expect(response.body).to eq ret.to_json
+    end
+
     it "should failed without authority"
   end
 end

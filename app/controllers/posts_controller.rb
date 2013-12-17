@@ -20,6 +20,7 @@ class PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
     not_found if @post.detail_type != Subject.to_s
+    not_found if @post.status != Post::STATUS_NORMAL
 
     @original = @post.original.cast if @post.is_a?(Recommend)
 
