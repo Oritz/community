@@ -28,8 +28,8 @@ SonkwoCommunity::Application.routes.draw do
     end
   end
 
-  resource :talks, only: [:show, :create]
-  resource :subject, only: [:show, :new, :create, :edit, :update] do
+  resources :talks, only: [:show, :create]
+  resources :subjects, only: [:show, :new, :create, :edit, :update] do
     resources :post_images, only: [:create, :destroy]
   end
 
