@@ -7,7 +7,7 @@
       .groups_top_new_inner
         h1
           = link_to @group.name, "#"
-          a.set.fr href="#"
+          a.set.fr href="/groups/#{@group.id}/edit"
         span
           | 已有
           = @group.member_count
@@ -23,8 +23,12 @@
       .groups_b_jb_inner
         a href="#" 举报
       .groups_b_cz_inner
-        span.groups_b_cz_jr_inner
-          a href="#" 加入小组
+        - if @is_added
+          span.groups_b_cz_tc
+            = link_to "退出", remove_user_group_path(@group), method: :delete
+        - else   
+          span.groups_b_cz_jr_inner
+            = link_to "加入小组", add_user_group_path(@group), method: :put
   .radius3px.sns_release_enter
     #msgBox
       form

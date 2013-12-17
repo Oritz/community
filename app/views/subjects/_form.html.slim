@@ -1,0 +1,47 @@
+= form_tag "/subject", id:"post_subject", method: :put  do
+  = hidden_field_tag :id, @subject.id
+  .article_title
+    h3 标题
+    = text_field_tag "subject_title", nil, placeholder:"请输入标题"
+  .article_text
+    span.article_text_link.fl
+      a.text_link_img#insert_img href="javascript:void(0);" title="插入图片" 图 片
+      a.text_link_link#insert_link href="javascript:void(0);" title="插入链接" 链 接
+    = text_area_tag "subject_body", nil, placeholder:"请输入正文"
+  .article_img
+    ul
+      - for post_image in @post_images do
+        li(id="images_block_#{post_image.id}")
+          .article_img_bit
+            span.article_close
+              a.remove_image href="javascript:void(0);"
+            .bit_img.fl
+              h3 图片#{post_image.id}
+              .bit_img_tx
+                img src="#{post_image.url}?imageView/2/w/118/h/118"
+            .bit_bewrite.fr
+              h3 图片描述
+              textarea cols="" name="" placeholder="请对图片进行描述" rows="" value="#{post_image.comment}"       
+      li#hidden_img_block
+        .article_img_bit
+          span.article_close
+            a href="#"
+          .bit_img.fl
+            h3 图片
+            .bit_img_tx
+              img src="images/banner/tutu.png"
+          .bit_bewrite.fr
+            h3 图片描述
+            textarea cols="" name="" placeholder="请对图片进行描述" rows=""
+  .article_bn
+    span.fr
+      = button_tag "取消", class: "bn_cancel"
+    span.fr
+      = button_tag "发布", class: "bn_post"
+    span.fr
+      = button_tag "保存", class: "bn_save"
+    span.fr
+      a.snshide1 公开
+      .snsshow1
+        p
+          a href="#"

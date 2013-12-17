@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
   //----------------------------------------------------------------
   // Helpers
@@ -39,23 +39,35 @@ $(document).ready(function() {
     } else {
       textObj.value += textFeildValue;
     }
-  } 
+  }
+  
+  // Auto save 
+  function autoSaveSubject() {
+    
+    
+  }
   
   //----------------------------------------------------------------
   // Binding events
   //----------------------------------------------------------------
+  // Hint of quit page
+  window.onbeforeunload = function () {
+    return "长文章未提交，确定退出吗？";
+  };
+  
+  
 	// Bind insert image
-	$('#insert_img').click(function() {
+	$('#insert_img').click(function () {
 		$.fancybox.open($('#insert_img_box'), {
 			closeBtn: false,
 			closeClick: false,
 			modal: true,
-			afterClose: function() {clearFile();},
+			afterClose: function () {clearFile();},
 		});
 	});
 	
 	// Auto upload selected image
-	$('#subject_qiniu_upload').on('change', '#upload_img_file', function() {
+	$('#subject_qiniu_upload').on('change', '#upload_img_file', function () {
 		if ($('#upload_img_file').val()) {
 		  $('#subject_qiniu_upload').ajaxSubmit({
 		    success: function(response) {
@@ -74,7 +86,7 @@ $(document).ready(function() {
 	});
 	
 	// Save the image box
-  $('#upload_img_save').click(function() {
+  $('#upload_img_save').click(function () {
     // Save the setting
     if ($('#upload_img_file').val() && $('#cloud_storage_id').val()) {
       $('#post_subject_image').ajaxSubmit({
@@ -110,22 +122,22 @@ $(document).ready(function() {
   });
           	   
 	// Cancel the image box
-	$('#upload_img_cancel').click(function() {
+	$('#upload_img_cancel').click(function () {
     $.fancybox.close();
   });
 	
 	// Bind insert link
-	$('#insert_link').click(function() {
+	$('#insert_link').click(function () {
 		$.fancybox.open($('#insert_link_box'), {
       closeBtn: false,
       closeClick: false,
       modal: true,
-      afterClose: function() {clearLink();},
+      afterClose: function () {clearLink();},
     });
 	});
 	
 	// Save the link
-  $('#link_save').click(function() {
+  $('#link_save').click(function () {
 	  // Insert into text body
 	  var link_desc = $('#link_text_desc').val();
 	  var link_url = $('#link_text_url').val();
@@ -146,17 +158,17 @@ $(document).ready(function() {
 	});
 	
 	// Cancel the link
-	$('#link_save').click(function() {
+	$('#link_save').click(function () {
     $.fancybox.close();
   });
   
 	// Bind close fancybox
-	$('.subject_popup_closebtn').click(function() {
+	$('.subject_popup_closebtn').click(function () {
 		$.fancybox.close();
 	});
 	
 	// Remove the posted image
-	$('span.article_close a').click(function() {
+	$('span.article_close a').click(function () {
 	  alert("close");
 	});
 });
