@@ -71,9 +71,9 @@ class Group < ActiveRecord::Base
   end
 
   def default_values
-    self.member_count ||= 0
-    self.status ||= self.class::STATUS['NORMAL']
-    self.group_type ||= self.class::TYPE['OFFICAL']
-    self.logo ||= Settings.images.group.default
+    self.member_count ||= 0 if self.attribute_names.include?("member_count")
+    self.status ||= self.class::STATUS['NORMAL'] if self.attribute_names.include?("status")
+    self.group_type ||= self.class::TYPE['OFFICAL'] if self.attribute_names.include?("group_type")
+    self.logo ||= Settings.images.group.default if self.attribute_names.include?("logo")
   end
 end

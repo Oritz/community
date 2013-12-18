@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
   before_filter :sonkwo_authenticate_account
+  before_filter :check_update_tag, only: [:index]
 
   def index
     @friends = Account.friends(current_account.id).limit(12).order("updated_at DESC")
@@ -72,5 +73,28 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html
     end
+  end
+
+  def add_tag
+    @tag = Tag.find(params[:tag_id])
+    if current_account.tags.exists?(@tag) || current_account.tags << @tag
+      render json: { status: "success", data: { id: @tag.id } }
+    else
+      render json: { status: "error", message: I18n.t("common.unknow_error") }
+    end
+  end
+
+  def remove_tag
+    @tag = Tag.find(params[:tag_id])
+    if !current_account.tags.exists?(@tag) || current_account.tags.delete(@tag)
+      render json: { status: "success", data: { id: @tag.id } }
+    else
+      render json: { status: "error", message: I18n.t("common.unknow_error") }
+    end
+  end
+
+  private
+  def check_update_tag
+    redirect_to controller: :informations, action: :interests unless current_account.update_tag
   end
 end

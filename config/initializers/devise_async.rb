@@ -1,3 +1,5 @@
 # Supported options: :resque, :sidekiq, :delayed_job, :queue_classic, :torquebox
-Devise::Async.backend = :sidekiq
-Devise::Async.enabled = true
+Devise::Async.setup do |config|
+  config.enabled = true
+  config.backend = :sidekiq
+end

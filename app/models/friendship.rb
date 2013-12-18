@@ -1,7 +1,7 @@
 require 'sonkwo/exp'
 
 class Friendship < ActiveRecord::Base
-  acts_as_notificable callbacks: ["after_create"], slot: "followed", tos: ["account"]
+  #acts_as_notificable callbacks: ["after_create"], slot: "followed", tos: ["account"]
   # Constants
   IS_SINGLE = 0
   IS_MUTUAL = 1
