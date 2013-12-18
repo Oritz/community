@@ -2,7 +2,9 @@ class InformationsController < ApplicationController
   before_filter :sonkwo_authenticate_account
   before_filter :check_upate_tag
 
-  def interests
+  STEPS = [:tags, :groups, :friends, :clients]
+
+  def index
   end
 
   def groups
@@ -25,12 +27,13 @@ class InformationsController < ApplicationController
       format.html
       format.json do
         data = []
-        @accounts = Account.order("follower_count").limit(6)
+        @accounts = Account.where("id<>?", current_account.id).order("follower_count DESC").limit(6)
         ids = @accounts.collect { |a| a.id }
         @friendship = Friendship.where("account_id IN (?) AND follower_id=#{current_account.id}", ids)
         @accounts.each do |account|
           data_item = {}
           data_item[:id] = account.id
+          data_item[:avatar] = account.avatar
           data_item[:nick_name] = account.nick_name
           data_item[:level] = account.level
           data_item[:following_count] = account.following_count
@@ -66,8 +69,20 @@ class InformationsController < ApplicationController
     end
   end
 
+  def confirm_step
+    step = params[:step].to_i
+    step = 5 if step > 5
+    step = 0 if step < 0
+    current_account.update_tag = step
+    if current_account.save
+      redirect_to :back
+    else
+      redirect_to action: self.class::STEPS[current_account.update_tag], error: I18n.t("common.unknow_error")
+    end
+  end
+
   private
   def check_upate_tag
-    not_found if current_account.update_tag
+    not_found if current_account.update_tag.to_i >= self.class::STEPS.count
   end
 end

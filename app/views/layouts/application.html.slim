@@ -6,7 +6,7 @@ html
     = stylesheet_link_tag "application", media: "all"
     title= @title
   body
-    - if !current_account || current_account.update_tag
+    - if show_account_info?
       #code
       #code_img
       a#gotop href="javascript:void(0)"
@@ -25,7 +25,7 @@ html
     .sns_logo
       .sns_logo_logo
         a href="#" target="_blank"
-      - if current_account.update_tag
+      - if show_account_info?
         .sns_logo_search
           input.sns_logo_search_style.radius3px name="" placeholder="请输入关键词" type="text"
           a.sns_logo_search_botton href="#"
@@ -43,7 +43,7 @@ html
             = link_to "登录", new_account_session_path, class: "sns_login_dl_dl"
           span.sns_login_dl
             = link_to "注册", new_account_registration_path, class: "sns_login_dl_dl"
-    -if current_account.update_tag
+    -if show_account_info?
       #sns_nav
         - if current_account
           a.nav-btn1

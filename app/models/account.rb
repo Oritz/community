@@ -31,6 +31,8 @@ class Account < ActiveRecord::Base
   GENDER_GIRL = 1
   TYPE_NORMAL = 0
 
+  UPDATE_TAG_FINISH = 4 # There're four steps
+
   attr_accessible :email, :password, :password_confirmation, :remember_me, :nick_name, :gender, :tos_agreement
   #attr_accessor :crop_x, :crop_y, :crop_w, :crop_h, :avatar_upload_width, :avatar_upload_height
 

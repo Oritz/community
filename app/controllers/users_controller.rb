@@ -66,12 +66,12 @@ class UsersController < ApplicationController
       if @friendship.save
         respond_to do |format|
           format.html { redirect_to :back, notice: "Follow successfully." }
-          format.json { render json: @friendship }
+          format.json { render json: { status: "success", data: { is_mutual: @friendship.is_mutual } } }
         end
       else
         respond_to do |format|
           format.html { redirect_to :back, notice: "Follow failed." }
-          format.json { render json: @friendship }
+          format.json { render json: { status: "fail", data: @friendship.errors } }
         end
       end
     end
@@ -82,12 +82,12 @@ class UsersController < ApplicationController
     if @friendship.destroy
       respond_to do |format|
         format.html { redirect_to :back, notice: "Unfollow successfully." }
-        format.json { render json: @friendship }
+        format.json { render json: { status: "success", data: { is_mutual: @friendship.is_mutual } } }
       end
     else
       respond_to do |format|
         format.html { redirect_to :back, notice: "Unfollow failed." }
-        format.json { render json: @friendship }
+        format.json { render json: { status: "fail", data: @friendship.errors } }
       end
     end
   end

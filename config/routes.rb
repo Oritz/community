@@ -84,13 +84,13 @@ SonkwoCommunity::Application.routes.draw do
     resources :game_achievements, only: [:index, :show]
   end
 
-  resources :informations, only: [] do
+  resources :informations, only: [:index] do
     collection do
-      get :interests
       get :groups
       get :friends
       get :clients
       get :tags
+      post :confirm_step
     end
   end
 
