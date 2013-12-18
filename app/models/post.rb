@@ -83,7 +83,7 @@ class Post < ActiveRecord::Base
   def only_one_pending_post
     return unless self.creator
     pending_item = self.class.where(account_id: self.creator.id, status: self.class::STATUS_PENDING).first
-    if pending_item && self.status == self.class::STATUS_PENDING
+    if pending_item && self.status == self.class::STATUS_PENDING && self.id != pending_item.id
       errors[:base] << I18n.t("post.more_than_one_pending_post")
     end
   end

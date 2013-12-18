@@ -1,13 +1,13 @@
 = form_for(@subject) do |f|
-  = hidden_field_tag :id, @subject.id
+  = f.hidden_field :id
   .article_title
     h3 标题
-    = text_field_tag "subject_title", nil, placeholder:"请输入标题"
+    = f.text_field :title, placeholder:"请输入标题"
   .article_text
     span.article_text_link.fl
       a.text_link_img#insert_img href="javascript:void(0);" title="插入图片" 图 片
       a.text_link_link#insert_link href="javascript:void(0);" title="插入链接" 链 接
-    = text_area_tag "subject_body", nil, placeholder:"请输入正文"
+    = f.text_area :content, placeholder:"请输入正文"
   .article_img
     ul
       - for post_image in @post_images do
@@ -18,10 +18,7 @@
             .bit_img.fl
               h3 图片#{post_image.id}
               .bit_img_tx
-                img src="#{post_image.url}?imageView/2/w/118/h/118"
-            .bit_bewrite.fr
-              h3 图片描述
-              textarea cols="" name="" placeholder="请对图片进行描述" rows="" value="#{post_image.comment}"       
+                img src="#{post_image.url}?imageView/2/w/118/h/118"    
       li#hidden_img_block
         .article_img_bit
           span.article_close
@@ -30,16 +27,13 @@
             h3 图片
             .bit_img_tx
               img src="images/banner/tutu.png"
-          .bit_bewrite.fr
-            h3 图片描述
-            textarea cols="" name="" placeholder="请对图片进行描述" rows=""
   .article_bn
     span.fr
-      = button_tag "取消", class: "bn_cancel"
+      = button_tag "取消", class: "bn_cancel", name:"is_post", value:"-1"
     span.fr
-      = button_tag "发布", class: "bn_post"
+      = button_tag "发布", class: "bn_post", name:"is_post", value:"1"
     span.fr
-      = button_tag "保存", class: "bn_save"
+      = button_tag "保存", class: "bn_save", name:"is_post", value:"0"
     span.fr
       a.snshide1 公开
       .snsshow1
