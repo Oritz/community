@@ -86,7 +86,7 @@ class Account < ActiveRecord::Base
     subject.status = Post::STATUS_PENDING
     subject.creator = self
     subject.save!
-    subject
+    subject.post
   end
 
   def avatar

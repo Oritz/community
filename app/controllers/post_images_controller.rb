@@ -12,7 +12,7 @@ class PostImagesController < ApplicationController
     respond_to do |format|
       if post_image.save
         format.html
-        format.json { render json: { status: "success", data: { id: post_image.id } } }
+        format.json { render json: { status: "success", data: { id: post_image.id, cloud_storage_id: cloud_storage.id, url: cloud_storage.url } } }
       else
         format.html
         foramt.json { render json: { status: "fail", data: post_image.errors } }
