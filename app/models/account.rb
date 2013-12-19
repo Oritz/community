@@ -4,10 +4,10 @@ class Account < ActiveRecord::Base
   #require_human_on :create
 
   control_access
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :async, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :token_authenticatable, :confirmable,
-         :lockable, :timeoutable, :encryptable, :async
+         :lockable, :timeoutable, :encryptable
 
   acts_as_api
   api_accessible :post_info do |t|
@@ -30,6 +30,8 @@ class Account < ActiveRecord::Base
   GENDER_BOY = 0
   GENDER_GIRL = 1
   TYPE_NORMAL = 0
+
+  UPDATE_TAG_FINISH = 4 # There're four steps
 
   attr_accessible :email, :password, :password_confirmation, :remember_me, :nick_name, :gender, :tos_agreement
   #attr_accessor :crop_x, :crop_y, :crop_w, :crop_h, :avatar_upload_width, :avatar_upload_height
@@ -68,6 +70,8 @@ class Account < ActiveRecord::Base
   has_many :accounts_other_games
   has_many :other_games, through: :accounts_other_games, source: :game
   has_many :albums
+  has_many :accounts_tags
+  has_many :tags, through: :accounts_tags
 
   # Validations
   validates :exp, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
@@ -182,6 +186,19 @@ class Account < ActiveRecord::Base
   def play_time(game_id, options={})
     histories = UserGamePlayHistory.where("account_id=? AND game_id=?", self.id, game_id).select("SUM(UNIX_TIMESTAMP(exit_time)-UNIX_TIMESTAMP(start_time)) AS total_time")
     histories = histories.where("start_time>=?", options[:from]) if options[:from]
+  end
+
+  def add_tags(tag_ids)
+    tags = Tag.where("id IN (?)", tag_ids)
+    accounts_tags = []
+    tags.each do |tag|
+      accounts_tag = AccountsTag.new
+      accounts_tag.account = self
+      accounts_tag.tag = tag
+      accounts_tags << accounts_tag
+    end
+
+    AccountsTag.import accounts_tags
   end
 
   protected

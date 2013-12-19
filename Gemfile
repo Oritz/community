@@ -94,5 +94,6 @@ gem 'qiniu-rs'
 gem 'jquery-form-rails'
 gem "messengerjs-rails", "~> 1.3.6.2"
 gem "devise-async"
-gem 'negative_captcha'
-gem "parsley-rails"
+gem 'parsley-rails'
+gem 'humanizer'
+gem 'activerecord-import', '~> 0.4.1'

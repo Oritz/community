@@ -59,6 +59,8 @@ SonkwoCommunity::Application.routes.draw do
       get 'posts'
       get 'notification'
       get 'recommended'
+      put 'tags/:tag_id', to: 'home#add_tag'
+      delete 'tags/:tag_id', to: 'home#remove_tag'
     end
   end
 
@@ -80,6 +82,16 @@ SonkwoCommunity::Application.routes.draw do
 
   resources :games, only: [] do
     resources :game_achievements, only: [:index, :show]
+  end
+
+  resources :informations, only: [:index] do
+    collection do
+      get :groups
+      get :friends
+      get :clients
+      get :tags
+      post :confirm_step
+    end
   end
 
   # sidekiq
