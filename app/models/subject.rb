@@ -62,6 +62,36 @@ class Subject < ActiveRecord::Base
       false
     end
   end
+  
+  def display_content
+    cooked_content = []
+    cached_images = {}
+    self.content.each_line do |line|
+      cooked_line = CGI.escapeHTML(line)
+      # find all images
+      cooked_line.gsub!(/&lt;#{Settings.posts.image_tag}(\d+)&gt;/) do |post_image_str|
+        if cached_images.has_key?($1)
+          post_image = cached_images[$1]
+        else
+          post_image = PostImage.where(id: $1).first
+          if post_image
+            cached_images[$1] = post_image
+          end
+        end
+        if post_image
+          post_image_str = "<img src='#{post_image.cloud_storage.url}'>"
+        else
+          post_image_str = post_image_str
+        end
+      end
+      # find all href
+      cooked_line.gsub!(/&lt;a href=&quot;(.+)?&quot;&gt;(.+)?&lt;\/a&gt;/) do |linked_str|
+          linked_str = "<a href='#{$1}' title='#{$1}'>#{$2}</a>"
+      end
+      cooked_content.append(cooked_line + '<br>')
+    end
+    cooked_content.reduce(:concat)
+  end
 
   private
   def add_subject_count

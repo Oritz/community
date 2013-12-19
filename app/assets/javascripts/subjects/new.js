@@ -242,7 +242,6 @@ $(document).ready(function () {
           },
           success: function(data, textStatus) {
             if (textStatus == 'success') {
-              console.log(data);
               Messenger().post('成功删除图片');
               $(image_block).remove();
             }

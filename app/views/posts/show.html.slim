@@ -48,7 +48,7 @@
                   /! Baidu Button END
                 span.fl.cl_gray
                   | 发布时间: #{@post.created_at.strftime('%Y-%m-%d %M:%S')}
-      .info_cont =@post.detail.content
+      .info_cont =raw @post.detail.display_content
       .info_operate
         .tool_toolbar
           .toolbar_comment.fl
