@@ -95,6 +95,6 @@ class HomeController < ApplicationController
 
   private
   def check_update_tag
-    redirect_to controller: :informations, action: InformationController::STEPS[current_account.update-tag] if current_account.update_tag.to_i < Account::UPDATE_TAG_FINISH
+    redirect_to controller: :informations, action: InformationsController::STEPS[current_account.update-tag] if current_account.update_tag.to_i < Account::UPDATE_TAG_FINISH
   end
 end
