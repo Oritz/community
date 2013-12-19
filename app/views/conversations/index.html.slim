@@ -1,21 +1,34 @@
-ul.media-list
-  -@private_messages.each do |pm|
-    li.media
-      - if pm.sender == current_account
-        - another = pm.recipient
-      - else
-        - another = pm.sender
-      = link_to user_path(another), class: "pull-left" do
-        = image_tag another.avatar.m.url, alt: another.nick_name, class: "media-object"
-      div.media-body.well.well-small
-        p.media-heading
-          = link_to another.nick_name, user_path(another)
-          span.label= another.created_at
-          = link_to t("delete"), conversation_path(pm.conversation), method: :delete, data: {confirm: 'Are you sure?'}
-          - if pm.sender != current_account && !pm.read_at
-            span
-              i.icon-envelope
-        div.media
-          = link_to conversation_path(pm.conversation) do
-            = pm.content
-=will_paginate @private_messages
+.my-assets
+  .top_explanation
+    span.fl
+      h3.explanation_h3.fl 我的私信
+      strong.explanation_suffix.fl
+        | [
+        a.cl_red href="#"
+        | 封未读]
+  - if @private_messages.empty?
+    .no_letter 没有私信
+  - for private_message in @private_messages do
+    .letter
+      .letter-list.rs3
+        span.fl.letter-img
+          .letter-tx
+            img src="images/img/tx.png"
+        span.fl.letter-info
+          span.info-id
+            p 我是名字我是名字
+          span.info-reply
+            span.fl.info-reply-new.rs3
+              p.fl 我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字
+              em.fr 2013-10-28 12:22
+          .letter-site
+            span.fl
+              a.letter-set href="#"
+              | \
+              a.letter-set href="#"
+            span.fr
+              a.letter-bn.rs3 href="#"
+  .letter-list-select
+    span.fr
+      a.letter-send.rs3 href="javascript:void(0);" 发私信
+    = render 'private_messages/send_form'

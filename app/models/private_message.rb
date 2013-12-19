@@ -1,7 +1,7 @@
 class PrivateMessage < ActiveRecord::Base
   #acts_as_notificable callbacks: ["after_create"], slot: "private_message", from: "sender", tos: ["recipient"]
   acts_as_api
-  api_accessible :show do |t|
+  api_accessible :pm_info do |t|
     t.add :sender
     t.add :recipient
     t.add :id

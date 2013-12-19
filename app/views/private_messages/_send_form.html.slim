@@ -1,0 +1,14 @@
+.pop-layer.radius3px.brd#private_message_box style="display: none;"
+  .prompt
+    .writing
+      h3 发私信
+    .prompt-bn
+      a.pm_popup_closebtn href="javascript:void(0);"
+  .p 收件人
+  input#pm_recipient_name name="private_message[recipient_name]" type="text"
+  .p 内容
+  textarea#pm_recipient_content name="private_message[recipient_content]"
+  .box_actions
+    = button_tag "发送", id: "bn_pm_send"
+    = button_tag "取消", id: "bn_pm_cancel"
+    
