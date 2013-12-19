@@ -1,8 +1,8 @@
-.push_page
+.push_page.step current_step=current_account.update_tag.to_i
   .push_nav
     h2.fl 兴趣爱好
     span.push_nav_style.fl
-      a.rs3.bjcl_red href="javascript:void(0);" 1.兴趣爱好
+      a.rs3.bjcl_ccc href="javascript:void(0);" 1.兴趣爱好
     span.push_nav_style.fl
       a.rs3.bjcl_ccc href="javascript:void(0);" 2.兴趣小组
     span.push_nav_style.fl
@@ -13,14 +13,14 @@
     .center-head
       .center-head-font
         lable
-          | 请您选择您感兴趣的游戏类目
+          | 请您选择您感兴趣的项目
     .center-body
-      #wrap.information-container.information-tags
+      #wrap.information-container.information-tags style="display:none;"
       #wrap1.information-container.information-groups style="display:none;"
       #wrap.information-container.information-friends style="display:none;"
     .center-foot
       span.fr
-        = link_to "下一步", confirm_step_informations_path(step: current_account.update_tag), method: "post", class: "log_success_botton_yzyx bjcolor_yellow.fr"
+        = link_to "下一步", confirm_step_informations_path(step: current_account.update_tag.to_i+1), method: "post", class: "log_success_botton_yzyx bjcolor_yellow.fr"
         = link_to "跳过", confirm_step_informations_path(step: InformationsController::STEPS.count), method: "post", class: "log_success_botton_yzyx bjcolor_yellow.fr"
         span.im1.fr
           a href="javascript:void(0);" class="refresh-items"
@@ -52,8 +52,8 @@
               .sns_release_fans_top_cj
                 span.fans_top_dj_dj
                   span.account-level
-                span.fans_top_dj_dj_sj
-                  i.fans_top_dj_dj_sj_jdt
+                span.fans_top_dj_dj_sj.total-level
+                  i.fans_top_dj_dj_sj_jdt.level
               .sns_release_fans_top_bom
                 span.fans_top_dj_id_sj
                   ul

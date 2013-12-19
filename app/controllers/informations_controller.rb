@@ -2,7 +2,7 @@ class InformationsController < ApplicationController
   before_filter :sonkwo_authenticate_account
   before_filter :check_upate_tag
 
-  STEPS = [:tags, :groups, :friends, :clients]
+  STEPS = [:tags, :groups, :friends]
 
   def index
   end
@@ -15,7 +15,7 @@ class InformationsController < ApplicationController
         min_id = Group.minimum(:id)
         ids = [*min_id..max_id].sample(9)
         @groups = Group.joins("LEFT JOIN groups_accounts ON group_id=id AND account_id=#{current_account.id}")
-          .select("groups.id, groups.name, groups.member_count, groups.description, account_id")
+          .select("groups.id, groups.name, groups.logo, groups.member_count, groups.description, account_id")
           .where("id IN (?)", ids)
         render json: { status: "success", data: @groups }
       end
@@ -55,9 +55,6 @@ class InformationsController < ApplicationController
     end
   end
 
-  def clients
-  end
-
   def tags
     max_id = Tag.maximum(:id)
     min_id = Tag.minimum(:id)
@@ -71,18 +68,22 @@ class InformationsController < ApplicationController
 
   def confirm_step
     step = params[:step].to_i
-    step = 5 if step > 5
+    step = self.class::STEPS.count if step > self.class::STEPS.count
     step = 0 if step < 0
     current_account.update_tag = step
     if current_account.save
-      redirect_to :back
+      if current_account.update_tag == self.class::STEPS.count
+        render :clients
+      else
+        redirect_to :back
+      end
     else
-      redirect_to action: self.class::STEPS[current_account.update_tag], error: I18n.t("common.unknow_error")
+      redirect_to action: :index, error: I18n.t("common.unknow_error")
     end
   end
 
   private
   def check_upate_tag
-    not_found if current_account.update_tag.to_i >= self.class::STEPS.count
+    redirect_to controller: :home, action: :index if current_account.update_tag.to_i >= self.class::STEPS.count
   end
 end

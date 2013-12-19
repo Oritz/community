@@ -33,7 +33,7 @@ html
         - if current_account
           .sns_logo_user_tx_fl.sns_logo_user_tx_style.radius3px.border_2px_red
             a href="#"
-              = image_tag current_account.avatar
+              = image_tag current_account.avatar, width: 44, height: 44
             span#info.sns_logo_user_tx_fl.sns_logo_user_tx_id
               = link_to current_account.nick_name, "#"
             span.sns_logo_user_tx_fl.sns_logo_user_tx_tuichu

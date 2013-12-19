@@ -1,3 +1,4 @@
+//= require ../misc
 $(document).ready(function() {
   function get_items(options) {
     options = $.extend(true, {
@@ -30,6 +31,8 @@ $(document).ready(function() {
             $wrap.append($item);
           }
         }
+        $(".information-container").hide();
+        $wrap.show("normal");
       },
       error: function() {
         Messenger().post("网络错误");
@@ -82,40 +85,84 @@ $(document).ready(function() {
   }
 
   function get_tags() {
-    get_func = this;
     get_items({
       url: "/informations/tags.json",
       container: ".information-tags",
       item: ".tag-item",
       fill_func: function($item, data) {
         $item.find(".font").html(data.name);
-        $item.attr("url", "/home/tags/"+data.id+".json");
+        $item.attr("addurl", "/home/tags/"+data.id+".json");
+        $item.attr("rmurl", "/home/tags/"+data.id+".json");
       }
     });
   }
 
-  function get_group()
+  function get_groups()
   {
-    get_func = this;
+    get_items({
+      url: "/informations/groups.json",
+      container: ".information-groups",
+      item: ".group-item",
+      active_class: "inter",
+      fill_func: function($item, data) {
+        $item.find(".group-name").html(data.name);
+        $item.find(".group-description").html(data.description);
+        $item.find(".group-member").html("已有"+data.member_count+"位成员");
+        $item.find(".group-image").attr("src", data.logo);
+        $item.attr("rmurl", "/groups/"+data.id+"/remove_user.json");
+        $item.attr("addurl", "/groups/"+data.id+"/add_user.json");
+      }
+    });
   }
 
-  function get_friend()
+  function get_friends()
   {
-    get_func = this;
+    get_items({
+      url: "/informations/friends.json",
+      container: ".information-friends",
+      item: ".friend-item",
+      active_class: "interest",
+      fill_func: function($item, data) {
+        $item.find(".account-name").html(data.nick_name);
+        $item.find(".account-avatar").attr("src", data.avatar);
+        $item.find(".account-level").html("Lv "+data.level);
+        $item.find(".follower-count").html(data.follower_count);
+        $item.find(".following-count").html(data.following_count);
+        $item.find(".post-count").html(data.post_count);
+        $item.find(".level").attr("level", data.level);
+        $item.attr("rmurl", "/users/unfollow.json?target_id="+data.id);
+        $item.attr("addurl", "/users/follow.json?target_id="+data.id);
+        show_level($item);
+      }
+    });
   }
 
-  var step = 0;
-  get_tags();
+  var step = parseInt($(".step").attr("current_step"));
+  var steps = [
+    function() {
+      get_tags();
+    },
+    function() {
+      get_groups();
+    },
+    function() {
+      get_friends();
+    }
+  ];
+
+  steps[step]();
+  $(".push_nav .push_nav_style").eq(step).find("a").removeClass("bjcl_ccc").addClass("bjcl_red");
 
   $(".refresh-items").click(function() {
-    get_func.call();
+    steps[step]();
   });
   $(document).on("click", ".information-container .information-item", function() {
     var active_class = $(this).attr("active_class");
-    var url = $(this).attr("url");
+    var addurl = $(this).attr("addurl");
+    var rmurl = $(this).attr("rmurl");
     if($(this).hasClass(active_class)) {
       item_op({
-        url: url,
+        url: rmurl,
         op: "remove",
         class_active: active_class,
         item: $(this)
@@ -123,7 +170,7 @@ $(document).ready(function() {
     }
     else {
       item_op({
-        url: url,
+        url: addurl,
         op: "add",
         class_active: active_class,
         item: $(this)
