@@ -85,8 +85,8 @@ class Subject < ActiveRecord::Base
         end
       end
       # find all href
-      cooked_line.gsub!(/&lt;a href=&quot;(.+)?&quot;&gt;(.+)?&lt;\/a&gt;/) do |linked_str|
-          linked_str = "<a href='#{$1}' title='#{$1}'>#{$2}</a>"
+      cooked_line.gsub!(/&lt;a href=&quot;(.*?)&quot;&gt;(.*?)&lt;\/a&gt;/) do |linked_str|
+          linked_str = "<a target='_blank' rel='nofollow' href='#{$1}' title='#{$1}'>#{$2}</a>"
       end
       cooked_content.append(cooked_line + '<br>')
     end
