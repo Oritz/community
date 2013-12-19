@@ -79,7 +79,7 @@ class PrivateMessage < ActiveRecord::Base
 
   def self.conversation_destroy(conversation, account)
     pms = PrivateMessage.where("conversation_id=?", conversation.id)
-    if conversation.first_account = account
+    if conversation.first_account == account
       pms.update_all(first_deleted_at: Time.now())
     else
       pms.update_all(second_deleted_at: Time.now())

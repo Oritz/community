@@ -19,7 +19,6 @@ class ConversationsController < ApplicationController
   def destroy
     @conversation = Conversation.find(params[:id])
     return unless check_access?(conversation: @conversation)
-
     PrivateMessage.conversation_destroy(@conversation, current_account)
 
     respond_to do |format|

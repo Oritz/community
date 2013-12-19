@@ -8,27 +8,33 @@
         | 封未读]
   - if @private_messages.empty?
     .no_letter 没有私信
-  - for private_message in @private_messages do
+  - for pm in @private_messages do
+    - if pm.sender == current_account
+      - another = pm.recipient
+    - else
+      - another = pm.sender
     .letter
       .letter-list.rs3
         span.fl.letter-img
           .letter-tx
-            img src="images/img/tx.png"
+            = link_to user_path(another)
+              = image_tag another.avatar, alt: another.nick_name, title: another.nick_name
         span.fl.letter-info
           span.info-id
-            p 我是名字我是名字
+            p
+              = link_to another.nick_name, user_path(another), title: another.nick_name
           span.info-reply
             span.fl.info-reply-new.rs3
-              p.fl 我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字我是名字
-              em.fr 2013-10-28 12:22
+              p.fl =pm.content
+              em.fr =pm.created_at.strftime("%Y-%m-%d %H:%M")
           .letter-site
             span.fl
-              a.letter-set href="#"
-              | \
-              a.letter-set href="#"
+              a.letter-set href="#" 举报
+              = link_to "删除", conversation_path(pm.conversation), class: "letter-set", method: :delete
             span.fr
-              a.letter-bn.rs3 href="#"
+              = link_to "查看", conversation_path(pm.conversation), class: "letter-bn rs3"
   .letter-list-select
     span.fr
       a.letter-send.rs3 href="javascript:void(0);" 发私信
     = render 'private_messages/send_form'
+=will_paginate @private_messages
