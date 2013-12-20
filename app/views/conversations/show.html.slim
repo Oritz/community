@@ -1,20 +1,34 @@
-div.form-div
-  = form_tag private_messages_path, method: :post do
-    =hidden_field_tag "recipient_id", @recipient.id
-    p= text_area_tag "private_message[content]", "", class: "span", rows: "3"
-    p= submit_tag t("send"), class: "btn btn-primary"
-
-ul.media-list
-  -@private_messages.each do |pm|
-    - pm.conversation = @conversation
-    li.media
-      = link_to user_path(pm.sender), class: "pull-left" do
-        = image_tag pm.sender.avatar.m.url, alt: pm.sender.nick_name, class: "media-object"
-      div.media-body.well.well-small
-        p.media-heading
-          = link_to pm.sender.nick_name, user_path(pm.sender)
-          span.label= pm.created_at
-          = link_to t("delete"), private_message_path(pm), method: :delete, data: {confirm: 'Are you sure?'}
-        div.media
-          p= pm.content
+.my-assets
+  .top_explanation
+    span.fl
+      h3.explanation_h3.fl 发送私信
+  .send-message.rs3
+    .send-con
+        = form_tag private_messages_path, method: :post do
+          h3 回复：
+          =hidden_field_tag "recipient_id", @recipient.id
+          span
+            = text_area_tag "private_message[content]", "", class: "send-textarea rs3"
+          span.fr
+            = submit_tag "发送", class: "send-con-bn rs3 bjcl_blue"
+            = link_to "返回", conversations_path(), class: "send-con-bn rs3 bjcl_ccc"
+    .send-dialog
+    -@private_messages.each do |pm|
+      .dialog-new
+        - if pm.sender == current_account
+          - float_postion = "fl"
+        -else
+          - float_postion = "fr"
+        div class="#{float_postion} dialog-tx"
+          span.dialog-tx-img
+            = link_to user_path(pm.sender)
+              = image_tag pm.sender.avatar, alt: pm.sender.nick_name, title: pm.sender.nick_name
+        div class="#{float_postion} dialog-detail"
+          span.dialog-detail-id
+            p 
+              = link_to pm.sender.nick_name, user_path(pm.sender), title: pm.sender.nick_name
+          span.dialog-detail-reply
+            span.fl.dialog-detail-reply-new.rs3
+              p.fl =pm.content
+              em.fr =pm.created_at.strftime("%Y-%m-%d %H:%M") 
 =will_paginate @private_messages

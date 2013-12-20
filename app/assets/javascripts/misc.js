@@ -18,8 +18,8 @@ function show_level($blocks) {
 }
 
 
-// Join and quit groups
 $(document).ready(function () {
+  // Join and quit groups
   var quitGroup = function () {
     var form_token = $('meta[name="csrf-token"]').attr('content');
     if (form_token) {
@@ -76,4 +76,53 @@ $(document).ready(function () {
   
   $('span.groups_b_cz_tc').on('click', 'a', quitGroup);
   $('span.groups_b_cz_jr').on('click', 'a', joinGroup); 
+  
+  
+  // send message box
+  function clearPM() {
+    $('#pm_recipient_name').val('');
+    $('#pm_recipient_content').val('');
+  }
+  
+  $('.letter-send').click(function () {
+    $.fancybox.open($('#private_message_box'), {
+      closeBtn: false,
+      closeClick: false,
+      width: 600,
+      modal: true,
+      afterClose: function () {clearPM();},
+    });
+  });
+  
+  $('.pm_popup_closebtn').click(function () {
+    $.fancybox.close();
+  });
+
+  $('#bn_pm_send').click(function () {
+    var form_token = $('meta[name="csrf-token"]').attr('content');
+    var recipient_name = $.trim($('#pm_recipient_name').val());
+    var recopient_content = $.trim($('#pm_recipient_content').val());
+    
+    $.ajax({
+      url: '/private_messages.json',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        authenticity_token: form_token,
+        recipient_name: recipient_name,
+        'private_message[content]': recopient_content,
+      },
+      error: function () {
+        $.fancybox.close();
+      },
+      success: function(data, textStatus) {
+        $.fancybox.close();
+        location.reload();
+      }
+    });
+  });
+  
+  $('#bn_pm_cancel').click(function () {
+    $.fancybox.close();
+  });  
 });

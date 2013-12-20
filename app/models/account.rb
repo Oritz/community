@@ -21,6 +21,10 @@ class Account < ActiveRecord::Base
     t.add :avatar
     t.add :nick_name
   end
+  api_accessible :pm_info do |t|
+    t.add :id
+    t.add :nick_name
+  end
 
   EMAIL_NOT_VERIFY = 0
   EMAIL_VERIFIED = 1
