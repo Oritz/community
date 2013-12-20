@@ -16,6 +16,9 @@ default: &defaults
     forum: "http://forum.sonkwo.com"
     community: "http://www.sonkwo.com"
     client: "#"
+  albums:
+    defaults:
+      screenshot: "截图相册"
   images:
     avatar:
       default: "/avatar/default.jpg"

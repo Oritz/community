@@ -1,5 +1,3 @@
-# -*- encoding : utf-8 -*-
-
 namespace :erbac do
   desc "Create access control system database."
 
