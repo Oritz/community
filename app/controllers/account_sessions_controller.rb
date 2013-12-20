@@ -39,20 +39,20 @@ class AccountSessionsController < Devise::SessionsController
     sso_domain_key = Settings.sso.domain_key
     auth_token = Digest::SHA1.hexdigest("#{current_account.id},#{current_account.email},#{now_time},#{sso_domain_key}")
     if current_account.remember_expired?
-      cookies.signed[:sso_auth] = {
+      cookies[:sso_auth] = {
         :value => "#{current_account.id},#{auth_token},#{now_time},#{current_account.email}",
         :domain => Settings.sso.root_domain,
         :secure => false
       }
     else
-      cookies.signed[:sso_auth] = {
+      cookies[:sso_auth] = {
         :value => "#{current_account.id},#{auth_token},#{now_time},#{current_account.email}",
         :domain => Settings.sso.root_domain,
         :expires => current_account.remember_expires_at,
         :secure => false
       }
     end
-    cookies.signed[:client] = {
+    cookies[:client] = {
       :value => client,
       :domain => Settings.sso.root_domain,
       :secure => false

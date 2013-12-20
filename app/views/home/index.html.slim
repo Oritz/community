@@ -55,7 +55,7 @@
               .snsshow1
                 p
                   a href="#"  举报
-              = f.submit("发布")
+              = f.submit "发布", id: "post_submit", disable: ""
       .image-upload-block style="display: none;"
         .image-upload-form style="display: none;"
           form#qiniu_uploader method="post" action="http://up.qiniu.com/" enctype="multipart/form-data"

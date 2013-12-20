@@ -126,19 +126,21 @@ function start_posts(url) {
 
     // new_talk form
     $("form.new_talk").submit(function() {
-      $(this).ajaxSubmit({
-        url: "/talks.json",
-        success: function(data) {
-          show_message(data);
-          var status = data.status;
-          if(status == "success") {
-            $("form.new_talk .post-pic").click();
-            $("form.new_talk [name='talk[content]']").attr("value", "");
-            add_post_to_wrapper(templates.talk, data.data, $wrapper);
-          }
-        },
-        resetForm: true
-      });
+      if ($(this).find('#post_submit').attr('disable') !== '') {
+        $(this).ajaxSubmit({
+          url: "/talks.json",
+          success: function(data) {
+            show_message(data);
+            var status = data.status;
+            if(status == "success") {
+              $("form.new_talk .post-pic").click();
+              $("form.new_talk [name='talk[content]']").attr("value", "");
+              add_post_to_wrapper(templates.talk, data.data, $wrapper);
+            }
+          },
+          resetForm: true
+        });
+      }
       return false;
     });
 

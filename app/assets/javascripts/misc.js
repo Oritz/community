@@ -1,3 +1,23 @@
+//= require sonkwo_textarea
+
+var get_unicode_length = function (str) {
+  var real_length = 0;
+  var len = str.length;
+  var char_code = -1;
+  
+  for (var i = 0; i < len; i++) {
+    char_code = str.charCodeAt(i);
+    if (char_code >= 0 && char_code < 128) {
+      real_length += 1;
+    }
+    else {
+      real_length += 2;
+    }
+  }
+  
+  return Math.ceil(real_length/2);
+};
+
 function show_level($blocks) {
   var total_level = 20;
   var $levels = $blocks.find(".total-level .level");
