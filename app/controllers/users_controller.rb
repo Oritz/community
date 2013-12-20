@@ -48,12 +48,13 @@ class UsersController < ApplicationController
     @target = Account.find(params[:id])
     show_fans = params[:type] ? (params[:type].downcase == "fans") : false
 
+    select_items = %w(id nick_name exp follower_count following_count talk_count subject_count recommend_count)
     if show_fans
       @type = "FANS"
-      @users = @target.people_relation_with_visitor(visitor: current_account, select: "id, nick_name, avatar", type: Friendship::FOLLOWER, page: params[:page], per_page: 10)
+      @users = @target.people_relation_with_visitor(visitor: current_account, select: select_items.join(","), type: Friendship::FOLLOWER, page: params[:page], per_page: 10)
     else
       @type = "STARS"
-      @users = @target.people_relation_with_visitor(visitor: current_account, select: "id, nick_name, avatar", type: Friendship::FOLLOWING, page: params[:page], per_page: 10)
+      @users = @target.people_relation_with_visitor(visitor: current_account, select: select_items.join(","), type: Friendship::FOLLOWING, page: params[:page], per_page: 10)
     end
   end
 

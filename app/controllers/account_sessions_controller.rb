@@ -41,18 +41,21 @@ class AccountSessionsController < Devise::SessionsController
     if current_account.remember_expired?
       cookies[:sso_auth] = {
         :value => "#{current_account.id},#{auth_token},#{now_time},#{current_account.email}",
-        :domain => Settings.sso.root_domain
+        :domain => Settings.sso.root_domain,
+        :secure => false
       }
     else
       cookies[:sso_auth] = {
         :value => "#{current_account.id},#{auth_token},#{now_time},#{current_account.email}",
         :domain => Settings.sso.root_domain,
-        :expires => current_account.remember_expires_at
+        :expires => current_account.remember_expires_at,
+        :secure => false
       }
     end
     cookies[:client] = {
       :value => client,
-      :domain => Settings.sso.root_domain
+      :domain => Settings.sso.root_domain,
+      :secure => false
     }
   end
 end

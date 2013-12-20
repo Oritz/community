@@ -100,6 +100,10 @@ class Account < ActiveRecord::Base
     subject.post
   end
 
+  def post_count
+    self.talk_count + self.subject_count + self.recommend_count
+  end
+
   def avatar
     return Settings.images.avatar.default unless self.cloud_storage
     cloud_storage.url
@@ -176,11 +180,6 @@ class Account < ActiveRecord::Base
     return accounts
   end
 
-  # Crop
-  #def cropping?
-    #!crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
-  #end
-
   # Game playing histories
   def last_play_time(game_id)
     history = UserGamePlayHistory.where("account_id=? AND game_id=?", self.id, game_id).select("UNIX_TIMESTAMP(start_time) AS start_timestamp").order("start_time DESC").first
@@ -251,7 +250,7 @@ class Account < ActiveRecord::Base
   end
 
   def create_screenshot_album
-    album = Album.new(name: "screenshot")
+    album = Album.new(name: Settings.albums.defaults.screenshot)
     album.album_type = Album::TYPE_SCREENSHOT
     album.account = self
     album.save!
