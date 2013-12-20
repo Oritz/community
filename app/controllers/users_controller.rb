@@ -33,9 +33,9 @@ class UsersController < ApplicationController
     @target = Account.find(params[:id])
     fetcher = Sonkwo::Behavior::Fetcher.new(current_account, target: @target)
     if params[:end_id]
-      @posts = fetcher.behaviors(limit: 2, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
+      @posts = fetcher.behaviors(limit: 9, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
     else
-      @posts = fetcher.behaviors(limit: 2, status: Post::STATUS_NORMAL, order: "created_at DESC")
+      @posts = fetcher.behaviors(limit: 9, status: Post::STATUS_NORMAL, order: "created_at DESC")
     end
 
     respond_to do |format|

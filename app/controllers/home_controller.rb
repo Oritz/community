@@ -39,12 +39,12 @@ class HomeController < ApplicationController
     if params[:type] == "posts"
       fetcher = Sonkwo::Behavior::Fetcher.new(current_account)
       if params[:end_id]
-        @posts = fetcher.behaviors(limit: 2, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
+        @posts = fetcher.behaviors(limit: 9, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
       else
-        @posts = fetcher.behaviors(limit: 2, status: Post::STATUS_NORMAL, order: "created_at DESC")
+        @posts = fetcher.behaviors(limit: 9, status: Post::STATUS_NORMAL, order: "created_at DESC")
       end
     elsif params[:type] == "groups"
-      @posts = Subject.subjects_in_groups_added(current_account.id, 2)
+      @posts = Subject.subjects_in_groups_added(current_account.id, 9)
       @posts = @posts.where("subjects.id < ?", params[:end_id]) if params[:end_id]
     else
       @posts = []
