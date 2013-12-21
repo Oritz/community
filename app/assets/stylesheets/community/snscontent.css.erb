@@ -8,9 +8,9 @@
 	border-radius: 3px;
 }
 .radius50 {
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
 }
 .border_2px_red {
 	border: 2px solid #FF0000;
@@ -1422,7 +1422,7 @@
 }
 .sns_release_enter1 {
 	width:632px;
-	height:192px;float: right;
+	float: right;
 }
 .countTxt_block {
 	height:24px;
@@ -1450,24 +1450,24 @@
 }
 #msgBox1 {
 	width:610px;
-	height:170px;
+	
 	background:#f8f8f8;
 	border-radius:3px;
 	border: 1px solid #CCCCCC;
 	padding:10px;
 }
-#userName,#talk_content {
+#userName,#talk_content,#comment_comment{
 	border:1px solid #d0d0d0;
 	border-radius:3px;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
 	transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
 }
-#userName.active,#talk_content.active,#talk_content:focus {
+#userName.active,#talk_content.active,#comment_comment.active,#talk_content:focus,#comment_comment:focus {
 	border-color: rgba(82, 168, 236, 0.8);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
 	outline: 0 none;
 }
-#talk_content {
+#talk_content,#comment_comment {
 	
 	resize:none;
 	
@@ -1475,6 +1475,7 @@
 	padding:10px;
 	color:#2c3e50;
 }
+#comment_comment{width: 100%; height: 80px;}
 .conBoxwidth {
 	width:610px;
 }
