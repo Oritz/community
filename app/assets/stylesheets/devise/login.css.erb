@@ -225,8 +225,9 @@ charset "utf-8";
 }
 .login_checkbox_1 {
         float:left;
-        margin-bottom:5px;
+        margin-bottom:5px;color: #fff; 
 }
+.login_checkbox_1 label{ margin-left:5px; cursor: pointer;}
 .login_checkbox_botton {
         float:right;
         width:150px;
@@ -235,22 +236,22 @@ charset "utf-8";
 .login_checkbox_botton_qd {
         height:46px;
 }
-.login_checkbox_botton_qd a {
+.login_checkbox_botton_qd input {
         height:46px;
         line-height:46px;
         text-align:center;
         font-size:24px;
         font-weight:bold;
         color:#fff;
-        padding:0px 30px;
+        padding:0px 50px;
         background:#3498db;
-        display:block;
+        display:block;border: 0;
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         border-radius: 3px;
         transition: all 0.3s ease 0s;
 }
-.login_checkbox_botton_qd a:hover {
+.login_checkbox_botton_qd input:hover {
         background:#2980b9;
 }
 .login_checkbox_botton_wjmm {
@@ -502,6 +503,8 @@ charset "utf-8";
         border-radius: 3px;
         color:#666;
 }
+.formbox-style .text:hover,.formbox-style .text:focus{border-color:#3498db;
+        outline: 0 none;}
 .formbox-style .text-1 {
         width:218px;
 }
@@ -711,15 +714,6 @@ charset "utf-8";
 .formbox-style-changepwd .item a:link,#formbox .item a:visited {
         text-decoration:underline;
 }
-.formbox-style-changepwd .label {
-        width:320px;
-        font-size:12px;
-        line-height:20px;
-        height:20px;
-        color:#2c3e50;
-        font-weight:bold;
-        text-align:center;
-}
 .formbox-style-changepwd .span-150 {
         width:150px;
 }
@@ -762,14 +756,6 @@ charset "utf-8";
 .formbox-style-changepwd .item1 a:link,#formbox .item1 a:visited {
         text-decoration:underline;
 }
-.formbox-style-changepwd .label {
-        width:320px;
-        font-size:12px;
-        line-height:20px;
-        height:20px;
-        color:#2c3e50;
-        font-weight:bold;
-}
 .formbox-style-changepwd .span-150 {
         width:150px;
 }
@@ -790,13 +776,16 @@ charset "utf-8";
         height:23px;
         margin-top:10px;
 }
+#account_email{width: 305px;
+height: 24px;
+line-height: 24px;}
 .formbox-style-changepwd .label {
         width:320px;
         font-size:12px;
         line-height:20px;
         height:20px;
         color:#2c3e50;
-        font-weight:bold;
+        font-weight:bold;float: left;
 }
 .formbox-style-changepwd .span-150 {
         width:150px;
@@ -842,3 +831,36 @@ charset "utf-8";
         .mar_t10 {
         margin-top:10px;
 }
+.required{ color: #f00;}
+.custom-error-message{color: #f00;}
+.parsley-error-list{float: left;}
+.email_field_st{padding: 0px 5px;
+border: 1px solid rgb(212, 212, 212);
+font-size: 12px;
+border-radius: 3px;
+color: rgb(102, 102, 102);}
+.email_field_st:hover,.email_field_st:focus{border-color: rgb(52, 152, 219);
+outline: 0px none;}
+.sign_up_btn{ height: 30px;}
+.sign_up_btn input{float:right;border: medium none;
+cursor: pointer;
+height: 30px;
+padding: 0px 20px 0px;
+overflow: hidden;
+display: inline-block;
+text-align: center;
+font-size: 14px;
+font-weight: 800;
+color: rgb(255, 255, 255);
+background: none repeat scroll 0% 0% rgb(52, 152, 219);
+border-radius: 3px;
+transition: all 0.3s ease 0s;}
+.sign_up_btn input:hover{background: none repeat scroll 0% 0% rgb(41, 128, 185);}
+.sign_up_xy label a{ color: #2c3e50; margin-left: 5px;}
+
+
+
+
+
+
+
