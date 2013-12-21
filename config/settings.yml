@@ -16,14 +16,11 @@ default: &defaults
     forum: "http://forum.sonkwo.com"
     community: "http://www.sonkwo.com"
     client: "#"
-<<<<<<< HEAD
   posts:
-    image_tag: ".."
-=======
+    image_tag: "图片"
   albums:
     defaults:
       screenshot: "截图相册"
->>>>>>> 5354e64526fe1e9a74af80581e56d2aea9a383a9
   images:
     avatar:
       default: "/avatar/default.jpg"
