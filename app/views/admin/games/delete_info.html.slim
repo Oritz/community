@@ -1,0 +1,13 @@
+<div class="widget">
+  <div class="widget-content">
+    <h3>序列号批量删除结果</h3>
+    <div class="alert">
+      <% if @used_count > 0 -%>
+        <p>删除<%= @all_count - @used_count %>，已有<%= @used_count %>个序列号已被使用，请联系相关人员处理</p>
+      <% else -%>
+        <p>删除成功，共有<%= @all_count - @used_count %>个序列号被删除</p>
+      <% end -%>
+    </div>
+    <%= link_to "返回", admin_game_serial_numbers_path(:game_id => @game.id), :class => "btn" %>
+  </div>
+</div>

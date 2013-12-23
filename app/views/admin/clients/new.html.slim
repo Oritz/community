@@ -1,0 +1,40 @@
+=render 'nav'
+=content_for(:content) do
+  = form_for(@client, :html => {:multipart => true}, :url => { :action => "create"}, :class=>'form-horizontal') do |f|
+    - @client.errors.any?
+      - @client.errors.full_messages.each do |msg|
+        =msg
+    .control-group
+      label.control-label
+        =t('admin.client.patch')
+      .controls
+        = file_field 'patch', ''
+    .control-group
+      label.control-label
+        =t('admin.client.full_pkg')
+      .controls
+        = file_field 'full_pkg', ''
+    .control-group
+      label.control-label
+        =t('admin.data.comment')
+      .controls
+        = file_field 'desc', ''
+        | txt file
+    .control-group
+      .controls
+        .alert
+          button.close data-dismiss='alert'
+            | &times;
+          strong
+            =t('admin.client.upload_tip')
+    .control-group
+      .controls
+        input.btn.btn-primary type="submit" value="Create" onclick="ensure_name();"
+=content_for(:js_files) do
+  javascript:
+    function ensure_name(){
+        file = document.getElementById("full_pkg_").value;
+        if(confirm("Are you sure to upload:"+file+"?")){
+            document.getElementById("new_admin_client_update").submit();
+        }
+    }

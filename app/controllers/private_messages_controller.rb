@@ -4,14 +4,23 @@ class PrivateMessagesController < ApplicationController
 
   def create
     @private_message = PrivateMessage.new(params[:private_message])
-    @recipient = Account.find(params[:recipient_id])
+    if params[:recipient_id]
+      @recipient = Account.where(id: params[:recipient_id]).first
+    elsif params[:recipient_name]
+      @recipient = Account.where(nick_name: params[:recipient_name]).first
+    end
+    
+    unless @recipient
+      render json: { status: "error", message: I18n.t("priavete_message.user_not_found") }
+      return
+    end
     @private_message.sender = current_account
     @private_message.recipient = @recipient
 
     respond_to do |format|
       if @private_message.save
         format.html { redirect_to :back }
-        format.json { render_for_api :show, json: @private_message, root: "data", meta: {status: "success"} }
+        format.json { render_for_api :pm_info, json: @private_message, root: "data", meta: {status: "success"} }
       else
         format.json { render json: {status: "fail", data: @private_message.errors} }
         format.html { redirect_to :back }

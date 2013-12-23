@@ -1,0 +1,49 @@
+=render 'nav'
+-content_for :content do
+  h3=@game.title
+
+  table.table-bordered.table-striped
+    tr
+      td=t('admin.game.pre_release_time')
+      td=sonkwo_time_format(@game_file.created_at)
+    tr
+      td=t('admin.game.crypt_type')
+      td=t('admin.game.crypt_types')[@game_file.crypt_type]
+    tr
+      td=t('admin.game.process_start_time')
+      td=@game_file.process_start_time ? sonkwo_time_format(@game_file.process_start_time) : ""
+    tr
+      td=t('admin.game.release_result')
+      td=@game_file.process_result
+    tr
+      td=t('admin.game.ini_ver')
+      td=@game_file.ini_ver
+    tr
+      td=t('admin.game.shell_ver')
+      td=@game_file.shell_ver
+    tr
+      td=t('admin.game.patch_ver')
+      td=@game_file.patch_ver
+    tr
+      td=t('admin.game.status')
+      td=t('admin.game.release_status')[@game_file.status]
+  =form_tag do
+    input type='hidden' name='game_file_id' value=params[:game_file_id]
+    input type='hidden' name='new_status' value=params[:new_status]
+    - if @new_status == GameFile::STATUS_REJECTED
+      =t('admin.game.reject_reason')
+    - elsif @new_status == GameFile::STATUS_ROLLBACKED
+      =t('admin.game.rollback_reason')
+    div.row
+      div.span3
+        div.alert.alert-warning
+          =t('admin.game.release_status')[@game_file.status]
+          |
+            ==>
+          =t('admin.game.release_status')[@new_status]
+          =t('helpers.links.confirm')
+
+
+
+    input type='text' name='comment' placeholder=t('admin.game.release_comment')
+    input.btn type='submit' confirm=t('helpers.links.confirm')

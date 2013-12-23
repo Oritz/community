@@ -6,7 +6,7 @@ class TalksController < ApplicationController
     @talk = Talk.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.slim
       format.json { render json: @talk }
     end
   end
@@ -17,11 +17,12 @@ class TalksController < ApplicationController
 
     respond_to do |format|
       if @talk.save
-        format.html { redirect_to @talk.post, notice: 'Talk war successfully created.' }
-        format.json { render json: @talk, status: :created, location: @talk }
+        @talk.post.detail = @talk
+        format.html { redirect_to @talk.post, notice: 'Talk was successfully created.' }
+        format.json { render_for_api :post_info, json: @talk.post, root: "data", meta: {status: "success"} }
       else
-        format.html { raise "TODO:" } #TODO: 
-        format.json { raise "TODO:" } #TODO:
+        format.html { raise "TODO:" } #TODO:
+        format.json { render json: { status: "fail", data: @talk.errors } }
       end
     end
   end

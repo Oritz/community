@@ -1,7 +1,0 @@
-li post_id="#{post.id}"
-  - if post.is_a?(Talk)
-    = render partial: "posts/talk.html.slim", locals: {post: post}
-  - elsif post.is_a?(Subject)
-    = render partial: "posts/subject.html.slim", locals: {post: post}
-  - elsif post.is_a?(Recommend)
-    = render partial: "posts/recommend.html.slim", locals: {post: post}

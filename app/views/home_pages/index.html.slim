@@ -1,0 +1,129 @@
+doctype
+html xmlns="http://www.w3.org/1999/xhtml"
+  head
+    meta content="text/html; charset=utf-8" http-equiv="Content-Type"
+    title 杉果游戏导流页
+    meta content="好玩的单机游戏,单机游戏大全,单机游戏下载,杉果游戏" name="keywords"
+    meta content="杉果游戏，单机游戏下载大全,PC游戏,好玩的大型单机游戏,国内首家正版游戏数字商城" name="description"
+    meta content="杉果游戏导流页" name="author"
+    = stylesheet_link_tag "reset"
+    = stylesheet_link_tag "home_pages/wwwstyle"
+    = stylesheet_link_tag "storefooter"
+  body
+    .www_header
+      .www_header_box
+        .www_head_logo
+          a.www_head_logo_bj href="#" target="_blank" title="杉果游戏"
+        ul.www_nav_font
+          li
+            - if current_account
+              = link_to current_account.nick_name, home_index_path
+            - else
+              = link_to "登录", new_account_session_path
+          li
+            - if current_account
+              = link_to "退出", destroy_account_session_path, method: :delete
+            - else
+              = link_to "注册", new_account_registration_path
+          li
+            a href="" target="_blank" 收藏
+          li
+            a href="#" target="_blank" 设为首页
+    .www_carousel
+      .www_carousel_box
+        .www_carousel_box_L
+          #banner
+            .slides
+              ul.slide-pic.radius3px
+                li.cur
+                  a href="#" target="_blank"
+                    img alt="" src="images/banner_1.jpg"
+                li
+                  a href="#" target="_blank"
+                    img alt="" src="images/banner_1.jpg"
+                li
+                  a href="#" target="_blank"
+                    img alt="" src="images/banner_1.jpg"
+                li
+                  a href="#" target="_blank"
+                    img alt="" src="images/banner_1.jpg"
+                li
+                  a href="#" target="_blank"
+                    img alt="" src="images/banner_1.jpg"
+              ul.slide-li.op
+                li.cur
+                li
+                li
+                li
+                li
+              ul.slide-li.slide-txt
+                li.cur
+                  a
+                li
+                  a
+                li
+                  a
+                li
+                  a
+                li
+                  a
+          /! 轮播 代码 结束
+        .www_carousel_box_R.radius3px
+          .text_welcome
+            h1 欢迎来到杉果游戏
+            p 在这里你会体验到正版单机游戏的质感与联机带来的快感与乐趣！
+          .text_button
+            a.radius3px href="#" 马上加入
+    .www_container
+      .www_container_box
+        ul
+          li
+            .box_store.radius3px
+              h1 杉果游戏商城
+              p 文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案。
+              span.fr
+                a.store_col href="#" target="_blank" Go
+          li
+            .box_community.radius3px
+              h1 杉果游戏商城
+              p 文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案。
+              span.fr
+                a.community_col href="#" target="_blank" Go
+          li
+            .box_forum.radius3px
+              h1 杉果游戏商城
+              p 文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案。
+              span.fr
+                a.forum_col href="#" target="_blank" Go
+          li
+            .box_client.radius3px
+              h1 杉果游戏商城
+              p 文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案。
+              span.fr
+                a.client_col href="#" target="_blank" Go
+    .footer
+      .footer_box
+        .footer_box_mian
+          span.fl
+            a.footLogo href="#" target="_blank"
+          span.fr
+            ul.foot_navigation
+              li
+                a href="#" target="_blank" 关于中电博亚
+                | |
+              li
+                a href="#" target="_blank" 关于杉果游戏
+                | |
+              li
+                a href="#" target="_blank" 用户协议
+                | |
+              li
+                a href="#" target="_blank" 客户服务
+                | |
+              li
+                a href="#" target="_blank" 联系我们
+        .footer_Copyright
+          p &copy;2013 北京中电博亚科技有限公司版权所有 所有商标版权属于其拥有者 Tel:010-68434500
+          p 京ICP备12041226号 《出版物经营许可证》 新出发京批字第直0816号 京公网安备11010802012421号
+    = javascript_include_tag "jquery"
+    = javascript_include_tag "jquery_ujs"

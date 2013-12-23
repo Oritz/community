@@ -18,6 +18,8 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
+  gem 'twitter-bootstrap-rails'
+  gem 'bootstrap-datetimepicker-rails'
 end
 
 gem 'jquery-rails'
@@ -44,7 +46,7 @@ gem 'json'
 gem 'zip'
 gem 'spreadsheet'
 gem 'uuidtools'
-
+gem 'rails3-active_form', '~> 2.0.0'
 #gem 'rmagick'
 
 group :development do
@@ -69,13 +71,14 @@ group :test do
   gem 'selenium-webdriver'
   gem 'email_spec'
   gem 'timecop'
+  gem 'webmock'
 end
 
 gem 'foreigner'
 gem 'composite_primary_keys'
 gem 'therubyracer'
 
-gem 'truncate_html', '~> 0.9.2'
+#gem 'truncate_html', '~> 0.9.2'
 gem 'figaro', '~> 0.7.0'
 gem 'devise', '~> 3.0.2'
 gem 'devise-encryptable', '~> 0.1.2'
@@ -83,3 +86,15 @@ gem 'slim-rails'
 gem 'erbac'
 gem 'acts_as_api'
 gem 'settingslogic'
+gem 'ruby-openid', require: 'openid'
+gem 'validates_timeliness', '~> 3.0'
+gem 'sidekiq'
+gem 'sinatra', '>= 1.3.0', require: nil
+gem 'unicorn'
+gem 'qiniu-rs'
+gem 'jquery-form-rails'
+gem "messengerjs-rails", "~> 1.3.6.2"
+gem "devise-async"
+gem 'parsley-rails'
+gem 'humanizer'
+gem 'activerecord-import', '~> 0.4.1'

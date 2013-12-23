@@ -11,9 +11,230 @@ default: &defaults
         name: "forum.sonkwo.com"
         key: "9fc54dfc86fea801f5760998614a19a4"
         logout_url: "http://forum.sonkwo.com/xxx"
+  subdomains:
+    store: "http://store.sonkwo.com"
+    forum: "http://forum.sonkwo.com"
+    community: "http://www.sonkwo.com"
+    client: "#"
+  posts:
+    image_tag: "图片"
+  albums:
+    defaults:
+      screenshot: "截图相册"
+  images:
+    avatar:
+      default: "/avatar/default.jpg"
+    game:
+      default: "/game/default.jpg"
+    group:
+      default: "/group/default.jpg"
+  cloud_storage:
+    default_bucket: 'sonkwo-post'
+    avatar_bucket: 'sonkwo-avatar'
+    snapshot_bucket: 'sonkwo-snapshot'
+    post_bucket: 'sonkwo-post'
+    sonkwo_key: 'dsfa1315zasfz989-77'
+    token_expire: 60
+    callback_url: 'http://101.71.243.50:8008/cloud_storages'
+    callback_body: 'name=$(fname)&size=$(fsize)&w=$(imageInfo.width)&h=$(imageInfo.height)&hash=$(etag)&sonkwo_token=$(x:sonkwo_token)&account_id=$(x:account_id)&timestamp=$(x:timestamp)&bucket_name=$(x:bucket_name)'
+    callback_body_type: 'application/x-www-form-urlencoded'
+    escape: 1
+    async_options: ''
+    return_body: '{"foo": "bar", "size": $(fsize), "hash": $(etag), "w": $(imageInfo.width), "h": $(imageInfo.height), "color": $(exif.ColorSpace.val), "sonkwo_token": $(x:sonkwo_token), "account_id": $(x:account_id), "timestamp": $(x:timestamp)}'
+  reputation:
+    # The ORDER IS VERY IMPORTANT
+    elite:
+      name: "ELITE"
+      range:
+        from: 0.1
+        to: 0
+    hardcore:
+      name: "HARDCORE"
+      range:
+        from: 0.2
+        to: 0.1
+    dedicated:
+      name: "DEDICATED"
+      range:
+        from: 0.4
+        to: 0.2
+    experienced:
+      name: "EXPERIENCED"
+      range:
+        from: 0.6
+        to: 0.4
+    amateur:
+      name: "AMATEUR"
+      range:
+        from: 0.8
+        to: 0.6
+    newbie:
+      name: "NEWBIE"
+      range:
+        from: 1.0
+        to: 0.8
+  level: [50, 200, 500, 1000, 2000, 5000, 8000, 12000, 16000, 20000, 25000, 35000, 50000, 80000, 120000, 200000, 500000, 1500000, 5000000]
+  exp:
+    exp_regist:
+      period_type: 0
+      status: 1
+      name: "注册成功"
+      time_limit: 1
+      value: 10
+      bonus: 20
+    exp_upload_avatar:
+      period_type: 0
+      status: 1
+      name: "首次上传头像"
+      time_limit: 1
+      value: 10
+      bonus: 5
+    exp_fill_personal_info:
+      period_type: 0
+      status: 1
+      name: "完善个人资料"
+      time_limit: 1
+      value: 20
+      bonus: 20
+    exp_sign:
+      period_type: 1
+      status: 1
+      name: "每日签到"
+      time_limit: 1
+      value: 10
+      bonus: 5
+    exp_post_subject:
+      period_type: 1
+      status: 1
+      name: "发表攻略和心情"
+      time_limit: 5
+      value: 10
+      bonus: 0
+    exp_post_talk:
+      period_type: 1
+      status: 1
+      name: "发表说说"
+      time_limit: 5
+      value: 10
+      bonus: 0
+    exp_recommend_post:
+      period_type: 1
+      status: 1
+      name: "转发"
+      time_limit: 20
+      value: 1
+      bonus: 0
+    exp_comment_post:
+      period_type: 1
+      status: 1
+      name: "评论"
+      time_limit: 20
+      value: 1
+      bonus: 0
+    exp_add_a_follower:
+      period_type: 1
+      status: 1
+      name: "被关注"
+      time_limit: 10
+      value: 5
+      bonus: 0
+    exp_add_a_grouper:
+      period_type: 1
+      status: 1
+      name: "小组增加新成员"
+      time_limit: 10
+      value: 5
+      bonus: 0
+    exp_post_as_elite:
+      period_type: 2
+      status: 1
+      name: "加精"
+      time_limit: 0
+      value: 50
+      bonus: 10
+  sys_params:
+    file_server_host: 10.1.1.22
+    file_server_port: 8800
+  tools:
+    entrypt_tool_name: ["", "F:\\Bin_ReleaseTool\\protectors\\protect.exe"]
+    entrypt_tool_cmds: ["", "\"#{tools_config['entrypt_tool_name']}\" \"#{exe_path_name}\" #{game_id} #{current_game_file.ver} #{current_game_file.game_key} #{current_game_file.game_key_iv}"]
+    release_tool: "F:\\Bin_ReleaseTool\\DownloadReleaseTool.exe"
+    files_root_dir: "C:\\P2PDownload"
+    file_meta_dir: "C:/P2PDownload/Meta"
+    down_release_tool: "F:\\Bin_ReleaseTool\\dist_server.py"
+
+  release_game_workflows:
+    desc: release_workflows
+    statuses:
+      STATUS_NEW:
+        on_pass:
+          to_status: STATUS_TO_VERIFY
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          cc: guangxing.wang@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}pre_release success，Game file id：{{game_file_id}}"
+        on_failed:
+          to_status: STATUS_NEW
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}pre_release failed，Game file id：{{game_file_id}}"
+        on_cancel:
+          to_status: STATUS_CANCELED
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}pre_release canceled，Game file id：{{game_file_id}}。"
+      STATUS_TO_VERIFY:
+        on_pass:
+          to_status: STATUS_VALIDATED
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}audit passed，Game file id：{{game_file_id}}。"
+        on_cancel:
+          to_status: STATUS_CANCELED
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}canceled，Game file id：{{game_file_id}}。"
+        on_rejected:
+          to_status: STATUS_REJECTED
+          rcpt: guangxing.wang@ceasia.com.cn, zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "游戏{{game_name}}not pass，Game file id：{{game_file_id}}。"
+      STATUS_VALIDATED:
+        on_rollback:
+          to_status: STATUS_ROLLBACKED
+          rcpt: zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}have rolled back，Game file id：{{game_file_id}}。"
+        on_uploaded:
+          rcpt: zhaochuan@ceasia.com.cn
+          msg_title: "{{game_name}}"
+          msg_body: "{{game_name}}game seed have been uploaded：{{download_server}}。"
 
 development:
   <<: *defaults
+  subdomains:
+    store: "#"
+    forum: "#"
+    community: "#"
+    client: "#"
+  cloud_storage:
+    default_bucket: 'sonkwo-post'
+    avatar_bucket: 'sonkwo-avatar'
+    snapshot_bucket: 'sonkwo-snapshot'
+    post_bucket: 'sonkwo-post'
+    sonkwo_key: 'dsfa1315zasfz989-77'
+    token_expire: 60
+    callback_url: 'http://101.71.243.50:8008/cloud_storages'
+    callback_body: 'name=$(fname)&size=$(fsize)&w=$(imageInfo.width)&h=$(imageInfo.height)&hash=$(etag)&sonkwo_token=$(x:sonkwo_token)&account_id=$(x:account_id)&timestamp=$(x:timestamp)&bucket_name=$(x:bucket_name)'
+    callback_body_type: 'application/x-www-form-urlencoded'
+    escape: 1
+    async_options: ''
+    return_body: '{"foo": "bar", "size": $(fsize), "hash": $(etag), "w": $(imageInfo.width), "h": $(imageInfo.height), "color": $(exif.ColorSpace.val), "sonkwo_token": $(x:sonkwo_token), "account_id": $(x:account_id), "timestamp": $(x:timestamp)}'
+  sys_params:
+    file_server_host: 10.1.1.22
+    file_server_port: 8800
+
+
 
 test:
   <<: *defaults

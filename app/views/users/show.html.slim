@@ -1,25 +1,118 @@
-- content_for(:jsfiles) do
-  = javascript_include_tag "posts/post_op"
-  = javascript_include_tag "users/show"
-  = javascript_include_tag "posts/post_templates"
-.span
-  = render "basic_info"
-div.container
-  ul.unstyled.posts user_id=@target.id
-  p
-    a href="javascript:void(0);" class="more-btn"= t("more")
-  div.form-div
-    div
-      = form_tag url_for("#"), method: :post, class: "modal hide fade recommend-form", id: "new_recommend" do
-        .modal-header
-          button.close aria-hidden="true" data-dismiss="modal" type="button"  ×
-          h3= t("Recommend")
-        .modal-body
-          p= text_area_tag "new_recommend[content]", "", class: "span12", rows: "3"
-        .modal-footer
-          = submit_tag t("Recommend"), class: "btn btn-primary"
-    div.new-comment-form.hide
-      = form_tag url_for("#"), method: :post do
-        p= text_area_tag "comment[comment]", "", class: "span", row: 3
-        p= submit_tag t("Reply"), class: "btn btn-primary"
-
+.sns_release
+  .sns_gr_home_top
+    .sns_gr_home_top_Ltx
+      .sns_gr_home_top_Ltx_png
+        .home_top_Ltx_l
+          .home_top_Ltx_l_tx.border_2px_viptx.avatar-block user_id=(@target.id)
+            a href="javascript:void(0);"
+              = image_tag(@target.avatar, height: 112, width: 112)
+        .home_top_Ltx_r
+          .home_top_Ltx_r_id
+            = link_to @target.nick_name, "javascript:void(0);"
+            .snsshowid
+              p
+                a href="#"
+              p
+                a href="#"
+              p
+                a href="#"
+              p
+                a href="#"
+          .home_top_Ltx_r_id_jdt_kuang
+            span.home_top_Ltx_r_id_jdt
+              = link_to "Lv #{level(@target.exp)}", "javascript:void(0);"
+            span.home_top_Ltx_r_id_jdt_bj.total-level
+              i.home_top_Ltx_r_id_jdt_bj1.level level=@target.level
+      span.sns_gr_home_top_pois
+    .sns_gr_home_top_Rzl
+      .sns_gr_home_top_Rzl_b
+        .sns_Cj_Dj
+          .sns_Cj_Dj_l
+            #focus_Box.games-block style="display: none;"
+              .slide_games
+          .sns_Cj_Dj_r
+            .sns_Cj_Dj_r_Tdj
+              .sns_release_data_top_bom
+                span.top_dj_cj 上 将
+                span.top_dj_cj_sj
+                  ul
+                    li
+                      img src="images/img/sns_tx_id_djBJ.png"
+              .sns_Cj_Dj_r_Tdj_sj
+                span.top_dj_id_sj
+                  ul
+                    li.sns_tx_id_yxBJ 333
+                    li.sns_tx_id_jlBJ 222
+                    li.sns_tx_id_sjBJ 111
+            .sns_Cj_Dj_r_Bcj
+              .v_show
+                span.prevs
+                span.nexts
+                .v_content
+                  .v_content_list
+                    ul
+                      li
+                        a href="#"
+                          img alt="等级1" src="images/img/ceshi_touxiang.png"
+                        span 1st
+      .sns_gr_home_top_Rzl_t
+        ul
+          li.sns_gr_home_top_Rzl_t_con_fs
+            = link_to @target.follower_count, people_user_path(@target)
+          li.sns_gr_home_top_Rzl_t_con_fx
+            = link_to @target.following_count, people_user_path(@target)
+          li.sns_gr_home_top_Rzl_t_con_pl
+            = link_to @target.talk_count+@target.subject_count+@target.recommend_count, user_path(@target)
+          li.sns_gr_home_top_Rzl_t_con_ft
+            = link_to @target.following_count, people_user_path(@target)
+  - if current_account
+    .sns_gr_home_editor
+      .radius3px.sns_release_enter1
+        #msgBox1
+          = form_for(@new_talk) do |f|
+            = f.hidden_field :cloud_storage_id
+            .countTxt_block
+              span.countTxt 还能输入
+              strong.maxNum 140
+              span 个字
+            .conBoxwidth1
+              = f.text_area :content, class: "f-text", style: "width: 588px;height:90px;"
+            .sendBtn_tr_width1
+              .sendBtn_tr
+                .sendBtn_tr_L
+                  span.emotion
+                    a href="#"  表情
+                  span.emotion_img
+                    a href="javascript:void(0);" class="post-pic"  图片
+                  span.emotion_text
+                    = link_to "长文章", new_subject_path
+                  span.emotion_xian
+                .sendBtn_tr_R
+                  .snsshow1
+                    p
+                      a href="#"  举报
+                  = f.submit("发布")
+          .image-upload-block style="display: none;"
+            .image-upload-form style="display: none;"
+              form#qiniu_uploader method="post" action="http://up.qiniu.com/" enctype="multipart/form-data"
+                input name="token" value=@cloud_storage_settings[:upload_token]
+                input name="x:account_id" value=current_account.id
+                input name="x:timestamp" value=@cloud_storage_settings[:now]
+                input name="x:sonkwo_token" value=@cloud_storage_settings[:sonkwo_token]
+                input name="x:bucket_name" value="sonkwo-post"
+                input name="file" type="file"
+                input name="submit" type="submit"
+            .image-upload-result
+              span.image-upload-before
+                a href="javascript:void(0);" class="image-upload-btn" 上传图片
+              span.image-upload-loading style="display: none;"
+              span.image-upload-after style="display: none;"
+                div
+                  img src="" /
+                div
+                  span
+                    a href="javascript:void(0);" class="image-upload-cancel" 取消上传
+                  span
+                    a href="javascript:void(0);" class="image-upload-reselect" 重新选择
+#wrapper last_id=0
+.post-loading style="display: none;"

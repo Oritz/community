@@ -1,0 +1,9 @@
+/*
+ *= require_self
+ *= require messenger
+ *= require messenger-spinner
+ *= require messenger-theme-future
+ *= require_directory ./devise
+ *= require reset
+ *= require storefooter
+ */

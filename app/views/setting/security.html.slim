@@ -1,0 +1,6 @@
+h1 Bind accounts
+- if current_account.steam_user
+  p steamid:
+  = current_account.steam_user.steamid
+= form_tag url_for(action: :bind) do
+  p= submit_tag "bind"

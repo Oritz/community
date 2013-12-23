@@ -6,6 +6,7 @@ development:
   password: <%= ENV['DB_PASSWORD'] %>
   host: <%= ENV['DB_HOST'] %>
   port: <%= ENV['DB_PORT'] %>
+  pool: 10
 
 test:
   adapter: <%= ENV['DB_ADAPTER'] %>
@@ -15,6 +16,7 @@ test:
   password: <%= ENV['DB_PASSWORD'] %>
   host: <%= ENV['DB_HOST'] %>
   port: <%= ENV['DB_PORT'] %>
+  pool: 10
 
 production:
   adapter: <%= ENV['DB_ADAPTER'] %>
@@ -24,3 +26,4 @@ production:
   password: <%= ENV['DB_PASSWORD'] %>
   host: <%= ENV['DB_HOST'] %>
   port: <%= ENV['DB_PORT'] %>
+  pool: 10

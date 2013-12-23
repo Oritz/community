@@ -6,7 +6,7 @@ class Group < ActiveRecord::Base
   end
 
   #attr_protected :member_count, :creator_id, :group_type, :status, :created_at, :updated_at
-  attr_accessible :name, :description
+  attr_accessible :name, :description, :logo
   #mount_uploader :logo, GroupUploader
   # Constants
   TYPE = {'OFFICAL' => 0, 'FOLK' => 1}
@@ -23,6 +23,7 @@ class Group < ActiveRecord::Base
   validates :group_type, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: self::TYPE.count }
   validates :status, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: self::STATUS.count }
   validates :creator, presence: true
+  validates :logo, presence: true, length: { maximum: 255 }
 
   # Associations
   belongs_to :creator, class_name: 'Account', foreign_key: 'creator_id'
@@ -70,8 +71,9 @@ class Group < ActiveRecord::Base
   end
 
   def default_values
-    self.member_count ||= 0
-    self.status ||= self.class::STATUS['NORMAL']
-    self.group_type ||= self.class::TYPE['OFFICAL']
+    self.member_count ||= 0 if self.attribute_names.include?("member_count")
+    self.status ||= self.class::STATUS['NORMAL'] if self.attribute_names.include?("status")
+    self.group_type ||= self.class::TYPE['OFFICAL'] if self.attribute_names.include?("group_type")
+    self.logo ||= Settings.images.group.default if self.attribute_names.include?("logo")
   end
 end

@@ -1,15 +1,16 @@
 class Post < ActiveRecord::Base
   # Plugins
-  acts_as_postcastable
   acts_as_behavior_provider author_key: "account_id",
     timestamp: "created_at",
     status: "status",
-    find_options: {include: [:creator]}
+    find_options: {include: [:detail, :creator]}
+  acts_as_polymorphic name: "detail"
   acts_as_api
   api_accessible :post_info do |t|
     t.add :creator
     t.add :id
-    t.add :post_type
+    t.add :detail
+    t.add :detail_type
     t.add :comment_count
     t.add :recommend_count
     t.add :like_count
@@ -30,19 +31,10 @@ class Post < ActiveRecord::Base
   PRIVILEGE_PRIVATE = 1
 
   # Post Type
-  TYPE_TALK = 0
-  TYPE_SUBJECT = 1
-  TYPE_RECOMMEND = 2
+  #TYPE_TALK = 0
+  #TYPE_SUBJECT = 1
+  #TYPE_RECOMMEND = 2
 
-  # Validations
-  validates :post_type, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::TYPE_RECOMMEND }
-  validates :privilege, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::PRIVILEGE_PRIVATE }
-  validates :status, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::STATUS_DELETED }
-  validates :comment_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :recommend_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :like_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :creator, presence: true
-  validates :comment, length: { maximum: 140 }
   # Callbacks
   after_initialize :default_values
 
@@ -52,9 +44,25 @@ class Post < ActiveRecord::Base
   has_many :likers, through: :accounts_like_posts, source: :account
   has_many :comments, class_name: 'Comment'
   has_many :recommend_posts, class_name: 'Recommend', foreign_key: 'parent_id'
+  belongs_to :group
+  has_many :post_images
+
+  # Validations
+  validates :privilege, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::PRIVILEGE_PRIVATE }
+  validates :status, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::STATUS_DELETED }
+  validates :comment_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :recommend_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :like_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :creator, presence: true
+  validates :comment, length: { maximum: 140 }
+  #validates :detail_type, presence: true
+  #validates :detail_id, presence: true
+  validate :group_should_be_added
+  validate :only_one_pending_post
 
   # Scopes
   scope :recommend_posts_with_account, lambda { |post_id| where("original_id=? AND status=?", post_id, Post::STATUS_NORMAL).includes(:creator).order("created_at DESC") }
+  scope :pending_of_account, lambda { |account| where("account_id=? AND status=?", account.id, Post::STATUS_PENDING) }
 
   # Methods
   protected
@@ -64,5 +72,19 @@ class Post < ActiveRecord::Base
     self.comment_count ||= 0
     self.recommend_count ||= 0
     self.like_count ||= 0
+  end
+
+  def group_should_be_added
+    if self.group && self.creator && !self.creator.groups.include?(self.group)
+      errors.add(:group, I18n.t("models.post.error_group_not_added"))
+    end
+  end
+
+  def only_one_pending_post
+    return unless self.creator
+    pending_item = self.class.where(account_id: self.creator.id, status: self.class::STATUS_PENDING).first
+    if pending_item && self.status == self.class::STATUS_PENDING && self.id != pending_item.id
+      errors[:base] << I18n.t("post.more_than_one_pending_post")
+    end
   end
 end

@@ -1,7 +1,7 @@
 class PrivateMessage < ActiveRecord::Base
   #acts_as_notificable callbacks: ["after_create"], slot: "private_message", from: "sender", tos: ["recipient"]
   acts_as_api
-  api_accessible :show do |t|
+  api_accessible :pm_info do |t|
     t.add :sender
     t.add :recipient
     t.add :id
@@ -79,7 +79,7 @@ class PrivateMessage < ActiveRecord::Base
 
   def self.conversation_destroy(conversation, account)
     pms = PrivateMessage.where("conversation_id=?", conversation.id)
-    if conversation.first_account = account
+    if conversation.first_account == account
       pms.update_all(first_deleted_at: Time.now())
     else
       pms.update_all(second_deleted_at: Time.now())

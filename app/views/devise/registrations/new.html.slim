@@ -1,0 +1,91 @@
+- @title = "杉果游戏注册"
+
+.log_mian
+  .log_center
+    .log_center_h1.log_align_center 创建杉果游戏
+    .log_center_lr
+      .log_center_lr_fl
+        ul
+          li
+            span.log_lr_fl_tu1
+            span.log_lr_fl_zi
+              h4 杉果游戏商城
+              p
+                | 上百款正版单机游戏，彬琅满目的风格总有一款
+                | 适合你。来体验正版游戏带给您的震撼与乐趣吧！
+          li
+            span.log_lr_fl_tu2
+            span.log_lr_fl_zi
+              h4 杉果游戏商城
+              p
+                | 上百款正版单机游戏，彬琅满目的风格总有一款
+                | 适合你。来体验正版游戏带给您的震撼与乐趣吧！
+          li
+            span.log_lr_fl_tu3
+            span.log_lr_fl_zi
+              h4 杉果游戏商城
+              p
+                | 上百款正版单机游戏，彬琅满目的风格总有一款
+                | 适合你。来体验正版游戏带给您的震撼与乐趣吧！
+      .log_center_lr_fr
+        #formbox
+          .formbox-style
+            = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {'parsley-validate' => ''}) do |f|
+              .form
+                .item
+                  span.label
+                    | 昵称
+                    span.red *
+                  .fl
+                    = f.text_field :nick_name, placeholder: '请输入昵称', class: 'text required', 'parsley-trigger' => 'focusin focusout', 'parsley-error-container' => '#username_error'
+                    span.clear
+                    #username_error
+                      - if resource.errors[:nick_name].length > 0
+                        span
+                          | #{resource.errors[:nick_name][0]}
+                .item
+                  span.label
+                    | 邮箱
+                    span.red *
+                  .fl
+                    = f.email_field :email, placeholder: '请输入邮箱', class: 'text required', 'parsley-type' => 'email', 'parsley-trigger' => 'change', 'parsley-error-container' => '#mail_error'
+                    span.clear
+                    #mail_error
+                      - if resource.errors[:email].length > 0
+                        span
+                          | #{resource.errors[:email][0]}
+                #o-password
+                  .item
+                    span.label
+                      | 密码
+                      span.red *
+                    .fl
+                      = f.password_field :password, placeholder: '请输入密码',  class: 'text required', 'parsley-regexp' => '^.*(?=.{8,})(?=.*[a-zA-Z0-9!#$%&?]).*$', 'parsley-trigger' => 'change', 'parsley-error-message' => I18n.t("account.password_not_valid"), 'parsley-error-container' => '#pwd_error'
+                      span.clear
+                      #pwd_error
+                        - if resource.errors[:password].length > 0
+                          span
+                            | #{resource.errors[:password][0]}
+                  .item
+                    span.label
+                      | 确认密码
+                      span.red *
+                    .fl
+                      = f.password_field :password_confirmation, placeholder: '请再次输入密码', class: 'text required', 'parsley-equalto' => '#account_password', 'parsley-error-container' => '#pwd2_error'
+                      span.clear
+                      #pwd2_error
+                        - if resource.errors[:password_confirmation].length > 0
+                          span
+                            | #{resource.errors[:password_confirmation][0]}
+                .item style="height:45px"
+                  .fl.sign_up_xy
+                    = f.check_box :tos_agreement, {'parsley-mincheck' => 1, 'parsley-error-message' => I18n.t("account.should_agree_the_agreement", 'parsley-error-container' => '#agreement_error')}, true, false
+                    = f.label :tos_agreement do
+                      = link_to "同意杉果协议", "#"
+                    span.clear
+                    #agreement_error
+                      - if resource.errors[:tos_agreement].length > 0
+                        span
+                          | #{resource.errors[:tos_agreement][0]}
+                .item.sign_up_btn style="height:30px;"
+                  = f.submit "注册"

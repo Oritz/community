@@ -1,34 +1,119 @@
-.span9
-  = render "#{@post.class.to_s.downcase}_content"
-  div
-    div
-      - if current_account && current_account.like_posts.include?(@common_post)
-        span= link_to I18n.t("Unlike"), {action: :unlike}, method: :delete
-      - else
-        span= link_to I18n.t("Like"), {action: :like}, method: :put
-      span
-        a data-toggle="modal" href="#new_recommend" = t("Recommend")
-      - if current_account && current_account == @post.creator
-        span= link_to t("delete"), post_path(@post), method: :delete, data: {confirm: 'Are you sure?'}
-  div
-    span
-      = link_to @post.comment_count
-      = I18n.t "comment"
-    span
-      = link_to @post.recommend_count, type: 'recommend'
-      = I18n.t "people recommend this"
-    span
-      = link_to @post.like_count, type: 'like'
-      = I18n.t "people like this"
-  div
-    = form_for @new_recommend, url: {action: :recommend}, method: :post, html: {class: "modal hide fade"} do |f|
-      .modal-header
-        button.close aria-hidden="true" data-dismiss="modal" type="button"  ×
-        h3= t("Recommend")
-      .modal-body
-        p= f.text_area :content, class: "span12", rows: "3"
-      .modal-footer
-        = f.submit t("Recommend"), class: "btn btn-primary"
-  div
-    = render @page_type
-.span3
+.sns_release
+  .detail_content
+    .detail_info.radius3px
+      .info_head
+        .info_head_users
+          /! 头像head
+          .users_GR_top_Box
+            .users_GR_top
+              .users_GR_top_tx_kuang
+                .radius50.users_GR_top_tx
+                  = image_tag(@post.creator.avatar, height: 48, width: 48)
+              .users_GR_sns_release_data_top_r
+                .users_GR_sns_release_data_top_dj
+                  span.users_GR_top_dj_id
+                    = link_to @post.creator.nick_name, user_path(@post.creator), class: "snshideid"
+                    .snsshowid
+                      p
+                        a href="#"
+                .users_GR_sns_release_data_top_cj
+                  span.users_GR_top_dj_dj
+                    | Lv #{@post.creator.level}
+                  span.users_GR_top_dj_dj_sj.total-level
+                    i.users_GR_top_dj_dj_sj_jdt.level level=@post.creator.level
+          /! 头像head end
+        .info_head_tool
+          .tool_title
+            h1 =@post.detail.title
+          .tool_layer
+            .tool_toolbar
+              .toolbar_comment.fl
+                span.toolbar_comment_up
+                  = link_to @post.like_count, {action: :like}, method: :put
+                span.toolbar_comment_zhuan
+                  a href="javascript:void(0);" class="recommend-op" =@post.recommend_count
+                span.toolbar_comment_huifu
+                  a href="javascript:void(0);" class="comment-op" =@post.comment_count
+              .toolbar_share.fr
+                span.fl
+                  a.cl_gray href="#"
+                span.fl.share_bd
+                  /! Baidu Button BEGIN
+                  #bdshare.bdshare_b style="line-height: 12px;"
+                    img src="http://bdimg.share.baidu.com/static/images/type-button-1.jpg?cdnversion=20120831"
+                  script#bdshare_js data="type=button&amp;mini=1&amp;uid=0" type="text/javascript"
+                  script#bdshell_js type="text/javascript"
+                  javascript:
+                    | document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
+                  /! Baidu Button END
+                span.fl.cl_gray
+                  | 发布时间: #{@post.created_at.strftime('%Y-%m-%d %M:%S')}
+      .info_cont =raw @post.detail.display_content
+      .info_operate
+        .tool_toolbar
+          .toolbar_comment.fl
+            span.toolbar_comment_up
+              = link_to @post.like_count, {action: :like}, method: :put
+            span.toolbar_comment_zhuan
+              a href="javascript:void(0);" class="recommend-op" =@post.recommend_count
+            span.toolbar_comment_huifu
+              a href="javascript:void(0);" class="comment-op" =@post.comment_count
+          .toolbar_share.fr
+            span.fl
+              a.cl_gray href="#"
+            span.fl.share_bd
+              /! Baidu Button BEGIN
+              #bdshare.bdshare_b style="line-height: 12px;"
+                img src="http://bdimg.share.baidu.com/static/images/type-button-1.jpg?cdnversion=20120831"
+              script#bdshare_js data="type=button&amp;mini=1&amp;uid=0" type="text/javascript"
+              script#bdshell_js type="text/javascript"
+              javascript:
+                | document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
+              /! Baidu Button END
+            span.fl.cl_gray
+              | 发布时间: #{@post.created_at.strftime('%Y-%m-%d %M:%S')}
+  .detail_review.radius3px
+    .review_reply
+      = form_for [@post, @new_comment] do |f|
+        .reply_block
+          span 回复
+          span.countTxt 还能输入
+          strong.maxNum 140
+          span 个字
+        .replywidth1
+          = f.text_area :comment, class: "f-text"
+        .reply_tr_width1
+          .sendBtn_tr
+            .sendBtn_tr_R
+              span.emotion
+                a 表情
+              = f.submit("发布")
+    - @comments.each do |comment|
+      .review_speak
+        .review_speak_tx.fl
+          .users_GR_top
+            .users_GR_top_tx_kuang
+              .radius50.users_GR_top_tx
+                = image_tag(comment.creator.avatar, height: 48, width: 48)
+            .users_GR_sns_release_data_top_r
+              .users_GR_sns_release_data_top_dj
+                span.users_GR_top_dj_id
+                  = link_to comment.creator.nick_name, user_path(comment.creator), class: "snshideid"
+                  .snsshowid
+                    p
+                      a href="javascript:void(0)"
+              .users_GR_sns_release_data_top_cj
+                span.users_GR_top_dj_dj
+                  | Lv #{comment.creator.level}
+                span.users_GR_top_dj_dj_sj.total-level
+                  i.users_GR_top_dj_dj_sj_jdt.level level=comment.creator.level
+        .review_speak_new.fr
+          p =comment.comment
+          .speak_new_time
+            span.fl
+              | 回复时间:#{comment.created_at.strftime('%Y-%m-%d %M:%S')}
+            span.fr
+              a.new_time_bn href="#"
+            span.fr
+              a.cl_gray href="#"
+    = will_paginate @comments

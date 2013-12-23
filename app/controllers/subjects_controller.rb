@@ -1,19 +1,23 @@
 class SubjectsController < ApplicationController
-  before_filter :sonkwo_authenticate_account, only: [:create]
-  layout "home"
+  before_filter :sonkwo_authenticate_account, only: [:create, :new, :update]
 
   def show
     # Show the content of a post and comments
     @subject = Subject.find(params[:id])
-
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.slim
       format.json { render json: @subject }
     end
   end
 
   def new
-    @subject = Subject.new
+    @post = current_account.pending_subject
+    @subject = @post.detail
+    @subject.post = @post
+    @cloud_storage_settings = CloudStorage.settings(current_account)
+    @new_post_image = PostImage.new
+    @post_images = @subject.post.post_images.includes(:cloud_storage)
+
     if params[:group_id]
       @group = Group.find(params[:group_id])
       @subject.group = @group
@@ -25,41 +29,62 @@ class SubjectsController < ApplicationController
     end
   end
 
-  def create
-    @subject = Subject.new(params[:subject])
-    @subject.creator = current_account
-    if params[:group_id]
-      @group = Group.find(params[:group_id])
-      @subject.group = @group
-    end
-
-    respond_to do |format|
-      if @subject.save
-        format.html { redirect_to @subject.post, notice: 'Subject war successfully created.' }
-        format.json { render json: @subject, status: :created, location: @subject }
-      else
-        format.html { raise "TODO:" } #TODO: 
-        format.json { raise "TODO:" } #TODO:
-      end
-    end
-  end
-
   def edit
     @subject = Subject.find(params[:id])
+    @cloud_storage_settings = CloudStorage.settings(current_account)
+    @new_post_image = PostImage.new
+    @post_images = @subject.post.post_images.includes(:cloud_storage)
+    
     return unless check_access?(auth_item: "oper_subjects_update", subject: @subject)
   end
 
   def update
+     # cancel button
+    if params[:is_post].to_i == -1
+      respond_to do |format|
+        format.html {redirect_to controller: 'home', action: 'index'}
+        format.json
+      end
+      return
+    end
+    
     @subject = Subject.find(params[:id])
-    return unless check_access?(subject: @subject)
+    if params[:group_id]
+      @group = Group.find(params[:group_id])
+      @subject.group = @group
+    end
+    
+    # post button: change the subject status
+    if params[:is_post].to_i == 1
+      if @subject.status != Post::STATUS_DELETED
+        @subject.status = Post::STATUS_NORMAL
+      else
+        respond_to do |format|
+          format.html
+          format.json { render json: { status: "error", message: I18n.t("post.is_deleted") }}
+        end
+        return
+      end
+    end
 
     respond_to do |format|
       if @subject.update_attributes(params[:subject])
-        format.html { redirect_to @subject.post, notice: 'Subject was successfully updated.'}
-        format.json { head :no_content }
+        format.html do
+          if @subject.status == Post::STATUS_NORMAL
+            redirect_to @subject.post, notice: 'Subject was successfully created.'
+          else
+            redirect_to action: 'new'
+          end
+        end
+        format.json { render json: { status: "success", data: { id: @subject.id, post: { id: @subject.post.id } } } }
       else
-        format.html { render action: "edit" }
-        format.json { render json: @subject.errors, status: :unprocessable_entity }
+        format.html do
+          @cloud_storage_settings = CloudStorage.settings(current_account)
+          @new_post_image = PostImage.new
+          @post_images = @subject.post.post_images.includes(:cloud_storage)
+          render action: "new"
+        end
+        format.json { render json: { status: "fail", data: @subject.errors } }
       end
     end
   end

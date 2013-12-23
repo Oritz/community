@@ -1,10 +1,10 @@
 class ConversationsController < ApplicationController
   before_filter :sonkwo_authenticate_account
-  #layout "home"
+  layout "center"
 
   def index
     @private_messages = PrivateMessage.conversations(current_account).paginate(page: params[:page], per_page: 10)
-    current_account.notification.reset(:private_message)
+    #current_account.notification.reset(:private_message)
   end
 
   def show
@@ -19,7 +19,6 @@ class ConversationsController < ApplicationController
   def destroy
     @conversation = Conversation.find(params[:id])
     return unless check_access?(conversation: @conversation)
-
     PrivateMessage.conversation_destroy(@conversation, current_account)
 
     respond_to do |format|

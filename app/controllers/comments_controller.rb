@@ -1,42 +1,15 @@
 class CommentsController < ApplicationController
   before_filter :sonkwo_authenticate_account
-  layout "home"
 
   # GET /comments/index
   # GET /comments/index.json
   def index
     @post = Post.find(params[:post_id])
-    @comments = Comment.comments_with_account(@post.id).paginate(page: params[:page], per_page: 10)
+    @comments = Comment.of_a_post(@post).includes(:creator, :original_author).order("created_at DESC").paginate(page: params[:page], per_page: 10)
 
     respond_to do |format|
       format.html
-      format.json do
-=begin
-        data = []
-        @comments.each do |comment|
-          item_data = {}
-          item_data[:comment] = comment.comment
-          item_data[:created_at] = comment.created_at
-          item_data[:creator] = {}
-          item_data[:creator][:id] = comment.creator.id
-          item_data[:creator][:nick_name] = comment.creator.nick_name
-          item_data[:creator][:avatar] = comment.creator.avatar
-          if comment.original_author
-            item_data[:original_author] = {}
-            item_data[:original_author][:id] = comment.original_author.id
-            item_data[:original_author][:nick_name] = comment.original_author.nick_name
-          end
-          data << item_data
-        end
-=end
-        # TODO: Render data(not html)
-        data = ""
-        @comments.each do |comment|
-          html = render_to_string(partial: "posts/comment.html", locals: {comment: comment})
-          data += html
-        end
-        render json: { status: "success", data: data }
-      end
+      format.json { render_for_api :comment_info, json: @comments, root: "data", meta: { status: "success" } }
     end
   end
 
@@ -47,7 +20,7 @@ class CommentsController < ApplicationController
     @comment = Comment.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html # new.html.slim
       format.json { render json: @comment }
     end
   end
@@ -61,7 +34,7 @@ class CommentsController < ApplicationController
     @comment.post = post
     @comment.post_author = post.creator
 
-    if params[:original_id]
+    if params[:original_id] && params[:original_id].to_i > 0
       original_comment = Comment.find(params[:original_id])
       @comment.original = original_comment
       @comment.original_author = original_comment.creator
@@ -70,10 +43,10 @@ class CommentsController < ApplicationController
     respond_to do |format|
       if @comment.save
         format.html { redirect_to post, notice: 'Comment was successfully created.'}
-        format.json { render json: @comment, status: :created, location: @comment }
+        format.json { render_for_api :comment_info, json: @comment, root: "data", meta: { status: "success" } }
       else
         format.html { render action: "show", controller: "posts" }
-        format.json { render json: @comment.errors, status: :unprocessable_entity }
+        format.json { render json: { status: "fail", data: @comment.errors } }
       end
     end
   end

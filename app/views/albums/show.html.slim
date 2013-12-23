@@ -1,0 +1,12 @@
+.my-assets
+  .top_explanation
+    span.fl
+      h3.explanation_h3.fl 相册
+    span.fr
+      = link_to "添加图片", "#", class: "album-bn rs3"
+  .my-album
+    ul.my-album-detail
+      - @photos.each do |photo|
+        li
+          = image_tag(photo.url)
+    = will_paginate(@photos)

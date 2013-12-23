@@ -1,0 +1,14 @@
+
+<script src="http://malsup.github.com/jquery.form.js"></script> 
+
+<form method="post" id="qiniu_uploader" action="http://up.qiniu.com/" enctype="multipart/form-data">
+  <input name="token" type="hidden" value="<%= @upload_token %>">
+  <input name="x:account_id" type="hidden" value="<%= current_account.id %>">
+  <input name="x:timestamp" type="hidden" value="<%= @now_time %>">
+  <input name="x:sonkwo_token" type="hidden" value="<%= @sonkwo_token %>">
+  <input name="x:bucket_name" type="hidden" value="sonkwo-avatar ">
+  <in2put name="file" type="file" />
+  <input name="submit" onclick="ajax_upload(); return false;" type="submit" value="submit">
+</form>
+<br><br>
+<div id="response_message">按submit提交<div>

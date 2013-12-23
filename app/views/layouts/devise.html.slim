@@ -1,0 +1,72 @@
+doctype html
+html xmlns="http://www.w3.org/1999/xhtml"
+  head
+    meta content="text/html; charset=utf-8" http-equiv="Content-Type"
+    = stylesheet_link_tag "devise", media: "all"
+    title= @title
+    = csrf_meta_tags
+  body
+    .citic_topNav
+      .citic_topNav_head
+        ul
+          li
+            a href="#" target="_blank" 欢迎页
+          li  
+            = link_to "商城", Settings.subdomains.store, target: "_blank"
+          li
+            = link_to "社区", Settings.subdomains.community, target: "_blank"
+          li
+            = link_to "论坛", Settings.subdomains.forum, target: "_blank"
+          li
+            = link_to "客户端", Settings.subdomains.client, target: "_blank"
+    .citic_topLogo
+      .citic_topLogo_head
+        .citic_topLogo_logo
+          = link_to Settings.subdomains.community, target: "_blank" do
+            = image_tag("logo.png")
+        .citic_topLogo_login
+          .citic_topLogo_login_dl
+            = link_to "注册", new_account_registration_path
+    div.logo_container
+      = yield
+    div.footer
+      div.footer_box
+        div.footer_box_mian
+          span.fl
+            a.footLogo href="#" target="_blank"
+          span.fr
+            ul.foot_navigation
+              li
+                a href="#" target="_blank" 关于中电博亚
+                | |
+              li
+                a href="#" target="_blank" 关于杉果游戏
+                | |
+              li
+                a href="#" target="_blank" 用户协议
+                | |
+              li
+                a href="#" target="_blank" 客户服务
+                | |
+              li
+                a href="#" target="_blank" 联系我们
+                | |
+      div.footer_Copyright
+        p &copy;2013 北京中电博亚科技有限公司版权所有 所有商标版权属于其拥有者 Tel:010-68434500
+        p 京ICP备12041226号 《出版物经营许可证》 新出发京批字第直0816号 京公网安备11010802012421号
+    div.flash-messages style="display: none;"
+      - if flash[:error]
+        p.flash-error
+          = flash[:error]
+      - if flash[:alert]
+        p.flash-alert
+          = flash[:alert]
+      - if flash[:notice]
+        p.flash-notice
+          = flash[:notice]
+      - if flash[:success]
+        p.flash-success
+          = flash[:success]
+
+    = javascript_include_tag "devise"
+    = javascript_include_tag "#{params[:controller]}/#{params[:action]}"

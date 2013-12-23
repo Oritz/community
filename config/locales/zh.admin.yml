@@ -1,0 +1,23 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+zh:
+  admin:
+    titles:
+      games: "游戏"
+      servers: "服务器"
+      clients: "客户端"
+      pre_release: "预发布"
+      game_files: "游戏文件"
+      serial: "序列号"
+      serial_type: "序列号类型"
+      submit_release: "提交发布"
+    game:
+      id: "游戏ID"
+      name: "游戏名"
+      english_name: "英文名"
+      relese_status: ["未发布", "新建预发布", "审核通过", "审核未通过", "取消发布", "回滚"]
+      status: "状态"
+    msg:
+      success: "操作成功"
+    client:
+      upload_tip: "请务必按照格式来命名文件，标准格式为：Sonkwo_major_ver.minor_ver.tiny_ver.msi,如：Sonkwo_1.0.0.msi"

@@ -1,10 +1,11 @@
 class HomeController < ApplicationController
   before_filter :sonkwo_authenticate_account
-  #layout "home"
+  before_filter :check_update_tag, only: [:index]
 
   def index
+    @friends = Account.friends(current_account.id).limit(12).order("updated_at DESC")
     @new_talk = Talk.new
-    @new_subject = Subject.new
+    @cloud_storage_settings = CloudStorage.settings(current_account)
 
     params[:type] ||= "posts"
     #fetcher = Sonkwo::Behavior::Fetcher.new(current_account)
@@ -29,21 +30,21 @@ class HomeController < ApplicationController
   end
 
   def games
-    user_game_serials = UserGameSerial.by_account(current_account.id).includes(:game)
+    #user_game_serials = UserGameSerial.by_account(current_account.id).includes(:game)
   end
 
   def posts
+    require "sonkwo/behavior/fetcher"
     params[:type] ||= "posts"
     if params[:type] == "posts"
       fetcher = Sonkwo::Behavior::Fetcher.new(current_account)
       if params[:end_id]
-        @posts = fetcher.behaviors(limit: 2, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
+        @posts = fetcher.behaviors(limit: 9, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
       else
-        @posts = fetcher.behaviors(limit: 2, status: Post::STATUS_NORMAL, order: "created_at DESC")
+        @posts = fetcher.behaviors(limit: 9, status: Post::STATUS_NORMAL, order: "created_at DESC")
       end
-      @posts = Post.downcast(@posts)
     elsif params[:type] == "groups"
-      @posts = Subject.subjects_in_groups_added(current_account.id, 2)
+      @posts = Subject.subjects_in_groups_added(current_account.id, 9)
       @posts = @posts.where("subjects.id < ?", params[:end_id]) if params[:end_id]
     else
       @posts = []
@@ -72,5 +73,28 @@ class HomeController < ApplicationController
     respond_to do |format|
       format.html
     end
+  end
+
+  def add_tag
+    @tag = Tag.find(params[:tag_id])
+    if current_account.tags.exists?(@tag) || current_account.tags << @tag
+      render json: { status: "success", data: { id: @tag.id } }
+    else
+      render json: { status: "error", message: I18n.t("common.unknow_error") }
+    end
+  end
+
+  def remove_tag
+    @tag = Tag.find(params[:tag_id])
+    if !current_account.tags.exists?(@tag) || current_account.tags.delete(@tag)
+      render json: { status: "success", data: { id: @tag.id } }
+    else
+      render json: { status: "error", message: I18n.t("common.unknow_error") }
+    end
+  end
+
+  private
+  def check_update_tag
+    redirect_to controller: :informations if current_account.update_tag.to_i < Account::UPDATE_TAG_FINISH
   end
 end

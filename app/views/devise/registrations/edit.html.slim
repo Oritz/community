@@ -1,0 +1,60 @@
+.my-assets
+  /! 账号管理-个人资料
+  .manage
+    .manage-nav
+      h2.fl 账号管理
+      span.fl.manage-nav-bj
+        = link_to "个人资料", edit_account_registration_path, class: "rs3 manage-style manage-active"
+      span.fl
+        = link_to "账号安全", edit_account_registration_path, class: "rs3 manage-style"
+    .cutover.rs3
+      .cutover-subNav
+        #subNav
+          span.active 基本信息
+          span 头像修改
+        = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, 'parsley-validate' => '' }) do |f|
+          .one style="display: block;"
+            span.navCont-mail
+              h3 登录帐号
+              input.navCont-input.rs3 disabled="disabled" name="" type="text" value="我是账号不可以修改"
+                span
+                  a.navCont-bn.rs3 href="#" 修改邮箱
+            span.navCont-mail
+              h3 昵称
+              = f.text_field :nick_name, class: "navCont-input rs3", required: '', 'parsley-trigger' => 'focusin focusout'
+              span
+                | error
+            span.navCont-mail
+              h3 性别
+              = select_tag(:gender, options_for_select([['男', Account::GENDER_BOY], ['女', Account::GENDER_GIRL]], Account::GENDER_BOY), class: "navCont-select-nv rs3")
+            span.navCont-mali-bn
+              = f.submit("修改", class: "send-con-bn rs3 bjcl_f39d12")
+              a.rs3.send-con-bn.bjcl_ccc href="#" 取消
+        .two style="display: none;"
+          span.upload-photos
+            span.photos-img
+              span.photos-img-area.fl.rs3
+                span.preview-upload
+                  span.photos-head
+                    span.localhost-img 本地图片
+                    form action="" enctype="multipart/form-data" method="post" name="upfiles"
+                      span.file-fl
+                        input#viewfile.photos-viewfile.rs3.fl name="viewfile" type="text"
+                          label.bottom for="upload"
+                          span.clear
+                            a.submit href="#"
+                          input.file name="upload" onchange="document.getElementById('viewfile').value=this.value;" size="27" type="file"
+                      span.four-mb 请选择小于4MB的JPG、PNG的格式的照片
+              span.photos-img-size
+                span.fl
+                  span.photos-img-size1.rs3
+                  p.photos-img-text 大图
+                span.fl
+                  span.photos-img-size2.rs3
+                  p.photos-img-text 小图
+                span.fl
+                  span.photos-img-size3.rs3
+                  p.photos-img-text 迷你图
+            span.photos-bn.fl
+              a.send-con-bn.rs3.bjcl_f39c12 href="#"
+              a.rs3.send-con-bn.bjcl_ccc href="#"

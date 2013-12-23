@@ -1,7 +1,10 @@
 require "devise/encryptors/custom_sha1"
 class Account < ActiveRecord::Base
+  #include Humanizer
+  #require_human_on :create
+
   control_access
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :async, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :token_authenticatable, :confirmable,
          :lockable, :timeoutable, :encryptable
@@ -10,6 +13,16 @@ class Account < ActiveRecord::Base
   api_accessible :post_info do |t|
     t.add :id
     t.add :avatar
+    t.add :nick_name
+    t.add :level
+  end
+  api_accessible :comment_info do |t|
+    t.add :id
+    t.add :avatar
+    t.add :nick_name
+  end
+  api_accessible :pm_info do |t|
+    t.add :id
     t.add :nick_name
   end
 
@@ -22,7 +35,9 @@ class Account < ActiveRecord::Base
   GENDER_GIRL = 1
   TYPE_NORMAL = 0
 
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :nick_name, :gender
+  UPDATE_TAG_FINISH = 3 # There're three steps
+
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :nick_name, :gender, :tos_agreement
   #attr_accessor :crop_x, :crop_y, :crop_w, :crop_h, :avatar_upload_width, :avatar_upload_height
 
   #mount_uploader :avatar, AvatarUploader
@@ -30,6 +45,7 @@ class Account < ActiveRecord::Base
   # Callbacks
   after_initialize :default_values
   #after_create :create_notification_item
+  after_create :create_exp_strategy, :create_screenshot_album
 
   # Associations
   has_many :groups_accounts
@@ -53,12 +69,56 @@ class Account < ActiveRecord::Base
     association_foreign_key: 'account_id',
     before_add: :forbid_callback
   has_one :notification, foreign_key: 'id', dependent: :destroy
-  has_many :client_errors, dependent: :destroy
+  has_one :steam_user
+  belongs_to :cloud_storage, class_name: "CloudStorage", foreign_key: "avatar_id"
+  has_many :accounts_other_games
+  has_many :other_games, through: :accounts_other_games, source: :game
+  has_many :albums
+  has_many :accounts_tags
+  has_many :tags, through: :accounts_tags
+
+  # Validations
+  validates :exp, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :bonus, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :nick_name, presence: true, length: { in: 2..30 }, uniqueness: { case_sensitive: false, message: I18n.t("account.nick_name_is_used") }
+  validates :email, presence: true, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, message: I18n.t("account.email_invalidate") }, length: { maximum: 128 }, uniqueness: { case_sensitive: false, message: I18n.t("account.email_is_used") }, allow_blank: false
+  validates :password, presence: true, format: { with: /\A.*(?=.{8,})(?=.*[a-zA-Z0-9!\#$%&?"]).*\z/, message: I18n.t("account.email_invalidate") }, on: :create
+  validates :tos_agreement, acceptance: { accept: 'true' }, on: :create
 
   # Scopes
   scope :post_likers, lambda { |post_id| where("post_id=?", post_id).joins("INNER JOIN accounts_like_posts ON accounts_like_posts.account_id=accounts.id").order("accounts_like_posts.created_at DESC") }
+  scope :friends, lambda { |account_id| joins("INNER JOIN friendship ON follower_id=accounts.id").where("account_id=? AND is_mutual=#{Friendship::IS_MUTUAL}", account_id) }
 
   # Methods
+  def pending_subject
+    subject = Post.pending_of_account(self).first
+    return subject if subject
+    subject = Subject.new
+    subject.status = Post::STATUS_PENDING
+    subject.creator = self
+    subject.save!
+    subject.post
+  end
+
+  def post_count
+    self.talk_count + self.subject_count + self.recommend_count
+  end
+
+  def avatar
+    return Settings.images.avatar.default unless self.cloud_storage
+    cloud_storage.url
+  end
+
+  def level
+    Sonkwo::Exp.level(self.exp)
+  end
+
+  def games
+    steam_user_games = []
+    steam_user_games = self.steam_user.games if self.steam_user
+    self.other_games + steam_user_games
+  end
+
   def people_relation_with_visitor(options={})
     options.assert_valid_keys(:visitor, :type, :select, :page, :per_page)
     options[:visitor] ||= self
@@ -120,11 +180,6 @@ class Account < ActiveRecord::Base
     return accounts
   end
 
-  # Crop
-  #def cropping?
-    #!crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
-  #end
-
   # Game playing histories
   def last_play_time(game_id)
     history = UserGamePlayHistory.where("account_id=? AND game_id=?", self.id, game_id).select("UNIX_TIMESTAMP(start_time) AS start_timestamp").order("start_time DESC").first
@@ -136,15 +191,30 @@ class Account < ActiveRecord::Base
     histories = histories.where("start_time>=?", options[:from]) if options[:from]
   end
 
+  def add_tags(tag_ids)
+    tags = Tag.where("id IN (?)", tag_ids)
+    accounts_tags = []
+    tags.each do |tag|
+      accounts_tag = AccountsTag.new
+      accounts_tag.account = self
+      accounts_tag.tag = tag
+      accounts_tags << accounts_tag
+    end
+
+    AccountsTag.import accounts_tags
+  end
+
   protected
   def default_values
-    self.gender ||= self.class::GENDER_BOY
-    self.follower_count ||= 0
-    self.following_count ||= 0
-    self.talk_count ||= 0
-    self.subject_count ||= 0
-    self.recommend_count ||= 0
-    self.account_type ||= self.class::TYPE_NORMAL
+    self.gender ||= self.class::GENDER_BOY if self.attribute_names.include?("gender")
+    self.follower_count ||= 0 if self.attribute_names.include?("follower_count")
+    self.following_count ||= 0 if self.attribute_names.include?("following_count")
+    self.talk_count ||= 0 if self.attribute_names.include?("talk_count")
+    self.subject_count ||= 0 if self.attribute_names.include?("subject_count")
+    self.recommend_count ||= 0 if self.attribute_names.include?("recommend_count")
+    self.account_type ||= self.class::TYPE_NORMAL if self.attribute_names.include?("account_type")
+    self.exp ||= 0 if self.attribute_names.include?("exp")
+    self.bonus ||= 0 if self.attribute_names.include?("bonus")
   end
 
   def post_liked(post)
@@ -166,5 +236,23 @@ class Account < ActiveRecord::Base
     notification = Notification.new
     notification.account = self
     notification.save!
+  end
+
+  def create_exp_strategy
+    exp_strategies = ExpStrategy.all
+    exp_strategies.each do |exp_strategy|
+      item = AccountsExpStrategy.new
+      item.account = self
+      item.exp_strategy = exp_strategy
+      item.period_count = 0
+      item.save!
+    end
+  end
+
+  def create_screenshot_album
+    album = Album.new(name: Settings.albums.defaults.screenshot)
+    album.album_type = Album::TYPE_SCREENSHOT
+    album.account = self
+    album.save!
   end
 end

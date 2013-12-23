@@ -61,7 +61,7 @@ module Sonkwo
                   if post_key
                     Sonkwo::Acts::Postcastable.set_post_by_key(list[index], post_key, sub)
                   else
-                    list[index] = sub
+                    list[index].cast = sub
                   end
                 end
 

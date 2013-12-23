@@ -1,0 +1,28 @@
+=render 'nav'
+=content_for(:content) do
+  = form_for(@download_server, :class=>'form-horizontal') do |f|
+    - @download_server.errors.any?
+      - @download_server.errors.full_messages.each do |msg|
+        =msg
+    .control-group
+      label.control-label
+        =t('admin.servers.comment')
+      .controls
+        =f.text_field :comment
+    .control-group
+      label.control-label
+        =t('admin.servers.ip')
+      .controls
+        = f.text_field :server_ip
+    .control-group
+      label.control-label
+        =t('admin.tips.tip')
+      .controls
+        .alert
+          button.close data-dismiss='alert'
+            | &times;
+          strong
+            =t('admin.tips.field_can_not_be_null')
+    .control-group
+      .controls
+        = f.submit 'Update', :class=>'btn btn-primary'

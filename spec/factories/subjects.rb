@@ -2,9 +2,8 @@
 
 FactoryGirl.define do
   factory :subject do
-    association :post, factory: :subject_post
     title "subject title"
     content "subject content"
-    group nil
+    association :creator, factory: :account
   end
 end

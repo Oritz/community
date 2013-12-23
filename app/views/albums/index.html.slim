@@ -1,0 +1,24 @@
+.my-assets
+  .top_explanation
+    span.fl
+      h3.explanation_h3.fl 相册
+    span.fr
+      = link_to "创建相册", "#", class: "album-bn rs3"
+  .my-album
+    ul.my-album-block
+      - @albums.each do |album|
+        li
+          .album-block-list.rs3
+            span.album-block-list-img
+              = link_to user_album_path(@account, album) do
+                - if album.cover
+                  = image_tag album.cover
+                - else
+                  <img src="/album/default.jpg">
+            h3= album.name
+            p
+              | 共#{album.photos_count}张图片
+            span.album-block-list-set.fl
+              span.fr
+                = link_to "查看", user_album_path(@account, album), class: "list-set-bn rs3"
+    = will_paginate(@albums)

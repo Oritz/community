@@ -1,0 +1,84 @@
+=render 'admin/games/nav'
+-content_for :content do
+  ul#my_tab.nav.nav-tabs
+    li id="#{Recommendation::RECOMMEND_TYPE_TOP}"
+      =link_to(t('admin.recommendation.types')[Recommendation::RECOMMEND_TYPE_TOP], '#top')
+    li id="#{Recommendation::RECOMMEND_TYPE_NORMAL}"
+      =link_to(t('admin.recommendation.types')[Recommendation::RECOMMEND_TYPE_NORMAL], '#normal')
+    li id="#{Recommendation::RECOMMEND_TYPE_FOCUS}"
+      =link_to(t('admin.recommendation.types')[Recommendation::RECOMMEND_TYPE_FOCUS], '#focus')
+  .tab-content
+    #top.tab-pane
+      -unless @top_recommendations.empty?
+        table.table.table-striped.table-bordered.table-condensed
+          thead:tr
+            th=t('admin.recommendation.link')
+            th=t('admin.recommendation.picture')
+            th=t('helpers.actions')
+          tbody
+            -@top_recommendations.each do |recommendation|
+              tr
+                td=h recommendation.link
+                td=image_tag(recommendation.picture.thumbnail_url, :border =>1)
+                td
+                  =link_to(admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning') do
+                    i.icon-eye-open
+                  =link_to(edit_admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning') do
+                    i.icon-edit
+                  = link_to(admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning', :confirm => t('helpers.links.confirm'), :method => :delete) do
+                    i.icon-remove
+      -else
+        =t('admin.msg.no_data')
+      div
+        a.btn.btn-primary href=new_admin_recommendation_path(:recommendation_type => Recommendation::RECOMMEND_TYPE_TOP)
+          =t('admin.recommendation.new')
+    #normal.tab-pane
+      -unless @normal_recommendations.empty?
+        table.table.table-striped.table-bordered.table-condensed
+          thead:tr
+            th=t('admin.game.name')
+            th=t('admin.recommendation.picture')
+            th=t('helpers.actions')
+          tbody
+            -@normal_recommendations.each do |recommendation|
+              tr
+                td=recommendation.title
+                td=image_tag(recommendation.picture.thumbnail_url)
+                td
+                  =link_to(admin_recommendation_path(recommendation.id), :class=>'btn btn-small btn-warning') do
+                    i.icon-eye-open
+                  =link_to(edit_admin_recommendation_path(recommendation.id), :class=>'btn btn-small btn-warning') do
+                    i.icon-edit
+                  = link_to(admin_recommendation_path(recommendation.id), :class=>'btn btn-small btn-warning', :confirm => t('helpers.links.confirm'), :method => :delete) do
+                    i.icon-remove
+      -else
+        =t('admin.msg.no_data')
+    #focus.tab-pane
+      -unless @focus_recommendations.empty?
+        table.table.table-striped.table-bordered.table-condensed
+          thead:tr
+            th=t('admin.recommendation.link')
+            th=t('admin.recommendation.picture')
+            th=t('helpers.actions')
+          tbody
+            -@focus_recommendations.each do |recommendation|
+              tr
+                td=h recommendation.link
+                td=image_tag(recommendation.picture.thumbnail_url, :border =>1)
+                td
+                  =link_to(admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning') do
+                    i.icon-eye-open
+                  =link_to(edit_admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning') do
+                    i.icon-edit
+                  = link_to(admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning', :confirm => t('helpers.links.confirm'), :method => :delete) do
+                    i.icon-remove
+      -else
+        =t('admin.msg.no_data')
+  #new
+=content_for(:js_files) do
+  javascript:
+    $("##{@actived_type} a").tab('show');
+    $('#my_tab a').click(function(e){
+      e.preventDefault();
+      $(this).tab('show')
+    })
