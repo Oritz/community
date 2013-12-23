@@ -73,7 +73,41 @@ $.fn.nav_float = function() {
   });
 };
 
-$(document).ready(function() {
+
+function showGoTop () {
+  var h = $(window).height();
+  var t = $(document).scrollTop();
+  if(t > h) {
+    $('#gotop,#code').show();
+  } else {
+    $('#gotop,#code').hide();
+  }
+} 
+
+
+$(document).ready(function () {
+  // nav top
+  showGoTop();
+  
+  // Go top!
+  $('#gotop').click(function () {
+    $(document).scrollTop(0);
+  });
+  
+  $('#code').hover(
+    function (){
+      $(this).attr('id','code_hover');
+      $('#code_img').show(300);
+    },
+    function(){
+      $(this).attr('id','code');
+      $('#code_img').hide();
+  });
+ 
+  $(window).scroll(function () {
+    showGoTop();
+  });
+
   // calculate level
   change_nav_height($("#sns_nav .nav-left1"));
   change_nav_height($("#sns_nav .nav-right1"));

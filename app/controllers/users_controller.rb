@@ -33,9 +33,9 @@ class UsersController < ApplicationController
     @target = Account.find(params[:id])
     fetcher = Sonkwo::Behavior::Fetcher.new(current_account, target: @target)
     if params[:end_id]
-      @posts = fetcher.behaviors(limit: 2, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
+      @posts = fetcher.behaviors(limit: 9, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
     else
-      @posts = fetcher.behaviors(limit: 2, status: Post::STATUS_NORMAL, order: "created_at DESC")
+      @posts = fetcher.behaviors(limit: 9, status: Post::STATUS_NORMAL, order: "created_at DESC")
     end
 
     respond_to do |format|
@@ -48,12 +48,13 @@ class UsersController < ApplicationController
     @target = Account.find(params[:id])
     show_fans = params[:type] ? (params[:type].downcase == "fans") : false
 
+    select_items = %w(id nick_name exp follower_count following_count talk_count subject_count recommend_count)
     if show_fans
       @type = "FANS"
-      @users = @target.people_relation_with_visitor(visitor: current_account, select: "id, nick_name, avatar", type: Friendship::FOLLOWER, page: params[:page], per_page: 10)
+      @users = @target.people_relation_with_visitor(visitor: current_account, select: select_items.join(","), type: Friendship::FOLLOWER, page: params[:page], per_page: 10)
     else
       @type = "STARS"
-      @users = @target.people_relation_with_visitor(visitor: current_account, select: "id, nick_name, avatar", type: Friendship::FOLLOWING, page: params[:page], per_page: 10)
+      @users = @target.people_relation_with_visitor(visitor: current_account, select: select_items.join(","), type: Friendship::FOLLOWING, page: params[:page], per_page: 10)
     end
   end
 

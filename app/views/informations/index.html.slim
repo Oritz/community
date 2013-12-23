@@ -20,8 +20,8 @@
       #wrap.information-container.information-friends style="display:none;"
     .center-foot
       span.fr
-        = link_to "下一步", confirm_step_informations_path(step: current_account.update_tag.to_i+1), method: "post", class: "log_success_botton_yzyx bjcolor_yellow.fr"
-        = link_to "跳过", confirm_step_informations_path(step: InformationsController::STEPS.count), method: "post", class: "log_success_botton_yzyx bjcolor_yellow.fr"
+        = link_to "下一步", confirm_step_informations_path(step: current_account.update_tag.to_i+1), method: "post", class: "log_success_botton_yzyx bjcolor_yellow fr"
+        = link_to "跳过", confirm_step_informations_path(step: InformationsController::STEPS.count), method: "post", class: "log_success_botton_yzyx bjcolor_yellow fr"
         span.im1.fr
           a href="javascript:void(0);" class="refresh-items"
             = image_tag "img/nav_R2_h3r1_huanyihuan_bj.png", alt: ""
@@ -46,21 +46,21 @@
           .sns_release_fans_top
             .sns_release_fans_top_tx_kuang
               img.account-avatar src=""
-              .sns_release_fans_top_dj
-                span.fans_top_dj_id
-                  span.account-name
-              .sns_release_fans_top_cj
-                span.fans_top_dj_dj
-                  span.account-level
-                span.fans_top_dj_dj_sj.total-level
-                  i.fans_top_dj_dj_sj_jdt.level
-              .sns_release_fans_top_bom
-                span.fans_top_dj_id_sj
-                  ul
-                    li.fans_sns_tx_id_yxBJ 111
-                    li.fans_sns_tx_id_jlBJ 111
-                    li.fans_sns_tx_id_jlBJ 111
-                    li.fans_sns_tx_id_sjBJ 111
+            .sns_release_fans_top_dj
+              span.fans_top_dj_id
+                span.account-name
+            .sns_release_fans_top_cj
+              span.fans_top_dj_dj
+                span.account-level
+              span.fans_top_dj_dj_sj.total-level
+                i.fans_top_dj_dj_sj_jdt.level
+            .sns_release_fans_top_bom
+              span.fans_top_dj_id_sj
+                ul
+                  li.fans_sns_tx_id_yxBJ 111
+                  li.fans_sns_tx_id_jlBJ 111
+                  li.fans_sns_tx_id_jlBJ 111
+                  li.fans_sns_tx_id_sjBJ 111
           .sns_release_fans_con
             ul
               li.sns_release_fans_con_fs

@@ -22,10 +22,12 @@ class Friendship < ActiveRecord::Base
   after_initialize :default_values
 
   # Validations
-  validates :account_id, uniqueness: { scope: :follower_id, message: I18n.t("activemodel.errors.models.friendship.attributes.account_id.uniqueness") }
+  validates :account_id, uniqueness: { scope: :follower_id, message: I18n.t("friendship.already_followed") }
 
   # Scopes
   scope :between_two_users, lambda { |visitor, *master_ids| true }
+  scope :followers, lambda { |account| where(account_id: account.id).includes([:follower]) }
+  scope :followings, lambda { |account| where(follower_id: account.id).includes([:account]) }
 
   # Methods
   private

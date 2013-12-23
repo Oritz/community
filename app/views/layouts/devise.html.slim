@@ -11,9 +11,13 @@ html xmlns="http://www.w3.org/1999/xhtml"
         ul
           li
             a href="#" target="_blank" 欢迎页
+          li  
             = link_to "商城", Settings.subdomains.store, target: "_blank"
+          li
             = link_to "社区", Settings.subdomains.community, target: "_blank"
+          li
             = link_to "论坛", Settings.subdomains.forum, target: "_blank"
+          li
             = link_to "客户端", Settings.subdomains.client, target: "_blank"
     .citic_topLogo
       .citic_topLogo_head

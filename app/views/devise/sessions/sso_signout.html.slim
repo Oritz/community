@@ -4,52 +4,52 @@ html xmlns="http://www.w3.org/1999/xhtml"
     meta content=("text/html; charset=utf-8") http-equiv="Content-Type" /
     = javascript_include_tag "jquery"
     javascript:
-      | $(document).ready(function() {
-        | var forum_done = false;
-        | var store_done = false;
-        | var forum = document.createElement("iframe");
-        | var store = document.createElement("iframe");
-        | forum.src = "http://forum.sonkwo.com/logging.php?action=logout";
-        | store.src = "http://store.sonkwo.com/user/logout";
+      $(document).ready(function() {
+        var forum_done = false;
+        var store_done = false;
+        var forum = document.createElement("iframe");
+        var store = document.createElement("iframe");
+        forum.src = "http://forum.sonkwo.com/logging.php?action=logout";
+        store.src = "http://store.sonkwo.com/user/logout";
 
-        | if(forum.attachEvent)
-        | {
-          | forum.attachEvent('onload', function() {
-            | forum_done = true;
-            | redirect();
-          | });
-        | }
-        | else
-        | {
-          | forum.onload = function() {
-            | forum_done = true;
-            | redirect();
-          | };
-        | }
-        | if(store.attachEvent)
-        | {
-          | store.attachEvent('onload', function() {
-            | store_done = true;
-            | redirect();
-          | });
-        | }
-        | else
-        | {
-          | store.onload = function() {
-            | store_done = true;
-            | redirect();
-          | };
-        | }
-        | document.getElementById('iframes').appendChild(forum);
-        | document.getElementById('iframes').appendChild(store);
+        if(forum.attachEvent)
+        {
+          forum.attachEvent('onload', function() {
+            forum_done = true;
+            redirect();
+          });
+        }
+        else
+        {
+          forum.onload = function() {
+            forum_done = true;
+            redirect();
+          };
+        }
+        if(store.attachEvent)
+        {
+          store.attachEvent('onload', function() {
+            store_done = true;
+            redirect();
+          });
+        }
+        else
+        {
+          store.onload = function() {
+            store_done = true;
+            redirect();
+          };
+        }
+        document.getElementById('iframes').appendChild(forum);
+        document.getElementById('iframes').appendChild(store);
 
-        | function redirect()
-        | {
-          | if(store_done && forum_done)
-            | window.location.href = "#{@destination}";
-        | }
-      | });
+        function redirect()
+        {
+          if(store_done && forum_done)
+            window.location.href = "#{@destination}";
+        }
+      });
   body
     div
       p 正在登出……
-    #iframes style="display:none;" 
+    #iframes style="display:none;"

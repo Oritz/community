@@ -77,8 +77,8 @@
                         - if resource.errors[:password_confirmation].length > 0
                           span
                             | #{resource.errors[:password_confirmation][0]}
-                .item style="height:25px"
-                  .fl
+                .item style="height:45px"
+                  .fl.sign_up_xy
                     = f.check_box :tos_agreement, {'parsley-mincheck' => 1, 'parsley-error-message' => I18n.t("account.should_agree_the_agreement", 'parsley-error-container' => '#agreement_error')}, true, false
                     = f.label :tos_agreement do
                       = link_to "同意杉果协议", "#"
@@ -87,5 +87,5 @@
                       - if resource.errors[:tos_agreement].length > 0
                         span
                           | #{resource.errors[:tos_agreement][0]}
-                .item style="height:30px;"
+                .item.sign_up_btn style="height:30px;"
                   = f.submit "注册"

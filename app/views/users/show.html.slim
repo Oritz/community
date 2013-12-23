@@ -4,7 +4,7 @@
       .sns_gr_home_top_Ltx_png
         .home_top_Ltx_l
           .home_top_Ltx_l_tx.border_2px_viptx.avatar-block user_id=(@target.id)
-            a href="#"
+            a href="javascript:void(0);"
               = image_tag(@target.avatar, height: 112, width: 112)
         .home_top_Ltx_r
           .home_top_Ltx_r_id
@@ -76,7 +76,7 @@
               strong.maxNum 140
               span 个字
             .conBoxwidth1
-              = f.text_area :content, class: "f-text", style: "height: 110px"
+              = f.text_area :content, class: "f-text", style: "width: 588px;height:90px;"
             .sendBtn_tr_width1
               .sendBtn_tr
                 .sendBtn_tr_L
