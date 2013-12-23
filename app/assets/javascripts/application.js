@@ -82,18 +82,18 @@ function showGoTop () {
   } else {
     $('#gotop,#code').hide();
   }
-} 
+}
 
 
 $(document).ready(function () {
   // nav top
   showGoTop();
-  
+
   // Go top!
   $('#gotop').click(function () {
     $(document).scrollTop(0);
   });
-  
+
   $('#code').hover(
     function (){
       $(this).attr('id','code_hover');
@@ -103,7 +103,7 @@ $(document).ready(function () {
       $(this).attr('id','code');
       $('#code_img').hide();
   });
- 
+
   $(window).scroll(function () {
     showGoTop();
   });

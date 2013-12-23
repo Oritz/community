@@ -1,0 +1,49 @@
+.rs3.sns_release_fans.marAuto.user-item user_id=user.id
+  .sns_release_fans_top
+    .sns_release_fans_top_tx_kuang
+      = link_to user_path(user) do
+        = image_tag(user.avatar, height: 64, width: 64)
+    .sns_release_fans_top_r
+      .sns_release_fans_top_dj
+        span.fans_top_dj_id
+          = link_to user.nick_name, user_path(user)
+      .sns_release_fans_top_cj
+        span.fans_top_dj_dj
+          | Lv #{user.level}
+        span.fans_top_dj_dj_sj.total-level
+          i.fans_top_dj_dj_sj_jdt.level level=user.level
+      .sns_release_fans_top_bom
+        span.fans_top_dj_id_sj
+  .sns_release_fans_con
+    ul
+      li.sns_release_fans_con_fs
+        = link_to user.follower_count, people_user_path(user, type: "fans")
+      li.sns_release_fans_con_fx
+        = link_to user.following_count, people_user_path(user, type: "stars")
+      li.sns_release_fans_con_pl
+        = link_to user.post_count, people_user_path(user, type: "stars")
+      li.sns_release_fans_con_ft
+        a href="#"
+  .sns_release_fans_bom
+    .fans_bom_l_yy
+      span.fans_bom_sx
+        a href="javascript:void(0);" =I18n.t("pages.send_pm")
+      - if @type == "FANS"
+        span.fans_bom_yc
+          a href="javascript:void(0);" class="remove-fans" =I18n.t("pages.remove_fans")
+      span.fans_bom_jb
+        a href="javascript:void(0);" class="tip-off-user" =I18n.t("pages.tip-off")
+    span.fans_bom_gz
+      span
+        - if user.is_mutual == Friendship::IS_MUTUAL
+          a href="javascript:void(0);" class="btn btn-danger unfollow-user" =I18n.t("pages.unfollow_user")
+          a href="javascript:void(0);" class="btn btn-danger follow-user" style="display: none;"  =I18n.t("pages.follow_user")
+        - elsif @type == "STARS"
+          a href="javascript:void(0);" class="btn btn-danger unfollow-user" =I18n.t("pages.unfollow_user")
+          a href="javascript:void(0);" class="btn btn-danger follow-user" style="display: none;"  =I18n.t("pages.follow_user")
+        - else
+          a href="javascript:void(0);" class="btn btn-danger follow-user" =I18n.t("pages.follow_user")
+          a href="javascript:void(0);" class="btn btn-danger unfollow-user" style="display: none;" =I18n.t("pages.unfollow_user")
+      - if user.is_mutual == Friendship::IS_MUTUAL
+        span.mutual
+          | mutual

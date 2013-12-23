@@ -4,7 +4,7 @@ var get_unicode_length = function (str) {
   var real_length = 0;
   var len = str.length;
   var char_code = -1;
-  
+
   for (var i = 0; i < len; i++) {
     char_code = str.charCodeAt(i);
     if (char_code >= 0 && char_code < 128) {
@@ -14,7 +14,7 @@ var get_unicode_length = function (str) {
       real_length += 2;
     }
   }
-  
+
   return Math.ceil(real_length/2);
 };
 
@@ -60,13 +60,13 @@ $(document).ready(function () {
           }
           else {
             show_message(data);
-          }          
-        },
-      });  
+          }
+        }
+      });
     }
     return false;
   };
-  
+
   var joinGroup = function () {
     var form_token = $('meta[name="csrf-token"]').attr('content');
     if (form_token) {
@@ -88,22 +88,21 @@ $(document).ready(function () {
           else {
             show_message(data);
           }
-        },
-      });  
+        }
+      });
     }
     return false;
   };
-  
+
   $('span.groups_b_cz_tc').on('click', 'a', quitGroup);
   $('span.groups_b_cz_jr').on('click', 'a', joinGroup); 
-  
-  
+
   // send message box
   function clearPM() {
     $('#pm_recipient_name').val('');
     $('#pm_recipient_content').val('');
   }
-  
+
   $('.letter-send').click(function () {
     $.fancybox.open($('#private_message_box'), {
       closeBtn: false,
@@ -113,7 +112,7 @@ $(document).ready(function () {
       afterClose: function () {clearPM();},
     });
   });
-  
+
   $('.pm_popup_closebtn').click(function () {
     $.fancybox.close();
   });
@@ -122,7 +121,7 @@ $(document).ready(function () {
     var form_token = $('meta[name="csrf-token"]').attr('content');
     var recipient_name = $.trim($('#pm_recipient_name').val());
     var recopient_content = $.trim($('#pm_recipient_content').val());
-    
+
     $.ajax({
       url: '/private_messages.json',
       type: 'POST',
@@ -141,8 +140,8 @@ $(document).ready(function () {
       }
     });
   });
-  
+
   $('#bn_pm_cancel').click(function () {
     $.fancybox.close();
-  });  
+  });
 });

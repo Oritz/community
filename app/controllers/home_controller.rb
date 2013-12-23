@@ -3,7 +3,6 @@ class HomeController < ApplicationController
   before_filter :check_update_tag, only: [:index]
 
   def index
-    @friends = Account.friends(current_account.id).limit(12).order("updated_at DESC")
     @new_talk = Talk.new
     @cloud_storage_settings = CloudStorage.settings(current_account)
 
@@ -17,15 +16,17 @@ class HomeController < ApplicationController
   end
 
   def people
-    show_fans = params[:type] ? (params[:type].downcase == "fans") : false
+    @type = params[:type] || "MUTUAL"
+    @type = @type.strip.upcase
 
-    if show_fans
-      @type = "FANS"
-      @users = current_account.people_relation_with_visitor(select: "id, nick_name, avatar", type: Friendship::FOLLOWER, page: params[:page], per_page: 10)
-      current_account.notification.reset(:followed)
+    select_items = %w(id nick_name exp follower_count following_count talk_count subject_count recommend_count is_mutual)
+    if @type == "FANS"
+      @users = current_account.fans.select(select_items.join(",")).paginate(page: params[:page], per_page: 10);
+      #current_account.notification.reset(:followed)
+    elsif @type == "STARS"
+      @users = current_account.stars.select(select_items.join(",")).paginate(page: params[:page], per_page: 10);
     else
-      @type = "STARS"
-      @users = current_account.people_relation_with_visitor(select: "id, nick_name, avatar", type: Friendship::FOLLOWING, page: params[:page], per_page: 10)
+      @users = Account.friends(current_account).select(select_items.join(",")).order("friendship.created_at DESC").paginate(page: params[:page], per_page: 10);
     end
   end
 

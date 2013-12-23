@@ -9,6 +9,7 @@ class Friendship < ActiveRecord::Base
   FOLLOWING = 1
   MUTUAL = 2
   IS_SELF = 3
+  IRRESPECTIVE = 4
 
   self.primary_keys = [:account_id, :follower_id]
   # Associations

@@ -1,0 +1,28 @@
+.sns_release
+  .groups_inside
+    - @groups.each do |group|
+      .radius3px.sns_groups_data.marAuto
+        .sns_groups_data_top
+          .groups_top_tx
+            = link_to group_path(group) do
+              = image_tag(group.logo)
+          .groups_top_new
+            h1
+              = link_to group.name, group_path(group)
+              = link_to "", edit_group_path(group), class: "set fr" if group.creator_id == current_account.id
+            span
+              a href="/groups/#{group.id}" 已有#{group.member_count}位成员
+            p =group.description
+        .sns_groups_data_bottom
+          .groups_b_jb
+            a href="javascript:void(0);" 举报
+          .groups_b_cz
+            - if group.creator_id != current_account.id
+              span.groups_b_cz_tc
+                a href="/groups/#{group.id}/remove_user.json" 退出
+            - else
+              span.group-manage
+                = link_to I18n.t("pages.manage"), edit_group_path(group)
+            span.groups_b_cz_jr style="display: none;"
+              a href="/groups/#{group.id}/add_user.json" 加入小组
+  = will_paginate @groups

@@ -7,6 +7,8 @@ class UsersController < ApplicationController
     @target = Account.find(params[:id])
     @new_talk = Talk.new
     @cloud_storage_settings = CloudStorage.settings(@target)
+    @relation = Friendship::IRRESPECTIVE
+    @relation = current_account.get_relation(@target) if current_account
 
     respond_to do |format|
       format.html

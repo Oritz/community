@@ -3,7 +3,7 @@ var bind_textarea_limit = function(textarea_input, textarea_hint, textarea_submi
   if (!textarea_input || limit_num <= 0) {
     return;
   }
-  
+
   var default_text = '<span class="countTxt">还能输入</span><strong class="maxNum">' + limit_num + '</strong><span>个字</span>';
   var textarea_input_trigger = function () {
     var char_length = get_unicode_length(textarea_input.val());
@@ -24,7 +24,7 @@ var bind_textarea_limit = function(textarea_input, textarea_hint, textarea_submi
     if (typeof textarea_hint == 'object') {
       textarea_hint.html(hint_text);
     }
-    
+
     if (disable_sumit) {
       textarea_submit.attr('disable', '');
       textarea_submit.parents('form').submit(function() {

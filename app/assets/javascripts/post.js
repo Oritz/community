@@ -129,6 +129,16 @@ function start_posts(url) {
       if ($(this).find('#post_submit').attr('disable') !== '') {
         $(this).ajaxSubmit({
           url: "/talks.json",
+          beforeSend: function() {
+            // check form
+            var content = $.trim($(this).find("fomr.new_talk [name='talk[content]']").attr("value"));
+            if(get_unicode_length(content) > 140) {
+              Messenger().post("字数超过限制了")
+              return false;
+            }
+            else if(content == "")
+              return false;
+          },
           success: function(data) {
             show_message(data);
             var status = data.status;

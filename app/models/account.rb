@@ -87,7 +87,7 @@ class Account < ActiveRecord::Base
 
   # Scopes
   scope :post_likers, lambda { |post_id| where("post_id=?", post_id).joins("INNER JOIN accounts_like_posts ON accounts_like_posts.account_id=accounts.id").order("accounts_like_posts.created_at DESC") }
-  scope :friends, lambda { |account_id| joins("INNER JOIN friendship ON follower_id=accounts.id").where("account_id=? AND is_mutual=#{Friendship::IS_MUTUAL}", account_id) }
+  scope :friends, lambda { |account| joins("INNER JOIN friendship ON follower_id=accounts.id").where("account_id=? AND is_mutual=#{Friendship::IS_MUTUAL}", account.id) }
 
   # Methods
   def pending_subject
@@ -117,6 +117,15 @@ class Account < ActiveRecord::Base
     steam_user_games = []
     steam_user_games = self.steam_user.games if self.steam_user
     self.other_games + steam_user_games
+  end
+
+  def get_relation(account)
+    return Friendship::IS_SELF if account.id == self.id
+    friendship = Friendship.where("(account_id=? AND follower_id=?) OR (account_id=? AND follower_id=?)", self.id, account.id, account.id, self.id).first
+    return Friendship::IS_IRRESPECTIVE unless friendship
+    return Friendship::IS_MUTUAL if friendship.is_mutual
+    return Friendship::IS_FOLLOWER if friendship.account_id == self.id
+    Frienship::IS_FOLLOWING
   end
 
   def people_relation_with_visitor(options={})
@@ -163,7 +172,7 @@ class Account < ActiveRecord::Base
 
     accounts.each do |account|
       class << account
-        attr_accessor :relation
+       attr_accessor :relation
       end
       if account.id == options[:visitor].id
         account.relation = Friendship::IS_SELF
@@ -174,7 +183,7 @@ class Account < ActiveRecord::Base
       elsif following_ids.include?(account.id)
         account.relation = Friendship::FOLLOWING
       else
-        account.relation = nil
+        account.relation = Friendship::IRRESPECTIVE
       end
     end
     return accounts

@@ -23,6 +23,13 @@
               = link_to "Lv #{level(@target.exp)}", "javascript:void(0);"
             span.home_top_Ltx_r_id_jdt_bj.total-level
               i.home_top_Ltx_r_id_jdt_bj1.level level=@target.level
+        .user-status-block
+          - if @relation == Friendship::IS_SELF
+            = link_to I18n.t("pages.edit_info"), "javascript:void(0);"
+          - elsif @relation == Friendship::IRRESPECTIVE
+            = link_to I18n.t("pages.follow_user"), follow_users_path(target_id: @target.id), method: :put
+          - elsif @relation == Friendship::FOLLOWING || @relation == Friendship::MUTUAL
+            = link_to I18n.t("pages.unfollow_user"), unfollow_users_path(target_id: @target.id), method: :delete
       span.sns_gr_home_top_pois
     .sns_gr_home_top_Rzl
       .sns_gr_home_top_Rzl_b

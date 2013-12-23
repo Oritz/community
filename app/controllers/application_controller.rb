@@ -3,6 +3,8 @@ class ApplicationController < ActionController::Base
   respond_to :html, :json
   layout :layout_by_resource
 
+  before_filter :load_for_layout
+
   def sonkwo_authenticate_account
     case request.format
     when 'json'
@@ -32,6 +34,12 @@ class ApplicationController < ActionController::Base
       'devise'
     else
       'application'
+    end
+  end
+
+  def load_for_layout
+    if _layout == "application"
+      @friends = Account.friends(current_account).limit(12).order("updated_at DESC")
     end
   end
 
