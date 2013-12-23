@@ -27,3 +27,6 @@ en:
       success: "Done Success"
     client:
       upload_tip: "file name must be formatted as：Sonkwo_major_ver.minor_ver.tiny_ver.msi,如：Sonkwo_1.0.0.msi"
+    recommendation:
+      types: ["Big Top", "BianJiQiangTui", "Focus"]
+      picture_size_tips: ["Top：936px x 453px", "BianJiQiangTui：200px x 285px", "Focus：300px x 250px"]

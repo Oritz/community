@@ -1,0 +1,70 @@
+<html>
+<head>
+	<link rel="stylesheet" href="/stylesheets/lightbox.css" type="text/css" media="screen" />
+	<script type="text/javascript" src="/javascripts/scriptaculous.js?load=effects,builder"></script>
+	<script type="text/javascript" src="/javascripts/lightbox.js"></script>
+</head>
+<body>
+
+            <div class="span4"> 
+                
+                
+                <div class="widget">
+                        
+                    <div class="widget-header">
+                        <i class="icon-bookmark"></i>
+                        <h3><%= I18n.t("page.admin.editing_recommendation")%></h3>
+                    </div> <!-- /widget-header -->
+                    
+                    <div class="widget-content">
+
+		<%= form_for(@recommendation,  :html => {:multipart => true}, :url => { :action => "update" }) do |f| %>
+		
+			<%= error_messages_for @recommendation %>
+			
+				<% if @recommendation.recommend_type.to_i == Recommendation::RECOMMEND_TYPE_NORMAL %>
+					游戏: <%=select_tag "recommendation[link]",    options_for_select(@games.collect{|g| [g.name, g.id.to_i]}, @recommendation.link.to_i) %>
+				<% else %>
+					<%= I18n.t("page.admin.rec_link")%>:<%= f.text_field:link%>
+				<% end %>
+				
+				<div class="space"></div>
+
+				<%= I18n.t("page.admin.recommend_types")[@recommendation.recommend_type] %>
+				<div class="space"></div>
+				
+				<div class="fileinput">
+					<div>
+						<a href= <%= @recommendation.picture.url %>  rel="lightbox">
+							<% if @recommendation.picture.exists? %>
+								<%= image_tag(@recommendation.picture.thumbnail_url, :border =>1) %>
+							<% else %>
+								<img src="/images/recommendation/tops/default.jpg" />
+							<% end %>
+						</a>
+					<div class="space"></div>
+					<div><%= file_field_tag "image" %></div>
+					
+					<div style="margin-top:20px;"><%= I18n.t("page.admin.weight")%>: <input name="recommendation[weight]" style="width:30px;" value="<%= @recommendation.weight %>" />	</div>
+					
+					<% if @recommendation.recommend_type.to_i == Recommendation::RECOMMEND_TYPE_TOP %>
+						<%= I18n.t("page.admin.rec_title")%> :<div><%= f.text_field:title%></div>
+						<%= I18n.t("page.admin.rec_comment")%> :<div><%= f.text_field:comment%></div>
+					<% end %>
+					
+				</div>
+		<div class="space"></div>
+		<%= f.submit I18n.t("page.button.update"), :class=>"btn" %></br>
+	  
+		<% end %>
+		<%= link_to I18n.t("page.button.show"), admin_recommendation_path(@recommendation) %> |
+		<%= link_to I18n.t("page.button.back"), admin_recommendations_path %>
+		
+		
+                    </div> <!-- /widget-content -->
+                
+                </div> <!-- /widget -->
+                                    
+              </div> <!-- /span6 -->
+</body>
+</html>

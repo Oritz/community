@@ -1,0 +1,69 @@
+=render 'nav'
+=content_for(:content) do
+  h3=t('admin.recommendation.types')[@require_type.to_i]
+  = form_for(@recommendation, :html => {:multipart => true}, :url => { :action => "create"}, :class=>'form-horizontal') do |f|
+    - @recommendation.errors.any?
+      - @recommendation.errors.full_messages.each do |msg|
+        =msg
+    = hidden_field_tag "recommendation[recommend_type]", @require_type
+    .control-group
+      - if params[:recommendation_type].to_i == Recommendation::RECOMMEND_TYPE_NORMAL
+        - if @games.empty?
+          =t('admin.msg.no_game')
+        - else
+          label.control-label
+            =t('admin.game.name')
+          .controls
+            =select_tag("recommendation[link]", options_for_select(@games.collect{|g| [g.title, g.id.to_i]}, @game_id.to_i))
+      - else
+        label.control-label
+          =t('admin.recommendation.link')
+        .controls
+          =f.text_field :link
+          | &nbsp;
+          button#preview value=t('admin.recommendation.preview') /
+    .control-group
+      label.control-label
+        =t('admin.data.weight')
+        .controls
+          = f.text_field  :weight, :size=>1
+          | &nbsp;
+          =t('admin.data.weight_desc')
+    .control-group
+      label.control-label
+        =t('admin.recommendation.picture')
+        .controls
+          = file_field('image', '')
+    .control-group
+      .controls
+        =t('admin.recommendation.picture_size_tips')[@require_type.to_i]
+    - if params[:recommendation_type].to_i == Recommendation::RECOMMEND_TYPE_TOP
+      .control-group
+        label.control-label
+          =t('admin.recommendation.title')
+        .controls
+          = f.text_field(:title, :size=>20)
+      .control-group
+        label.control-label
+          =t('admin.recommendation.comment')
+        .controls
+          = f.text_area(:comment, :size=>"50x3")
+      .control-group
+        label.control-label
+          =t('admin.recommendation.example')
+        .controls
+          img src="/images/recommendation/tops/exampal.jpg"
+
+    .control-group
+      .controls
+        =f.submit(:class =>"btn btn-primary")
+  a href=request.referer
+    i.icon-arrow-left
+    =t('helpers.links.back')
+=content_for(:js_files) do
+  javascript:
+    $("#preview").click(function(e){
+      e.preventDefault();
+      var link = $("#recommendation_link").val();
+      window.open(link,'','height=500,width=611,scrollbars=yes,status =yes');
+    });

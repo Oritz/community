@@ -142,6 +142,7 @@ SonkwoCommunity::Application.routes.draw do
     resources :serial_types
     resources :download_servers
     resources :clients
+    resources :recommendations
     get '/', to: 'admin#index'
 
   end

@@ -32,23 +32,25 @@
     - @serial_number_counts.each do |s|
       li id=s.status
         =link_to(t('admin.serial.status')[s.status],game_serial_numbers_admin_game_path(@game, :status =>s.status))
-  - unless @admin_serial_numbers.empty?
-    table.table.table-bordered.table-condensed.table-striped
-      thead
-        th=t('admin.titles.serial_type')
-        th=t('admin.serial.serial_number')
-        th=t('admin.serial.created_at')
-        th=t('admin.serial.updated_at')
-      tbody
-        -@admin_serial_numbers.each do |serial_number|
-          tr
-            td= serial_number.serial_type.type_desc
-            td= serial_number.serial_number
-            td= sonkwo_time_format(serial_number.created_at)
-            td= sonkwo_time_format(serial_number.updated_at)
-    div=will_paginate @admin_serial_numbers, :class =>'pagination', :previous_label => "&laquo; #{t('helpers.links.previous')}", :next_label => "#{t('helpers.links.next')} &raquo;"
-  -else
-    =t('admin.msg.no-data')
+  .tab-content
+    - unless @admin_serial_numbers.empty?
+      .tab-pane
+        table.table.table-bordered.table-condensed.table-striped
+          thead
+            th=t('admin.titles.serial_type')
+            th=t('admin.serial.serial_number')
+            th=t('admin.serial.created_at')
+            th=t('admin.serial.updated_at')
+          tbody
+            -@admin_serial_numbers.each do |serial_number|
+              tr
+                td= serial_number.serial_type.type_desc
+                td= serial_number.serial_number
+                td= sonkwo_time_format(serial_number.created_at)
+                td= sonkwo_time_format(serial_number.updated_at)
+        div=will_paginate @admin_serial_numbers, :class =>'pagination', :previous_label => "&laquo; #{t('helpers.links.previous')}", :next_label => "#{t('helpers.links.next')} &raquo;"
+    -else
+      =t('admin.msg.no-data')
   #import_div.modal.hide.fade role='dialog'
     .modal-header
       button.close data-dismiss='modal' aria-hidden='true'

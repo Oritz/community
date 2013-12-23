@@ -1,28 +1,14 @@
 # -*- encoding : utf-8 -*-
-class Admin::RecommendationsController < ApplicationController
+require 'common/picture'
+class Admin::RecommendationsController < AdminController
   def index
-  
-    @actived_type = params[:recommend_type] || 0
-    @top_recommendations = Recommendation.select('id, link, recommend_type').where('recommend_type=?', Recommendation::RECOMMEND_TYPE_TOP).all
-
-    @normal_recommendations = Recommendation.find(
-      :all,
-      :select =>"rd.id, rd.link, name,recommend_type",
-      :joins =>"AS rd INNER JOIN games ON rd.link=games.id",
-      :group =>"games.id",
-      :conditions =>["recommend_type=?", Recommendation::RECOMMEND_TYPE_NORMAL]
-    )
-
-    @normal_recommendations = Recommendation.select('id, link, recommend_type').includes(:game).where('recommend_type=?', Recommendation::RECOMMEND_TYPE_NORMAL).all
-
-    @focus_recommendations = Recommendation.find(
-      :all,
-      :select =>"id, link, recommend_type",
-      :conditions =>["recommend_type=?", Recommendation::RECOMMEND_TYPE_FOCUS]
-    )
-    
+    @actived_type = params[:recommend_type] || Recommendation::RECOMMEND_TYPE_TOP
+    @top_recommendations = Recommendation.in_type(Recommendation::RECOMMEND_TYPE_TOP)
+    @normal_recommendations = Recommendation.in_type(Recommendation::RECOMMEND_TYPE_NORMAL).includes(:game)
+    @normal_recommendations = Recommendation.select('recommendations.id, games.title, recommend_type, recommendations.link').joins(:game).all
+    @focus_recommendations = Recommendation.in_type(Recommendation::RECOMMEND_TYPE_FOCUS)
     respond_to do |format|
-      format.html # index.html.erb
+      format.html # index.html.slim
       format.xml  { render :xml =>@top_recommendations}#待修改
     end
   end
@@ -43,10 +29,10 @@ class Admin::RecommendationsController < ApplicationController
   def new
     @require_type = params[:recommendation_type]
     @recommendation = Recommendation.new
-    @games = Game.select('id, name').all
-    
+    @games = Game.select('id, title').all
+
     respond_to do |format|
-      format.html # new.html.erb
+      format.html # new.html.slim
       format.xml  { render :xml => @recommendation }
     end
   end
@@ -69,21 +55,7 @@ class Admin::RecommendationsController < ApplicationController
   # POST /recommendations
   # POST /recommendations.xml
   def create
- 
-  #  @link = params[:recommendation][:link]
-  #  @type_id = params[:recommendation][:game_type_id]
-  #  @recommend_type = params[:recommendation][:recommend_type]
-  #  @weight = params[:weight]
-  #  @recommendation = Recommendation.new(
-  #    :link => @link,
-  #    :recommend_type => @recommend_type,
-  #    :sub_type => @type_id,
-  #    :weight => @weight
-  #  )
-    
     @recommendation = Recommendation.new(params[:recommendation])
-    
-    #Top_pic
     err = nil
     
     1.times do 
@@ -97,7 +69,6 @@ class Admin::RecommendationsController < ApplicationController
       if (file_type !~ /^image\/.*?jpeg|jpg|png|bmp|gif$/i)   # File type should be IMAGE
         err = I18n.t("page.message.image_type_invalid")
         return err, nil
-
       end
       
       @recommendation.save
@@ -105,9 +76,7 @@ class Admin::RecommendationsController < ApplicationController
       image = params[:image][0]
       @picture = Picture.new(@recommendation,image)
       @recommendation.full_pic = @picture.url
-      @picture.save      
-      
-      
+      @picture.save
     end
     
     respond_to do |format|

@@ -14,7 +14,7 @@ class Admin::ClientsController < AdminController
 		@admin_clients = ClientUpdate.all
 
 		respond_to do |format|
-			format.html # index.html.erb
+			format.html # index.html.slim
 			format.xml	{ render :xml => @admin_clients }
 		end
 	end
@@ -26,7 +26,7 @@ class Admin::ClientsController < AdminController
 		@client = ClientUpdate.new
 
 		respond_to do |format|
-			format.html # new.html.erb
+			format.html # new.html.slim
 			format.xml	{ render :xml => @client }
 		end
 	end

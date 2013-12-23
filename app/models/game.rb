@@ -4,7 +4,7 @@ class Game < ActiveRecord::Base
   belongs_to :parent, class_name: "Game", foreign_key: "parent_id"
   has_many :game_files
   has_many :game_serial_numbers
-  has_many :recommendations
+  has_many :recommendations, foreign_key: 'link'
 
   def serial_type_arr=(arr)
     # puts "publisher_arr=#{arr}"
