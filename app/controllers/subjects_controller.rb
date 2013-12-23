@@ -5,7 +5,7 @@ class SubjectsController < ApplicationController
     # Show the content of a post and comments
     @subject = Subject.find(params[:id])
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.slim
       format.json { render json: @subject }
     end
   end

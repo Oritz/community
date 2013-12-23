@@ -1,0 +1,27 @@
+<div class="span6">
+    <div class="widget">
+		<div class="widget-header">
+			<i class="icon-tag"></i>
+		</div> <!-- /widget-header -->
+		<div class="widget-content">
+			<table style="text-align:left;">
+				<tr>
+					<th>ID:</th>
+					<td><%= @serial_type.id %></td>
+				</tr>
+				<tr>
+					<th><%= I18n.t("page.admin.serial_types") %>:</th>
+					<td><%= @serial_type.type_name %></td>
+				</tr>
+				<tr>
+					<th><%= I18n.t("page.admin.serial_type_public")%>:</th>
+					<td><%= I18n.t("serial_cat")[@serial_type.type_cat] %></td>
+				</tr>
+				<tr>
+					<th><%= I18n.t("page.admin.serial_type_desc") %>:</th>
+					<td><%= @serial_type.type_desc %></td>
+				</tr>
+			</table>
+		</div> <!-- /widget-content -->
+	</div> <!-- /widget -->
+</div>

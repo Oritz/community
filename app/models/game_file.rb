@@ -10,4 +10,8 @@ class GameFile < ActiveRecord::Base
 
   # Associations
   belongs_to :game
+  scope :status_new, -> {where(status: STATUS_NEW)}
+  scope :status_to_verify, -> {where(status: STATUS_TO_VERIFY)}
+  scope :status_validated, -> {where(status: STATUS_VALIDATED)}
+
 end

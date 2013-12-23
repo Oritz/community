@@ -1,0 +1,19 @@
+<div class="span8">
+
+                <div class="widget">
+                    
+                    <div class="widget-header">
+                        <i class="icon-plane"></i>
+
+                    </div> <!-- /widget-header -->
+                    
+                    <div class="widget-content">
+
+<%= @download_server.comment%>
+<%= @download_server.server_ip%> </br>
+<%= link_to I18n.t("page.button.edit"), edit_admin_download_server_path(@download_server) %> |
+<%= link_to I18n.t("page.button.back"), admin_download_servers_path %>
+                    </div> <!-- /widget-content -->
+                
+                </div> <!-- /widget -->
+</div>

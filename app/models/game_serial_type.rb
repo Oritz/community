@@ -1,3 +1,3 @@
 class GameSerialType < ActiveRecord::Base
-  # attr_accessible :title, :body
+  attr_accessible :game_id, :serial_type
 end

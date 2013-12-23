@@ -6,7 +6,7 @@ class TalksController < ApplicationController
     @talk = Talk.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.slim
       format.json { render json: @talk }
     end
   end

@@ -1,0 +1,18 @@
+=render 'nav'
+=content_for(:content) do
+  - unless @download_servers.empty?
+    table.table.table-bordered.table-condensed.table-striped
+      thead
+        tr
+          th=t('admin.servers.name')
+          th=t('admin.servers.ip')
+          th=t('helpers.actions')
+      -@download_servers.each do |download_server|
+        tr
+          td=download_server.comment
+          td=download_server.server_ip
+          td
+            =link_to(edit_admin_download_server_path(download_server), :class=>"btn btn-small btn-warning") do
+              i.icon-edit
+            =link_to(admin_download_server_path(download_server), :class=>"btn btn-small btn-warning", :confirm => t('helpers.links.confirm'), :method => :delete) do
+              i.icon-remove

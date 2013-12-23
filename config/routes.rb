@@ -116,6 +116,34 @@ SonkwoCommunity::Application.routes.draw do
     get 'game/get_game_serial_number', to: 'game#get_game_serial_number'
     post 'game/register_serial_number', to: 'game#register_serial_number'
     get 'game/get_game_news', to: 'game#get_game_news'
+
   end
   # match ':controller(/:action(/:id))(.:format)'
+  namespace :admin do
+    resources :games do
+      member do
+        get :pre_release_list
+        get :submit_release
+        get :new_pre_release
+        get :audit_release
+        get :game_serial_numbers
+        get :delete_selection
+        get :game_serial_type
+        post :pre_release_list
+        post :submit_release
+        post :new_pre_release
+        post :cancel_pre_release
+        post :audit_release
+        put :import_serials
+        put :game_serial_type
+      end
+    end
+
+    resources :serial_types
+    resources :download_servers
+    resources :clients
+    resources :recommendations
+    get '/', to: 'admin#index'
+
+  end
 end

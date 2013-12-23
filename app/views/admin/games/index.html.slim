@@ -1,0 +1,15 @@
+=render 'nav'
+
+-content_for :content do
+  h3 =I18n.t 'admin.titles.games'
+  =form_tag '/admin/games', :method => :get do
+    span
+      input#search_text name='query' type='text' /
+      '
+    span
+      input.btn.btn-primary type='submit'  value=t('helpers.links.search') /
+
+  #ajaxWrapper
+    =render 'search'
+    =will_paginate @games
+

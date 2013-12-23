@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="/stylesheets/lightbox.css" type="text/css" media="screen" />
+		<script type="text/javascript" src="/javascripts/scriptaculous.js?load=effects,builder"></script>
+		<script type="text/javascript" src="/javascripts/lightbox.js"></script>
+	</head>
+	
+	
+	<body>
+	
+            <div class="span4"> 
+                
+                
+                <div class="widget">
+                        
+                    <div class="widget-header">
+                        <i class="icon-bookmark"></i>
+                        <h3><%= I18n.t("page.admin.recommend_types")[@recommendation.recommend_type] %></h3>
+                    </div> <!-- /widget-header -->
+                    
+                    <div class="widget-content">			
+
+			<div style="margin:30px; color:#57A000;">
+				<% if flash[:notice] -%>
+					<%= flash[:notice] %>
+				<% end %>
+			</div>
+			
+
+			
+			<p>
+				点击图片放大
+			</p>
+			
+				
+				<div>
+					<a href=<%=@recommendation.picture.url%>  rel="lightbox">
+						<% if @recommendation.picture.exists? %>
+						<%= image_tag(@recommendation.picture.thumbnail_url, :border =>1) %>
+						<% else %>
+							<img src="/images/recommendation/tops/default.jpg" />
+						<% end %>
+					</a>
+				</div>
+			  
+			<%= link_to I18n.t("page.button.edit"), edit_admin_recommendation_path(@recommendation) %> |
+			<%= link_to I18n.t("page.button.back"), admin_recommendations_path(:recommend_type =>@recommendation.recommend_type) %>
+                    </div> <!-- /widget-content -->
+                
+			</div> <!-- /widget -->
+		</div>
+	</body>
+</html>
