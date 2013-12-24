@@ -4,10 +4,10 @@
   - unless @serial_number_types.empty?
     table.table.table-bordered.table-condensed
       thead
-        th=t('admin.titles.serial_type')
+        th=GameSerialNumber.human_attribute_name(:serial_type)
         - index = (0..GameSerialNumber::STATUS-2) #include all tag
         - index.each do |i|
-          th=t('admin.serial.status')[i]
+          th=GameSerialNumber.human_attribute_name(:status_arr)[i]
       tbody
         - @serial_number_types.each do |s|
           - next unless s
@@ -16,7 +16,7 @@
             - index.each do |i|
               td=s[:number][i] || 0
         tr
-          td=t('admin.serial.serial_types')[GameSerialNumber::STATUS_ALL]
+          td=GameSerialNumber.human_attribute_name(:status_arr)[GameSerialNumber::STATUS_ALL]
           td= @serial_number_total_count
 
   .btn-toolbar
@@ -61,19 +61,19 @@
       .modal-body
           .control-group
             label.control-label for='batch_number'
-              =t('admin.serial.batch')
+              =GameSerialNumber.human_attribute_name(:batch_number)
             .controls
               =select_tag('batch_number', options_for_select((0..34), 0))
           .control-group
             label.control-label for='serial_type'
-              =t('admin.titles.serial_type')
+              = GameSerialNumber.human_attribute_name(:serial_type)
             .controls
               =select_tag('serial_type', options_from_collection_for_select(@serial_types,'id', 'type_name'), prompt: t('helpers.tip.select_something'))
               =link_to(t('admin.serial.bind_new_type'), game_serial_type_admin_game_path)
               /<a id="bind_new_type_link" href="<%= admin_serial_types_path(:game_id => @game.id) -%>">绑定新类型</a>
           .control-group
             label.control-label for='serial_status'
-              =t('admin.serial.status')[GameSerialNumber::STATUS]
+              =GameSerialNumber.human_attribute_name(:status_arr)[GameSerialNumber::STATUS]
             .controls
               =select_tag('serial_status', options_from_collection_for_select(select_from_local_arrary(t('admin.serial.status')[0..2]),'value', 'content' ))
           .control-group
@@ -83,14 +83,15 @@
                 strong
                   =t('helpers.tips.tip')
                   |:
-                  =t('admin.tips.allocated_for_third_part')
+                  =GameSerialNumber.human_attribute_name(:allocated_for_third_part)
           .control-group
             label.control-label for='serial_file'
-              =t('admin.serial.serial_file')
+              =GameSerialNumber.human_attribute_name(:serial_file)
             .controls
               =file_field_tag 'serial_file'
       .modal-footer
-        input.btn.btn-primary type='submit' value=t('helpers.links.submit') /
+        input.btn.btn-primary type='submit'
+          =t('helpers.links.submit')
 -unless @admin_serial_numbers.empty?
   -content_for(:js_files) do
     javascript:

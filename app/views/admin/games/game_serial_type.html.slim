@@ -14,19 +14,19 @@
           = serial_type.type_name
     .control-group
       label.control-label
-        =t('admin.serial.serial_types')[SerialType::TYPE_PUBLIC]
+        =SerialType.human_attribute_name(:serial_number_types)[SerialType::TYPE_PUBLIC]
       .controls
         - @public_serial_types.each do |serial_type|
           = check_box 'game[serial_type_arr]', serial_type.id, {:checked=>@game.serial_type_arr.include?(serial_type.id) }
           = serial_type.type_name
     .control-group
       label.control-label for='type_desc'
-        =t('admin.serial.serial_types')[SerialType::TYPE_BASIC]
+        =SerialType.human_attribute_name(:serial_number_types)[SerialType::TYPE_BASIC]
       .controls
         - @private_serial_types.each do |serial_type|
           = check_box 'game[serial_type_arr]', serial_type.id, {:checked=>@game.serial_type_arr.include?(serial_type.id) }
           = serial_type.type_name
     .control-group
       .controls
-        = f.submit t('helpers.links.submit'), :class=>'btn btn-primary'
+        = f.submit(t('helpers.links.submit'), class: 'btn btn-primary')
 

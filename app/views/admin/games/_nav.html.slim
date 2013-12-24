@@ -1,4 +1,4 @@
 -content_for :sidebar do
-  li= link_to t('admin.titles.games'), admin_games_path
-  li= link_to t('admin.titles.serial_type'), admin_serial_types_path
-  li= link_to t('admin.titles.recommand'), admin_recommendations_path
+  li= link_to Game.model_name.human, admin_games_path
+  li= link_to GameSerialNumber.human_attribute_name(:serial_type), admin_serial_types_path
+  li= link_to Recommendation.model_name.human, admin_recommendations_path

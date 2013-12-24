@@ -1,12 +1,15 @@
 =render 'nav'
 =content_for(:content) do
-  h3=t('admin.recommendation.types')[@require_type.to_i]
-  = form_for(@recommendation, :html => {:multipart => true}, :url => { :action => "create"}, :class=>'form-horizontal') do |f|
+  - if @recommendation.picture.exists?
+    = image_tag(@recommendation.picture.url, :border =>1)
+  - else
+    img src="/images/recommendation/tops/default.jpg" /
+  h3=t('admin.recommendation.types')[@recommendation.recommend_type]
+  = form_for(@recommendation, :html => {:multipart => true}, :url => { :action => "update"}, :class=>'form-horizontal') do |f|
     - @recommendation.errors.any?
       - @recommendation.errors.full_messages.each do |msg|
         =msg
-      =@recommendation.errors
-    = hidden_field_tag "recommendation[recommend_type]", @require_type
+    = hidden_field_tag "recommendation[recommend_type]", @recommendation.recommend_type
     .control-group
       - if params[:recommendation_type].to_i == Recommendation::RECOMMEND_TYPE_NORMAL
         - if @games.empty?

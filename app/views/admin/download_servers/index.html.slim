@@ -4,8 +4,8 @@
     table.table.table-bordered.table-condensed.table-striped
       thead
         tr
-          th=t('admin.servers.name')
-          th=t('admin.servers.ip')
+          th= DownloadServer.human_attribute_name(:name)
+          th= DownloadServer.human_attribute_name(:server_ip)
           th=t('helpers.actions')
       -@download_servers.each do |download_server|
         tr

@@ -1,0 +1,11 @@
+=render 'admin/games/nav'
+-content_for :content do
+  - if @recommendation.picture.exists?
+    = image_tag(@recommendation.picture.url, :border =>1)
+  - else
+    img src="/images/recommendation/tops/default.jpg" /
+
+  h3=t('admin.recommendation.types')[@recommendation.recommend_type]
+  a href=admin_recommendations_path
+    i.icon-arrow-left
+    =t('helpers.links.back')

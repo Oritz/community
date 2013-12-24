@@ -27,10 +27,10 @@ html lang="en"
           a.brand href="#"Sonkwo Dashboard
           .container.nav-collapse
             ul.nav
-              li= link_to t('admin.titles.my_page'), admin_path
-              li= link_to t('admin.titles.games'), admin_games_path
-              li= link_to t('admin.titles.clients'), admin_clients_path
-              li= link_to t('admin.titles.servers'), admin_download_servers_path
+              li= link_to(t('admin.titles.my_page'), admin_path)
+              li= link_to(Game.model_name.human, admin_games_path)
+              li= link_to(ClientUpdate.model_name.human, admin_clients_path)
+              li= link_to(DownloadServer.model_name.human, admin_download_servers_path)
               li.divider
             ul.nav.pull-right
               li= link_to t('helpers.links.logout'), destroy_account_session_path

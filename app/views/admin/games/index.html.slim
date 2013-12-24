@@ -1,7 +1,7 @@
 =render 'nav'
 
 -content_for :content do
-  h3 =I18n.t 'admin.titles.games'
+  h3 =Game.model_name.human
   =form_tag '/admin/games', :method => :get do
     span
       input#search_text name='query' type='text' /
