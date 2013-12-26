@@ -1,6 +1,7 @@
 //= require misc
 //= require image
 //= require qiniu
+//= require textarea_form
 
 function posts(options) {
   options = $.extend(true, {
@@ -44,6 +45,7 @@ function posts(options) {
       else
         load_posts(data.data, 0, options.templates, options.wrapper, options.csrf);
       options.success(data.data);
+      
     }
     else {
       posts.status = 2;
@@ -123,11 +125,27 @@ function start_posts(url) {
     if(data.status != "success")
       return;
     var templates = data.data;
+    function after_success_post(data) {
+      show_message(data);
+      var status = data.status;
+      if(status == "success") {
+        $(".image-upload-block .image-upload-result .image-upload-before").hide();
+        $("form.new_talk [name='talk[content]']").attr("value", "");
+        add_post_to_wrapper(templates.talk, data.data, $wrapper);
+      }
+    }
 
+    textarea_form({
+      action_url: "/home/posts.json",
+      form_selector: "#new_talk",
+      limit_num: 140,
+      success: after_success_post,
+    });
     // new_talk form
+    /*
     $("form.new_talk").submit(function() {
       var that = this;
-      if ($(this).find('#post_submit').attr('disable') !== '') {
+      if ($(this).find('input[name="commit"]').attr('disable') !== '') {
         $(this).ajaxSubmit({
           url: "/talks.json",
           beforeSend: function() {
@@ -154,7 +172,8 @@ function start_posts(url) {
       }
       return false;
     });
-
+    */
+   
     // scroll event
     $(window).scroll(function() {
       if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
