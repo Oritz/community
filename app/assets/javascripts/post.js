@@ -136,7 +136,6 @@ function start_posts(url) {
     }
 
     textarea_form({
-      action_url: "/home/posts.json",
       form_selector: "#new_talk",
       limit_num: 140,
       success: after_success_post,

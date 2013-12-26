@@ -79,9 +79,7 @@ function textarea_form(options) {
   };
   
   // Bind events
-  $post_form.submit(function () {
-    return false;
-  });
+  $post_form.submit(function () {return false;});
   $post_form.on('keyup', 'textarea', textarea_refresh);
   $post_form.on('click', 'input[type="submit"]', form_submit);
 } 
