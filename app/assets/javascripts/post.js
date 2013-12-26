@@ -126,14 +126,15 @@ function start_posts(url) {
 
     // new_talk form
     $("form.new_talk").submit(function() {
+      var that = this;
       if ($(this).find('#post_submit').attr('disable') !== '') {
         $(this).ajaxSubmit({
           url: "/talks.json",
           beforeSend: function() {
             // check form
-            var content = $.trim($(this).find("fomr.new_talk [name='talk[content]']").attr("value"));
-            if(get_unicode_length(content) > 140) {
-              Messenger().post("字数超过限制了")
+            var content = $.trim($(that).find("#talk_content").val());
+            if(content.length > 140) {
+              Messenger().post("字数超过限制了");
               return false;
             }
             else if(content == "")

@@ -1,6 +1,7 @@
 class CloudStoragesController < ApplicationController
   before_filter :sonkwo_authenticate_account, :except => [:create]
   protect_from_forgery :except => :create
+  layout false
 
   def index
   end

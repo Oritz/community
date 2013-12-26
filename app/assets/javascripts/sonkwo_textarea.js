@@ -6,7 +6,7 @@ var bind_textarea_limit = function(textarea_input, textarea_hint, textarea_submi
 
   var default_text = '<span class="countTxt">还能输入</span><strong class="maxNum">' + limit_num + '</strong><span>个字</span>';
   var textarea_input_trigger = function () {
-    var char_length = get_unicode_length(textarea_input.val());
+    var char_length = textarea_input.val().length;
     var disable_sumit = true;
     var hint_text = default_text;
     if (char_length === 0) {
