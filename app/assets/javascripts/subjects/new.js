@@ -33,7 +33,7 @@ $(document).ready(function () {
     $('#link_text_url').val('');
   }
   
-  // insert text into texterea
+  // insert text into textarea
   function insertAtCaret(textObj, textFeildValue) {  
     if(document.all && textObj.createTextRange && textObj.caretPos){       
         var caretPos = textObj.caretPos;      

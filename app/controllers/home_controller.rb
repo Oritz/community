@@ -47,7 +47,9 @@ class HomeController < ApplicationController
     else
       @stream_posts = []
     end
-
+    
+    logger.info @posts.inspect
+    
     respond_to do |format|
       format.html
       format.json

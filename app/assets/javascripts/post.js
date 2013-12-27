@@ -1,6 +1,7 @@
 //= require misc
 //= require image
 //= require qiniu
+//= require textarea_form
 
 function posts(options) {
   options = $.extend(true, {
@@ -44,6 +45,7 @@ function posts(options) {
       else
         load_posts(data.data, 0, options.templates, options.wrapper, options.csrf);
       options.success(data.data);
+      
     }
     else {
       posts.status = 2;
@@ -123,11 +125,26 @@ function start_posts(url) {
     if(data.status != "success")
       return;
     var templates = data.data;
+    function after_success_post(data) {
+      show_message(data);
+      var status = data.status;
+      if(status == "success") {
+        $(".image-upload-block .image-upload-result .image-upload-before").hide();
+        $("form.new_talk [name='talk[content]']").attr("value", "");
+        add_post_to_wrapper(templates.talk, data.data, $wrapper);
+      }
+    }
 
+    textarea_form({
+      form_selector: "#new_talk",
+      limit_num: 140,
+      success: after_success_post,
+    });
     // new_talk form
+    /*
     $("form.new_talk").submit(function() {
       var that = this;
-      if ($(this).find('#post_submit').attr('disable') !== '') {
+      if ($(this).find('input[name="commit"]').attr('disable') !== '') {
         $(this).ajaxSubmit({
           url: "/talks.json",
           beforeSend: function() {
@@ -156,7 +173,8 @@ function start_posts(url) {
       }
       return false;
     });
-
+    */
+   
     // scroll event
     $(window).scroll(function() {
       if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
@@ -222,11 +240,21 @@ function start_posts(url) {
     }).on("submit", ".post-item .comments-block form", function() {
       $(this).ajaxSubmit({
         url: $(this).attr("action") + ".json",
+        context: $(this).parents(".post-item"),
         success: function(data, statusText, xhr, $form) {
           show_message(data);
           if(data.status == "success") {
+            var $item = $(Mustache.render(templates.comment, data.data));
+            console.log($item.html());
+            var comment_line = $(this).find(".comment-op .comment-count");
+            var comment_count = parseInt(comment_line.html()) + 1;
+            comment_line.html(comment_count);
+            $(this).find(".comments").prepend($item);
+            $(this).find("[name='original_id']").val("").trigger("change");
+            $wrapper.masonry();
           }
-        }
+        },
+        clearForm: true
       });
       return false;
     }).on("click", ".post-item .comments-block .comments .comment-reply", function() {
@@ -237,12 +265,14 @@ function start_posts(url) {
       var comment_id = parseInt($(this).val());
       if(comment_id > 0) {
         var nick_name = $(this).parents(".comments-block").find("[comment_id="+comment_id+"]").attr("nick_name");
-        $(this).parent().find(".reply-name").html(nick_name);
+        $(this).parent().find(".reply-name").html("回复：" + nick_name);
       }
       else
         $(this).parent().find(".reply-name").html("");
     }).on("click", ".post-item .comments-block form .cancel", function() {
-      $(this).parents("form").find("[name='original_id']").val("").trigger("change");
+      var comment_form = $(this).parents("form");
+      comment_form.find("textarea").val("");
+      comment_form.find("[name='original_id']").val("").trigger("change");
     });
   });
 }

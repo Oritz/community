@@ -1,4 +1,3 @@
-//= require sonkwo_textarea
 function show_level($blocks) {
   var total_level = 20;
   var $levels = $blocks.find(".total-level .level");
