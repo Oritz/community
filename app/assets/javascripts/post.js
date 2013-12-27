@@ -129,7 +129,7 @@ function start_posts(url) {
       show_message(data);
       var status = data.status;
       if(status == "success") {
-        $(".image-upload-block .image-upload-result .image-upload-before").hide();
+        $(".image-upload-block").hide();
         $("form.new_talk [name='talk[content]']").attr("value", "");
         add_post_to_wrapper(templates.talk, data.data, $wrapper);
       }
@@ -261,6 +261,7 @@ function start_posts(url) {
       var $comment = $(this).parents(".comment-detail");
       var $original = $(this).parents(".comments-block").find("form [name='original_id']");
       $original.val($comment.attr("comment_id")).trigger("change");
+      $(this).parents(".post-item").find("textarea").val("");
     }).on("change", ".post-item .comments-block form [name='original_id']", function() {
       var comment_id = parseInt($(this).val());
       if(comment_id > 0) {
@@ -325,11 +326,11 @@ function like_or_unlike_post($post, op) {
   var url = "";
   var method = "";
   if(op == "like") {
-    url = "posts/"+post_id+"/like";
+    url = "/posts/"+post_id+"/like";
     method = "PUT";
   }
   else if(op == "unlike") {
-    url = "posts/"+post_id+"/like";
+    url = "/posts/"+post_id+"/like";
     method = "DELETE";
   }
   else
