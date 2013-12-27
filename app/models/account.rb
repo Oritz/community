@@ -150,6 +150,10 @@ class Account < ActiveRecord::Base
     Post.where(group_id: group_ids).all_public
   end
 
+  ###########################################
+  # GroupActions
+  ###########################################
+
   def post_count
     self.talk_count + self.subject_count + self.recommend_count
   end

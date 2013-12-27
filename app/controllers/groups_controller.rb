@@ -28,7 +28,7 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     @new_talk = Talk.new
     @new_talk.group = @group
-    @cloud_storage_settings = CloudStorage.settings(current_account)
+    @cloud_storage_settings = CloudStorage.settings(current_account) if current_account
     @tags = @group.tags
     @newcomers = @group.accounts.order("groups_accounts.created_at DESC").limit(21)
     @is_added = current_account ? @group.accounts.include?(current_account) : false
@@ -135,11 +135,18 @@ class GroupsController < ApplicationController
 
   def remove_user
     @group = Group.find(params[:id])
-    @group.accounts.delete current_account if current_account && current_account.id != @group.creator.id
+    if @group.creator.id == current_account.id
+      respond_to do |format|
+        format.html { redirect_to :back, error: I18n.t("account.quit_failed_as_a_creator") }
+        format.json { render json: { status: "error", message: I18n.t("account.quit_failed_as_a_creator") } }
+      end
+    else
+      @group.accounts.destroy current_account if current_account && current_account.id != @group.creator.id
 
-    respond_to do |format|
-      format.html { redirect_to :back }
-      format.json { render json: { status: "success", data: { account_id: current_account.id, group_id: @group.id } } }
+      respond_to do |format|
+        format.html { redirect_to :back }
+        format.json { render json: { status: "success", data: { account_id: current_account.id, group_id: @group.id } } }
+      end
     end
   end
 

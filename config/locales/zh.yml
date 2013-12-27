@@ -131,7 +131,8 @@ zh:
         greater_than_start_date: "必须在起始日期之后"
         record_invalide: "无效的记录"
 
-
+  account:
+    quit_failed_as_a_creator: "管理员无法退出小组"
   pages:
     send_pm: "发私信"
     remove_fans: "移除粉丝"

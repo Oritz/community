@@ -42,6 +42,9 @@ class Post < ActiveRecord::Base
   belongs_to :detail, polymorphic: true
   delegate :content, :title, to: :detail
 
+  has_one :image, class_name: 'PostImage', foreign_key: 'post_id'
+  delegate :url, to: :image, prefix: true
+
   # Recommend Association
   belongs_to :original, class_name: 'Post', foreign_key: 'original_id'
   delegate :content, :title, :creator, to: :original, prefix: true
@@ -65,7 +68,7 @@ class Post < ActiveRecord::Base
   scope :pending_of_account, lambda { |account| where("account_id=? AND status=?", account.id, Post::STATUS_PENDING) }
 
   scope :all_public, where(status: self::STATUS_NORMAL)
-  scope :includes_for_a_stream, includes([:detail, :creator, original: [:detail]])
+  scope :includes_for_a_stream, includes([:image, :detail, :creator, original: [:detail]])
 
   # Methods
   class << self
