@@ -23,7 +23,7 @@ class TalksController < ApplicationController
       if @talk.save
         @talk.post.detail = @talk
         format.html { redirect_to @talk.post, notice: 'Talk was successfully created.' }
-        format.json { render_for_api :post_info, json: @talk.post, root: "data", meta: {status: "success"} }
+        format.json
       else
         format.html { raise "TODO:" } #TODO:
         format.json { render json: { status: "fail", data: @talk.errors } }
