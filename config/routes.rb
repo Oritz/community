@@ -13,7 +13,10 @@ SonkwoCommunity::Application.routes.draw do
       put 'add_user'
       delete 'remove_user'
       post 'add_tags'
+      get 'posts'
+      get 'members'
     end
+    resources :talks, only: [:create]
   end
 
   resources :posts, only: [:show, :destroy] do
