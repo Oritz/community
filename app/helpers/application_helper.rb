@@ -5,7 +5,7 @@ module ApplicationHelper
   end
 
   def show_account_info?
-    if current_account && current_account.update_tag.to_i >= InformationsController::STEPS.count
+    if current_account && current_account.update_tag.to_i >= Account::UPDATE_TAG_FINISH
       true
     else
       false

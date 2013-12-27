@@ -11,7 +11,7 @@ html xmlns="http://www.w3.org/1999/xhtml"
         ul
           li
             a href="#" target="_blank" 欢迎页
-          li  
+          li
             = link_to "商城", Settings.subdomains.store, target: "_blank"
           li
             = link_to "社区", Settings.subdomains.community, target: "_blank"
@@ -26,7 +26,10 @@ html xmlns="http://www.w3.org/1999/xhtml"
             = image_tag("logo.png")
         .citic_topLogo_login
           .citic_topLogo_login_dl
-            = link_to "注册", new_account_registration_path
+            - if @show_register
+              = link_to "注册", new_account_registration_path
+            - else
+              = link_to "登录", new_account_session_path
     div.logo_container
       = yield
     div.footer

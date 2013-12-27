@@ -28,11 +28,18 @@
     .fans_bom_l_yy
       span.fans_bom_sx
         a href="javascript:void(0);" =I18n.t("pages.send_pm")
-      span.fans_bom_yc
-        a href="javascript:void(0);" class="remove-fans" =I18n.t("pages.remove_fans")
       span.fans_bom_jb
         a href="javascript:void(0);" class="tip-off-user" =I18n.t("pages.tip-off")
     span.fans_bom_gz
       span
-        a href="javascript:void(0);" class="btn btn-danger follow-user" =I18n.t("pages.follow_user")
-        a href="javascript:void(0);" class="btn btn-danger unfollow-user" style="display: none;" =I18n.t("pages.unfollow_user")
+        - if !user.relationship || user.relationship == Friendship::IRRESPECTIVE || user.relationship == Friendship::FOLLOWER
+          a href="javascript:void(0);" class="btn btn-danger follow-user" =I18n.t("pages.follow_user")
+          a href="javascript:void(0);" class="btn btn-danger unfollow-user" style="display: none;" =I18n.t("pages.unfollow_user")
+        - elsif user.relationship == Friendship::IS_SELF
+          span
+        - else
+          a href="javascript:void(0);" class="btn btn-danger follow-user" style="display: none;" =I18n.t("pages.follow_user")
+          a href="javascript:void(0);" class="btn btn-danger unfollow-user" =I18n.t("pages.unfollow_user")
+      - if user.relationship && user.relationship == Friendship::MUTUAL
+        span.mutual
+          | mutual

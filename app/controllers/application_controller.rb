@@ -38,8 +38,8 @@ class ApplicationController < ActionController::Base
   end
 
   def load_for_layout
-    if _layout == "application"
-      @friends = Account.friends(current_account).limit(12).order("updated_at DESC")
+    if _layout == "application" && request.format != "json"
+      @friends = Account.friends(current_account).limit(12).order("updated_at DESC") if current_account
     end
   end
 

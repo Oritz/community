@@ -129,6 +129,7 @@ zh:
         odd: "必须为单数"
         even: "必须为双数"
         greater_than_start_date: "必须在起始日期之后"
+        record_invalide: "无效的记录"
 
 
   pages:
@@ -146,3 +147,7 @@ zh:
     all_friends: "全部好友"
     my_friends: "我的好友"
     manage: "管理"
+    quit: "退出"
+    add_group: "加入小组"
+    group_creator: "创建者"
+    group_members: "成员"

@@ -4,21 +4,9 @@ class Post < ActiveRecord::Base
     timestamp: "created_at",
     status: "status",
     find_options: {include: [:detail, :creator]}
-  acts_as_polymorphic name: "detail"
-  acts_as_api
-  api_accessible :post_info do |t|
-    t.add :creator
-    t.add :id
-    t.add :detail
-    t.add :detail_type
-    t.add :comment_count
-    t.add :recommend_count
-    t.add :like_count
-    t.add :created_at
-    t.add :updated_at
-  end
+  #acts_as_polymorphic name: "detail"
 
-  attr_accessible :comment
+  attr_accessible :recommendation
   #attr_protected :post_type, :privilege, :status, :comment_count, :recommend_count, :like_count, :created_at, :updated_at
   # Constants
   # Post Status
@@ -37,15 +25,27 @@ class Post < ActiveRecord::Base
 
   # Callbacks
   after_initialize :default_values
+  before_create :add_post_count
+  after_create do
+    Sonkwo::Exp.increase("exp_recommend_post", self.creator, self.created_at) if self.original && self.original_creator != self.creator
+  end
 
   # Associations
-  belongs_to :creator, class_name: 'Account', foreign_key: 'account_id'
+  belongs_to :creator, class_name: 'Account', foreign_key: 'account_id', inverse_of: :posts
+  delegate :nick_name, :avatar, :level, to: :creator, prefix: true
   has_many :accounts_like_posts
   has_many :likers, through: :accounts_like_posts, source: :account
   has_many :comments, class_name: 'Comment'
   has_many :recommend_posts, class_name: 'Recommend', foreign_key: 'parent_id'
-  belongs_to :group
+  belongs_to :group, inverse_of: :posts
   has_many :post_images
+  belongs_to :detail, polymorphic: true
+  delegate :content, :title, to: :detail
+
+  # Recommend Association
+  belongs_to :original, class_name: 'Post', foreign_key: 'original_id'
+  delegate :content, :title, :creator, to: :original, prefix: true
+  belongs_to :parent, class_name: 'Post', foreign_key: 'parent_id'
 
   # Validations
   validates :privilege, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: self::PRIVILEGE_PRIVATE }
@@ -54,7 +54,7 @@ class Post < ActiveRecord::Base
   validates :recommend_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :like_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :creator, presence: true
-  validates :comment, length: { maximum: 140 }
+  validates :recommendation, length: { maximum: 140, message: I18n.t("post.recommendation_is_too_long") }, allow_blank: true
   #validates :detail_type, presence: true
   #validates :detail_id, presence: true
   validate :group_should_be_added
@@ -64,7 +64,17 @@ class Post < ActiveRecord::Base
   scope :recommend_posts_with_account, lambda { |post_id| where("original_id=? AND status=?", post_id, Post::STATUS_NORMAL).includes(:creator).order("created_at DESC") }
   scope :pending_of_account, lambda { |account| where("account_id=? AND status=?", account.id, Post::STATUS_PENDING) }
 
+  scope :all_public, where(status: self::STATUS_NORMAL)
+  scope :includes_for_a_stream, includes([:detail, :creator, original: [:detail]])
+
   # Methods
+  class << self
+    def for_a_stream(min_id, order, user)
+      # TODO: add visible(public/private) here
+      min_id > 0 ? where("posts.id < ?", min_id).order(order).includes_for_a_stream : order(order).includes_for_a_stream
+    end
+  end
+
   protected
   def default_values
     self.status ||= self.class::STATUS_NORMAL
@@ -74,8 +84,21 @@ class Post < ActiveRecord::Base
     self.like_count ||= 0
   end
 
+  def add_post_count
+    if self.parent && self.detail_type != "Talk" && self.detail_type != "Subject"
+      self.creator.recommend_count += 1
+      self.parent.recommend_count += 1
+      self.parent.save!
+      if self.original.id != self.parent.id
+        self.original.recommend_count += 1
+        self.original.save!
+      end
+      self.creator.save!
+    end
+  end
+
   def group_should_be_added
-    if self.group && self.creator && !self.creator.groups.include?(self.group)
+    if self.group && self.creator && !self.group.accounts.include?(self.creator)
       errors.add(:group, I18n.t("models.post.error_group_not_added"))
     end
   end

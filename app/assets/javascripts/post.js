@@ -139,6 +139,8 @@ function start_posts(url) {
             }
             else if(content == "")
               return false;
+            else
+              return true;
           },
           success: function(data) {
             show_message(data);
@@ -190,10 +192,8 @@ function start_posts(url) {
       }
 
       var $output = $(Mustache.render(templates.recommend_pop, {
-        creator: {
-          id: creator_id,
-          nick_name: creator_name
-        },
+        creator_id: creator_id,
+        creator_nick_name: creator_name,
         id: post_id,
         content: content
       }));

@@ -10,4 +10,4 @@ ul.unstyled
               = liker.nick_name
               = I18n.t("likes this #{@post.class.to_s.downcase}")
 div
-  = will_paginate @likers
+  = paginate @likers

@@ -2,4 +2,4 @@
   .groups_inside
   -@users.each do |user|
     = render partial: "user", locals: { user: user }
-  = will_paginate @users
+  = paginate @users
