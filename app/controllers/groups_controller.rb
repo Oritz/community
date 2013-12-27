@@ -1,5 +1,7 @@
+require 'sonkwo/behavior/fetcher'
+
 class GroupsController < ApplicationController
-  before_filter :sonkwo_authenticate_account, except: [:index, :show]
+  before_filter :sonkwo_authenticate_account, except: [:index, :show, :posts, :members]
 
   # GET /groups
   # GET /groups.json
@@ -23,12 +25,13 @@ class GroupsController < ApplicationController
   # GET /groups/1
   # GET /groups/1.json
   def show
-    # TODO: rewrite the function without andy "select"
     @group = Group.find(params[:id])
+    @new_talk = Talk.new
+    @new_talk.group = @group
+    @cloud_storage_settings = CloudStorage.settings(current_account)
     @tags = @group.tags
     @newcomers = @group.accounts.order("groups_accounts.created_at DESC").limit(21)
     @is_added = current_account ? @group.accounts.include?(current_account) : false
-    #@subjects = Subject.sort_by_time_in_group(@group.id).paginate(page: params[:page], per_page: 10)
 
     respond_to do |format|
       format.html # show.html.slim
@@ -102,6 +105,22 @@ class GroupsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to groups_url }
       format.json { head :no_content }
+    end
+  end
+
+  def members
+    @group = Group.find(params[:id])
+    @members = @group.accounts.not_in([@group.creator_id]).page(params[:page]).per(12)
+    @show_creator = true if !params[:page] || params[:page].to_i <= 0
+  end
+
+  def posts
+    @group = Group.find(params[:id])
+    stream = Stream::Group.new(current_account, @group, min_id: params[:end_id].to_i, order: "created_at DESC")
+    @stream_posts = stream.stream_posts.limit(9)
+    respond_to do |format|
+      format.html
+      format.json
     end
   end
 

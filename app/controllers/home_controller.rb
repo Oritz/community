@@ -1,3 +1,5 @@
+require "sonkwo/behavior/fetcher"
+
 class HomeController < ApplicationController
   before_filter :sonkwo_authenticate_account
   before_filter :check_update_tag, only: [:index]
@@ -12,7 +14,7 @@ class HomeController < ApplicationController
   end
 
   def groups
-    @groups = current_account.groups.order("created_at DESC").paginate(page: params[:page], per_page: 10)
+    @groups = current_account.groups.order("created_at DESC").page(params[:page]).per(10)
   end
 
   def people
@@ -21,12 +23,12 @@ class HomeController < ApplicationController
 
     select_items = %w(id nick_name exp follower_count following_count talk_count subject_count recommend_count is_mutual)
     if @type == "FANS"
-      @users = current_account.fans.select(select_items.join(",")).paginate(page: params[:page], per_page: 10);
+      @users = current_account.fans.select(select_items.join(",")).page(params[:page]).per(10)
       #current_account.notification.reset(:followed)
     elsif @type == "STARS"
-      @users = current_account.stars.select(select_items.join(",")).paginate(page: params[:page], per_page: 10);
+      @users = current_account.stars.select(select_items.join(",")).page(params[:page]).per(10)
     else
-      @users = Account.friends(current_account).select(select_items.join(",")).order("friendship.created_at DESC").paginate(page: params[:page], per_page: 10);
+      @users = Account.friends(current_account).select(select_items.join(",")).order("friendship.created_at DESC").page(params[:page]).per(10)
     end
   end
 
@@ -35,27 +37,22 @@ class HomeController < ApplicationController
   end
 
   def posts
-    require "sonkwo/behavior/fetcher"
     params[:type] ||= "posts"
     if params[:type] == "posts"
-      fetcher = Sonkwo::Behavior::Fetcher.new(current_account)
-      if params[:end_id]
-        @posts = fetcher.behaviors(limit: 9, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
-      else
-        @posts = fetcher.behaviors(limit: 9, status: Post::STATUS_NORMAL, order: "created_at DESC")
-      end
+      stream = Stream::Account.new(current_account, nil, min_id: params[:end_id].to_i, order: "created_at DESC")
+      @stream_posts = stream.stream_posts.limit(9)
     elsif params[:type] == "groups"
-      @posts = Subject.subjects_in_groups_added(current_account.id, 9)
-      @posts = @posts.where("subjects.id < ?", params[:end_id]) if params[:end_id]
+      stream = Stream::Group.new(current_account, nil, min_id: params[:end_id].to_i, order: "created_at DESC")
+      @stream_posts = stream.stream_posts.limit(9)
     else
-      @posts = []
+      @stream_posts = []
     end
     
     logger.info @posts.inspect
     
     respond_to do |format|
       format.html
-      format.json { render_for_api :post_info, json: @posts, root: "data", meta: {status: "success"} }
+      format.json
     end
   end
 
@@ -69,7 +66,7 @@ class HomeController < ApplicationController
   end
 
   def recommended
-    @recommends = Recommend.account_recommended(current_account.id).paginate(page: params[:page], per_page: 10)
+    @recommends = Recommend.account_recommended(current_account.id).page(params[:page]).per(10)
     Post.downcast(@recommends, "original")
     current_account.notification.reset(:recommended)
 

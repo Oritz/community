@@ -14,6 +14,10 @@ class TalksController < ApplicationController
   def create
     @talk = Talk.new(params[:talk])
     @talk.creator = current_account
+    if params[:group_id]
+      @group = Group.find(params[:group_id])
+      @talk.group = @group
+    end
 
     respond_to do |format|
       if @talk.save

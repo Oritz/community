@@ -9,4 +9,4 @@
       - @photos.each do |photo|
         li
           = image_tag(photo.url)
-    = will_paginate(@photos)
+    = paginate(@photos)

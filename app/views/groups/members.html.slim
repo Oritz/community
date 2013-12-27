@@ -1,0 +1,9 @@
+.sns_release
+  .groups_inside
+    - if @show_creator
+      p= I18n.t("pages.group_creator")
+      = render partial: "users/user", locals: { user: @group.creator }
+    p= I18n.t("pages.group_members")
+    - @members.each do |user|
+      = render partial: "users/user", locals: { user: user }
+  = paginate @members

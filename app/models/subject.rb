@@ -11,17 +11,6 @@ class Subject < ActiveRecord::Base
   #  joins: "INNER JOIN posts ON posts.id=subjects.id",
   #  find_options: {include: [post: [:creator]]}
   acts_as_api
-  api_accessible :post_info do |t|
-    t.add :creator
-    t.add :id
-    t.add :comment_count
-    t.add :recommend_count
-    t.add :like_count
-    t.add :created_at
-    t.add :updated_at
-    t.add :content
-    t.add :title
-  end
   api_accessible :preview do |t|
     t.add :content
     t.add :title
@@ -31,7 +20,8 @@ class Subject < ActiveRecord::Base
   #exp_hookable account: "self.creator", setting_name: "exp_subject_value"
 
   # Callbacks
-  before_save :add_subject_count, :add_exp
+  before_save :add_subject_count
+  before_save :add_exp
 
   # Validations
   validates :content, presence: true, if: Proc.new { |a| a.status != Post::STATUS_PENDING }

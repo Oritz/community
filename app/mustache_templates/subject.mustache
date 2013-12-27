@@ -1,15 +1,15 @@
-<div class="item_Container post-item" post_id={{id}} creator_id={{creator.id}} creator_name={{creator.nick_name}}>
+<div class="item_Container post-item" post_id={{id}} creator_id={{creator_id}} creator_name={{creator_nick_name}}>
   <div class="item item_GR">
     <div class="item_GR_top">
       <div class="item_GR_top_tx_kuang">
         <div class="radius3px item_GR_top_tx top_txvip">
-          <img src="{{creator.avatar}}" width="60" height="60">
+          <img src="{{creator_avatar}}" width="60" height="60">
         </div>
       </div>
       <div class="item_GR_sns_release_data_top_r">
         <div class="item_GR_sns_release_data_top_dj">
           <span class="item_GR_top_dj_id">
-            <a class="snshideid" href="/users/{{creator.id}}">{{creator.nick_name}}</a>
+            <a class="snshideid" href="/users/{{creator_id}}">{{creator_nick_name}}</a>
             <div class="snsshowid">
               <p><a href="#">举报</a></p>
             </div>
@@ -17,18 +17,18 @@
         </div>
         <div class="item_GR_sns_release_data_top_cj">
           <span class="item_GR_top_dj_dj">
-            <a href="javascript:void(0);" target="_blank">Lv {{creator.level}}</a>
+            <a href="javascript:void(0);" target="_blank">Lv {{creator_level}}</a>
           </span>
           <span class="item_GR_top_dj_dj_sj total-level">
-            <i class="item_GR_top_dj_dj_sj_jdt level" level={{creator.level}}></i>
+            <i class="item_GR_top_dj_dj_sj_jdt level" level={{creator_level}}></i>
           </span>
         </div>
       </div>
     </div>
     <div class="article_cent">
-      <h2><a href="javascript:void(0);">{{detail.title}}</a></h2>
+      <h2><a href="javascript:void(0);">{{title}}</a></h2>
       <div class="article_cent_text">
-        <p class="post-content">{{detail.content}}</p>
+        <p class="post-content">{{content}}</p>
       </div>
       <div class="article_cent_text_xx">
         <span class="text_xx_time">{{created_at}}</span>
@@ -43,7 +43,7 @@
     <div class="img_cent">
       <a href="#" target="_blank">
         {{#detail.image_url}}
-          <img src="{{detail.image_url}}?imageView/2/w/326">
+          <img src="{{image_url}}?imageView/2/w/326">
         {{/detail.image_url}}
       </a>
     </div>

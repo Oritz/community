@@ -25,47 +25,57 @@
       .groups_b_cz_inner
         - if @is_added
           span.groups_b_cz_tc
-            = link_to "退出", remove_user_group_path(@group), method: :delete
-        - else   
+            = link_to I18n.t("pages.quit"), remove_user_group_path(@group), method: :delete
+        - else
           span.groups_b_cz_jr_inner
-            = link_to "加入小组", add_user_group_path(@group), method: :put
+            = link_to I18n.t("pages.add_group"), add_user_group_path(@group), method: :put
   .radius3px.sns_release_enter
     #msgBox
-      form
+      = form_for([@new_talk.group, @new_talk]) do |f|
+        = f.hidden_field :cloud_storage_id
         .countTxt_block
           span.countTxt 还能输入
           strong.maxNum 140
           span 个字
         .conBoxwidth1
-          textarea#conBox.f-text name="conBox"
+          = f.text_area :content, class: "f-text", style: "width: 638px;height:90px;"
         .sendBtn_tr_width1
           .sendBtn_tr
             .sendBtn_tr_L
               span.emotion
-                a href="#"
+                a href="javascript:void(0);" 表情
               span.emotion_img
-                a href="#"
-              span.emotion_ltv
-                a href="#"
+                a href="javascript:void(0);" class="post-pic" 图片
               span.emotion_text
-                a href="#"
-              span.emotion_xian \
-              span.emotion_more
-                a.snshide href="#"
-                .snsshow
-                  p
-                    a href="#"
-                  p
-                    a href="#"
-                  p
-                    a href="#"
+                = link_to "长文章", new_subject_path
+              span.emotion_xian
             .sendBtn_tr_R
-              span.emotion_more
-                a.snshide1 href="#"
-                .snsshow1
-                  p
-                    a href="#"
-              input#sendBtn title="快捷键 Ctrl+Enter" type="button" value="发布"
+              .snsshow1
+                p
+                  a href="#"  举报
+              = f.submit "发布", id: "post_submit", disable: ""
+      .image-upload-block style="display: none;"
+        .image-upload-form style="display: none;"
+          form#qiniu_uploader method="post" action="http://up.qiniu.com/" enctype="multipart/form-data"
+            input name="token" value=@cloud_storage_settings[:upload_token]
+            input name="x:account_id" value=current_account.id
+            input name="x:timestamp" value=@cloud_storage_settings[:now]
+            input name="x:sonkwo_token" value=@cloud_storage_settings[:sonkwo_token]
+            input name="x:bucket_name" value="sonkwo-post"
+            input name="file" type="file"
+            input name="submit" type="submit"
+        .image-upload-result
+          span.image-upload-before
+            a href="javascript:void(0);" class="image-upload-btn" 上传图片
+          span.image-upload-loading style="display: none;"
+          span.image-upload-after style="display: none;"
+            div
+              img src="" /
+            div
+              span
+                a href="javascript:void(0);" class="image-upload-cancel" 取消上传
+              span
+                a href="javascript:void(0);" class="image-upload-reselect" 重新选择
 .post_member
   .post.fl
     .prompt

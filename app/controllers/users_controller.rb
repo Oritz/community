@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     @groups = @target.groups.joins("LEFT JOIN groups_accounts AS g ON g.group_id=id AND g.account_id=#{current_account ? current_account.id : 0}")
                             .select("groups.*, g.account_id AS gaid")
                             .order("created_at DESC")
-                            .paginate(page: params[:page], per_page: 10)
+                            .page(params[:page]).per(10)
 
     respond_to do |format|
       format.html
@@ -33,31 +33,29 @@ class UsersController < ApplicationController
 
   def posts
     @target = Account.find(params[:id])
-    fetcher = Sonkwo::Behavior::Fetcher.new(current_account, target: @target)
-    if params[:end_id]
-      @posts = fetcher.behaviors(limit: 9, max_id: params[:end_id], status: Post::STATUS_NORMAL, order: "created_at DESC")
-    else
-      @posts = fetcher.behaviors(limit: 9, status: Post::STATUS_NORMAL, order: "created_at DESC")
-    end
+    stream = Stream::Account.new(current_account, @target, min_id: params[:end_id].to_i, order: "created_at DESC")
+    @stream_posts = stream.stream_posts.limit(9)
 
     respond_to do |format|
       format.html
-      format.json { render_for_api :post_info, json: @posts, root: "data", meta: {status: "success"} }
+      format.json
     end
   end
 
   def people
     @target = Account.find(params[:id])
-    show_fans = params[:type] ? (params[:type].downcase == "fans") : false
-
-    select_items = %w(id nick_name exp follower_count following_count talk_count subject_count recommend_count)
-    if show_fans
-      @type = "FANS"
-      @users = @target.people_relation_with_visitor(visitor: current_account, select: select_items.join(","), type: Friendship::FOLLOWER, page: params[:page], per_page: 10)
+    params[:type] ||= "friends"
+    case params[:type].downcase
+    when "stars"
+      show_type = "stars"
+    when "fans"
+      show_type = "fans"
     else
-      @type = "STARS"
-      @users = @target.people_relation_with_visitor(visitor: current_account, select: select_items.join(","), type: Friendship::FOLLOWING, page: params[:page], per_page: 10)
+      show_type = "friends"
     end
+
+    relation = Relation::Account.new(current_account, @target, show_type, order: "created_at DESC", paginate: {per: 9, page: params[:page]})
+    @users = relation.relation_accounts
   end
 
   def follow

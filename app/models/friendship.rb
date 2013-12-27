@@ -3,8 +3,11 @@ require 'sonkwo/exp'
 class Friendship < ActiveRecord::Base
   #acts_as_notificable callbacks: ["after_create"], slot: "followed", tos: ["account"]
   # Constants
+  # is_mutual field
   IS_SINGLE = 0
   IS_MUTUAL = 1
+
+  # relation
   FOLLOWER = 0
   FOLLOWING = 1
   MUTUAL = 2
@@ -29,6 +32,8 @@ class Friendship < ActiveRecord::Base
   scope :between_two_users, lambda { |visitor, *master_ids| true }
   scope :followers, lambda { |account| where(account_id: account.id).includes([:follower]) }
   scope :followings, lambda { |account| where(follower_id: account.id).includes([:account]) }
+
+  scope :mutual, where(is_mutual: self::IS_MUTUAL)
 
   # Methods
   private

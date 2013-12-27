@@ -10,12 +10,6 @@ class Account < ActiveRecord::Base
          :lockable, :timeoutable, :encryptable
 
   acts_as_api
-  api_accessible :post_info do |t|
-    t.add :id
-    t.add :avatar
-    t.add :nick_name
-    t.add :level
-  end
   api_accessible :comment_info do |t|
     t.add :id
     t.add :avatar
@@ -37,7 +31,8 @@ class Account < ActiveRecord::Base
 
   UPDATE_TAG_FINISH = 3 # There're three steps
 
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :nick_name, :gender, :tos_agreement
+  attr_accessor :relationship
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :nick_name, :gender, :tos_agreement, :relation_id
   #attr_accessor :crop_x, :crop_y, :crop_w, :crop_h, :avatar_upload_width, :avatar_upload_height
 
   #mount_uploader :avatar, AvatarUploader
@@ -51,7 +46,7 @@ class Account < ActiveRecord::Base
   has_many :groups_accounts
   has_many :groups, through: :groups_accounts
   has_many :accounts_like_posts
-  has_many :posts
+  has_many :posts, inverse_of: :creator
   has_many :like_posts, through: :accounts_like_posts, source: :post,
     after_add: :post_liked,
     after_remove: :post_unliked
@@ -82,12 +77,14 @@ class Account < ActiveRecord::Base
   validates :bonus, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :nick_name, presence: true, length: { in: 2..30 }, uniqueness: { case_sensitive: false, message: I18n.t("account.nick_name_is_used") }
   validates :email, presence: true, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, message: I18n.t("account.email_invalidate") }, length: { maximum: 128 }, uniqueness: { case_sensitive: false, message: I18n.t("account.email_is_used") }, allow_blank: false
-  validates :password, presence: true, format: { with: /\A.*(?=.{8,})(?=.*[a-zA-Z0-9!\#$%&?"]).*\z/, message: I18n.t("account.email_invalidate") }, on: :create
+  validates :password, presence: true, format: { with: /\A.*(?=.{8,})(?=.*[a-zA-Z0-9!\#$%&?"]).*\z/, message: I18n.t("account.email_invalidate") }, confirmation: true, on: :create
+  validates :password_confirmation, presence: true, on: :create
   validates :tos_agreement, acceptance: { accept: 'true' }, on: :create
 
   # Scopes
   scope :post_likers, lambda { |post_id| where("post_id=?", post_id).joins("INNER JOIN accounts_like_posts ON accounts_like_posts.account_id=accounts.id").order("accounts_like_posts.created_at DESC") }
   scope :friends, lambda { |account| joins("INNER JOIN friendship ON follower_id=accounts.id").where("account_id=? AND is_mutual=#{Friendship::IS_MUTUAL}", account.id) }
+  scope :not_in, lambda { |ids|  where("id NOT IN (?)", ids) }
 
   # Methods
   def pending_subject
@@ -100,13 +97,61 @@ class Account < ActiveRecord::Base
     subject.post
   end
 
-  def post_count
-    self.talk_count + self.subject_count + self.recommend_count
+  ###########################################
+  # SocialActions
+  ###########################################
+  def comment(target, text, opts={})
+    comment = Comment.new
+    comment.creator = self
+    comment.comment = text
+    comment.post = target
+    if opts[:original_id] && params[:original_id].to_i > 0
+      original_comment = comment.find(params[:original_id])
+      comment.original_author = original_comment.creator
+    end
+
+    result = comment.save
+    [result, comment]
   end
 
-  def avatar
-    return Settings.images.avatar.default unless self.cloud_storage
-    cloud_storage.url
+  def recommend(target, text, opts={})
+    post = Post.new
+    post.creator = self
+    post.parent = target
+    if target.detail_type == "Talk" || target.detail_type == "Subject"
+      post.original = target
+    else
+      post.original = target.original
+    end
+    post.recommendation = text
+    result = post.save
+    [result, post]
+  end
+
+  def posts_from_user(account)
+    # TODO: add public/private here
+    account.posts.all_public
+  end
+
+  def posts_from_users
+    # TODO: add public/private here
+    account_ids = [self.id]
+    account_ids = account_ids | self.stars.select(:id).map(&:id)
+    Post.where(account_id: account_ids).all_public
+  end
+
+  def posts_from_group(group)
+    # TODO: add public/private here
+    group.posts.all_public
+  end
+
+  def posts_from_groups
+    group_ids = self.groups.map(&:id)
+    Post.where(group_id: group_ids).all_public
+  end
+
+  def post_count
+    self.talk_count + self.subject_count + self.recommend_count
   end
 
   def level
@@ -122,71 +167,10 @@ class Account < ActiveRecord::Base
   def get_relation(account)
     return Friendship::IS_SELF if account.id == self.id
     friendship = Friendship.where("(account_id=? AND follower_id=?) OR (account_id=? AND follower_id=?)", self.id, account.id, account.id, self.id).first
-    return Friendship::IS_IRRESPECTIVE unless friendship
-    return Friendship::IS_MUTUAL if friendship.is_mutual
-    return Friendship::IS_FOLLOWER if friendship.account_id == self.id
-    Frienship::IS_FOLLOWING
-  end
-
-  def people_relation_with_visitor(options={})
-    options.assert_valid_keys(:visitor, :type, :select, :page, :per_page)
-    options[:visitor] ||= self
-    options[:type] ||= Friendship::FOLLOWER
-    options[:select] ||= "accounts.*"
-
-    accounts = self
-    if options[:type] == Friendship::FOLLOWER
-      accounts = accounts.fans
-    else
-      accounts = accounts.stars
-    end
-
-    accounts = accounts.order("friendship.created_at DESC").select(options[:select])
-
-    if self == options[:visitor]
-      accounts = accounts.select("is_mutual")
-      accounts = accounts.paginate(page: options[:page], per_page: options[:per_page])
-      accounts.each do |account|
-        class << account
-          attr_accessor :relation
-        end
-        if account.is_mutual == Friendship::IS_MUTUAL
-          account.relation = Friendship::MUTUAL
-        elsif options[:type] == Friendship::FOLLOWER
-          account.relation = Friendship::FOLLOWER
-        else
-          account.relation = Friendship::FOLLOWING
-        end
-      end
-
-      return accounts
-    end
-
-    accounts = accounts.paginate(page: options[:page], per_page: options[:per_page])
-    ids = accounts.collect { |a| a.id }
-
-    follower_relations = Friendship.where("account_id=#{options[:visitor].id} AND follower_id IN (?)", ids)
-    following_relations = Friendship.where("account_id IN (?) AND follower_id=#{options[:visitor].id}", ids)
-    follower_ids = follower_relations.collect { |r| r.follower_id }
-    following_ids = following_relations.collect { |r| r.account_id }
-
-    accounts.each do |account|
-      class << account
-       attr_accessor :relation
-      end
-      if account.id == options[:visitor].id
-        account.relation = Friendship::IS_SELF
-      elsif following_ids.include?(account.id) && follower_ids.include?(account.id)
-        account.relation = Friendship::MUTUAL
-      elsif follower_ids.include?(account.id)
-        account.relation = Friendship::FOLLOWER
-      elsif following_ids.include?(account.id)
-        account.relation = Friendship::FOLLOWING
-      else
-        account.relation = Friendship::IRRESPECTIVE
-      end
-    end
-    return accounts
+    return Friendship::IRRESPECTIVE unless friendship
+    return Friendship::MUTUAL if friendship.is_mutual == Friendship::IS_MUTUAL
+    return Friendship::FOLLOWER if friendship.account_id == self.id
+    Friendship::FOLLOWING
   end
 
   # Game playing histories
@@ -224,6 +208,7 @@ class Account < ActiveRecord::Base
     self.account_type ||= self.class::TYPE_NORMAL if self.attribute_names.include?("account_type")
     self.exp ||= 0 if self.attribute_names.include?("exp")
     self.bonus ||= 0 if self.attribute_names.include?("bonus")
+    self.avatar ||= Settings.images.avatar.default if self.attribute_names.include?("avatar")
   end
 
   def post_liked(post)
