@@ -50,7 +50,9 @@ class HomeController < ApplicationController
     else
       @posts = []
     end
-
+    
+    logger.info @posts.inspect
+    
     respond_to do |format|
       format.html
       format.json { render_for_api :post_info, json: @posts, root: "data", meta: {status: "success"} }
