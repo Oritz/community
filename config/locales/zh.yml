@@ -132,8 +132,21 @@ zh:
         record_invalide: "无效的记录"
 
   account:
+    remember_me: "自动登录"
     quit_failed_as_a_creator: "管理员无法退出小组"
+    password_not_valid: "密码由8-20位的数字、字母以及标点符号组成"
+    should_agree_the_agreement: "请同意杉果协议"
   pages:
+    register: "注册"
+    login: "登录"
+    newest_trends: "最新动态"
+    browsing: "浏览发现"
+    user_homepage: "个人主页"
+    my_private_messages: "我的私信"
+    my_asset: "个人资产"
+    my_groups: "我的小组"
+    user_center: "个人中心"
+    joinin_immidiately: "马上加入"
     send_pm: "发私信"
     remove_fans: "移除粉丝"
     follow_user: "关注"

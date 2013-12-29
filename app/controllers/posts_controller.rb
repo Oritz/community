@@ -22,8 +22,6 @@ class PostsController < ApplicationController
     not_found if @post.detail_type != Subject.to_s
     not_found if @post.status != Post::STATUS_NORMAL
 
-    @original = @post.original.cast if @post.is_a?(Recommend)
-
     @comments = Comment.of_a_post(@post).page(params[:page]).per(10)
     @new_comment = @post.comments.build
 

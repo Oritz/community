@@ -4,11 +4,15 @@ class SteamUser < ActiveRecord::Base
   attr_accessible :steamid, :personaname, :profile_url, :avatar, :communityvisibilitystate, :profilestate, :lastlogoff, :commentpermission, :realname, :primaryclanid, :timecreated, :loccountrycode, :locstatecode, :loccityid
 
   # Associations
-  belongs_to :account
+  belongs_to :account, select: "avatar, nick_name"
+  delegate :avatar, :nick_name, to: :account, prefix: true
+
   has_many :steam_users_game_achievements
   has_many :game_achievements, through: :steam_users_game_achievements
   has_many :steam_users_games
   has_many :games, through: :steam_users_games
+
+  # Scope
 
   # Validations
   validates :steamid, presence: true, length: { maximum: 63 }, steamid: true

@@ -10,6 +10,9 @@ class AccountsOtherGame < ActiveRecord::Base
   belongs_to :account
   belongs_to :game, class_name: "AllGame", foreign_key: "game_id"
 
+  # Scope
+  scope :chose_game, lambda { |game| where(game_id, game.id) }
+
   # Validations
   validates :account, presence: true
   validates :game, presence: true

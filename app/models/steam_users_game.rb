@@ -13,6 +13,9 @@ class SteamUsersGame < ActiveRecord::Base
   belongs_to :steam_user
   belongs_to :game, class_name: "AllGame", foreign_key: "game_id"
 
+  # Scope
+  scope :chose_game, lambda { |game| where(game_id: game.id) }
+
   # Validations
   validates :steam_user, presence: true
   validates :game, presence: true
@@ -29,9 +32,9 @@ class SteamUsersGame < ActiveRecord::Base
   end
 
   def update_reputation
-    item = UsersGamesReputationRanklist.where(game_id: self.game.id, user_id: self.steam_user.id, user_type: "Account").first
+    item = UsersGamesReputationRanklist.where(game_id: self.game.id, user_id: self.steam_user.id, user_type: "SteamUser").first
     unless item
-      item = UsersGamesReputationRanklist.new unless item
+      item = UsersGamesReputationRanklist.new
       item.game = self.game
       item.user = self.steam_user
     end
@@ -41,7 +44,7 @@ class SteamUsersGame < ActiveRecord::Base
   end
 
   def destroy_reputation
-    item = UsersGamesReputationRanklist.where(game_id: self.game.id, user_id: self.steam_user.id, user_type: "Account").first
+    item = UsersGamesReputationRanklist.where(game_id: self.game.id, user_id: self.steam_user.id, user_type: "SteamUser").first
     return false unless item.destroy
     true
   end

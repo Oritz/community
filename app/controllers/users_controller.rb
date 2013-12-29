@@ -105,6 +105,25 @@ class UsersController < ApplicationController
     end
   end
 
+  def game
+    @game = AllGame.find(params[:game_id])
+    @account = Account.find(params[:id])
+    if @game.subable_type == "SteamGame" && @account.steam_user
+      steam_users_game = @account.steam_user.steam_users_games.chose_game(@game).first
+      if steam_users_game
+        render json: { status: "success", data: { achievements_count: steam_users_game.achievements_count, playtime_forever: steam_users_game.playtime_forever.to_i } }
+        return
+      end
+    end
+
+    accounts_other_game = @account.other_games.chose_game(@game).first
+    unless accounts_other_game
+      render json: { status: "error", message: I18n.t("account.not_have_game") }
+    else
+      render json: { status: "success", data: { achievements_count: accounts_other_game.achievements_count, playtime_forever:  accounts_other_game.playtime_forever.to_i } }
+    end
+  end
+
   def check_name
     account = Account.new(params[:account])
     if !account.valid? && account.errors[:nick_name] == []

@@ -21,7 +21,7 @@ div.login_bj
               div.login_checkbox
                 div.login_checkbox_1
                   = f.check_box :remember_me
-                  = f.label :remember_me
+                  = f.label :remember_me, I18n.t("account.remember_me")
           div.login_checkbox_botton
             span.login_checkbox_botton_qd
               = f.submit "登录"

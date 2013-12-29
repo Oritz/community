@@ -21,7 +21,7 @@ class HomeController < ApplicationController
     @type = params[:type] || "MUTUAL"
     @type = @type.strip.upcase
 
-    select_items = %w(id nick_name exp follower_count following_count talk_count subject_count recommend_count is_mutual)
+    select_items = %w(id nick_name exp follower_count following_count talk_count subject_count recommend_count is_mutual avatar)
     if @type == "FANS"
       @users = current_account.fans.select(select_items.join(",")).page(params[:page]).per(10)
       #current_account.notification.reset(:followed)
@@ -47,9 +47,7 @@ class HomeController < ApplicationController
     else
       @stream_posts = []
     end
-    
-    logger.info @posts.inspect
-    
+
     respond_to do |format|
       format.html
       format.json

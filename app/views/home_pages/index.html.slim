@@ -19,12 +19,12 @@ html xmlns="http://www.w3.org/1999/xhtml"
             - if current_account
               = link_to current_account.nick_name, home_index_path
             - else
-              = link_to "登录", new_account_session_path
+              = link_to I18n.t("pages.login"), new_account_session_path
           li
             - if current_account
-              = link_to "退出", destroy_account_session_path, method: :delete
+              = link_to I18n.t("pages.quit"), destroy_account_session_path, method: :delete
             - else
-              = link_to "注册", new_account_registration_path
+              = link_to I18n.t("pages.register"), new_account_registration_path
           li
             a href="" target="_blank" 收藏
           li
@@ -38,34 +38,10 @@ html xmlns="http://www.w3.org/1999/xhtml"
                 li.cur
                   a href="#" target="_blank"
                     img alt="" src="images/banner_1.jpg"
-                li
-                  a href="#" target="_blank"
-                    img alt="" src="images/banner_1.jpg"
-                li
-                  a href="#" target="_blank"
-                    img alt="" src="images/banner_1.jpg"
-                li
-                  a href="#" target="_blank"
-                    img alt="" src="images/banner_1.jpg"
-                li
-                  a href="#" target="_blank"
-                    img alt="" src="images/banner_1.jpg"
               ul.slide-li.op
                 li.cur
-                li
-                li
-                li
-                li
               ul.slide-li.slide-txt
                 li.cur
-                  a
-                li
-                  a
-                li
-                  a
-                li
-                  a
-                li
                   a
           /! 轮播 代码 结束
         .www_carousel_box_R.radius3px
@@ -73,7 +49,7 @@ html xmlns="http://www.w3.org/1999/xhtml"
             h1 欢迎来到杉果游戏
             p 在这里你会体验到正版单机游戏的质感与联机带来的快感与乐趣！
           .text_button
-            a.radius3px href="#" 马上加入
+            = link_to I18n.t("pages.joinin_immidiately"), new_account_registration_path, class: "radius3px"
     .www_container
       .www_container_box
         ul

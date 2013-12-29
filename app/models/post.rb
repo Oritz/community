@@ -36,7 +36,7 @@ class Post < ActiveRecord::Base
   has_many :accounts_like_posts
   has_many :likers, through: :accounts_like_posts, source: :account
   has_many :comments, class_name: 'Comment'
-  has_many :recommend_posts, class_name: 'Recommend', foreign_key: 'parent_id'
+  #has_many :recommend_posts, class_name: 'Recommend', foreign_key: 'parent_id'
   belongs_to :group, inverse_of: :posts
   has_many :post_images
   belongs_to :detail, polymorphic: true
@@ -47,7 +47,7 @@ class Post < ActiveRecord::Base
 
   # Recommend Association
   belongs_to :original, class_name: 'Post', foreign_key: 'original_id'
-  delegate :content, :title, :creator, to: :original, prefix: true
+  delegate :content, :title, :creator, :image_url, to: :original, prefix: true
   belongs_to :parent, class_name: 'Post', foreign_key: 'parent_id'
 
   # Validations
@@ -68,7 +68,7 @@ class Post < ActiveRecord::Base
   scope :pending_of_account, lambda { |account| where("account_id=? AND status=?", account.id, Post::STATUS_PENDING) }
 
   scope :all_public, where(status: self::STATUS_NORMAL)
-  scope :includes_for_a_stream, includes([:image, :detail, :creator, original: [:detail]])
+  scope :includes_for_a_stream, includes([:image, :detail, :creator, original: [:detail, :image]])
 
   # Methods
   class << self

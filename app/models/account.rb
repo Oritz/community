@@ -65,6 +65,8 @@ class Account < ActiveRecord::Base
     before_add: :forbid_callback
   has_one :notification, foreign_key: 'id', dependent: :destroy
   has_one :steam_user
+  delegate :steam_id, to: :steam_user
+
   belongs_to :cloud_storage, class_name: "CloudStorage", foreign_key: "avatar_id"
   has_many :accounts_other_games
   has_many :other_games, through: :accounts_other_games, source: :game
