@@ -3,6 +3,9 @@ require 'validators/steamid_validator'
 class SteamUser < ActiveRecord::Base
   attr_accessible :steamid, :personaname, :profile_url, :avatar, :communityvisibilitystate, :profilestate, :lastlogoff, :commentpermission, :realname, :primaryclanid, :timecreated, :loccountrycode, :locstatecode, :loccityid
 
+  # Callbacks
+  after_initialize :default_values
+
   # Associations
   belongs_to :account, select: "avatar, nick_name"
   delegate :avatar, :nick_name, to: :account, prefix: true
@@ -30,4 +33,10 @@ class SteamUser < ActiveRecord::Base
   validates :lastlogoff, numericality: { only_integer: true, lager_than_or_equal_to: 0 }, if: Proc.new { |a| a.lastlogoff }
   validates :timecreated, numericality: { only_integer: true, lager_than_or_equal_to: 0 }, if: Proc.new { |a| a.timecreated }
   validates :account_id, uniqueness: true, if: Proc.new { |a| a.account_id }
+
+  # Methods
+  protected
+  def default_values
+    self.avatar ||= Settings.images.steam_user.default if self.attribute_names.include?("avatar")
+  end
 end

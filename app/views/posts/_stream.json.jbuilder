@@ -19,5 +19,5 @@ else
   json.original_content post.original_content
   json.original_title post.original_title if post.original.detail_type == "Subject"
   json.recommendation post.recommendation
-  json.original_image_url post.original_image_url
+  json.original_image_url post.original_image_url if post.original.image
 end

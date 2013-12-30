@@ -3,6 +3,7 @@ json.data @ranklists do |ranklist|
   json.game_id ranklist.game_id
   json.rank ranklist.rank
   json.user_type ranklist.user_type
+  json.user_id ranklist.user_id
   if ranklist.user_type == "SteamUser"
     if ranklist.user.account
       json.nick_name ranklist.user.account_nick_name

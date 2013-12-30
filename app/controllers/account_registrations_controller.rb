@@ -4,7 +4,4 @@ class AccountRegistrationsController < Devise::RegistrationsController
     @show_register = false
     super
   end
-
-  def update
-  end
 end

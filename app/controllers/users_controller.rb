@@ -109,18 +109,20 @@ class UsersController < ApplicationController
     @game = AllGame.find(params[:game_id])
     @account = Account.find(params[:id])
     if @game.subable_type == "SteamGame" && @account.steam_user
-      steam_users_game = @account.steam_user.steam_users_games.chose_game(@game).first
+      steam_users_game = @account.steam_user.steam_users_games.choose_game(@game).first
       if steam_users_game
-        render json: { status: "success", data: { achievements_count: steam_users_game.achievements_count, playtime_forever: steam_users_game.playtime_forever.to_i } }
+        ranklist = @game.ranklists.choose_user(@account.steam_user).first
+        render json: { status: "success", data: { achievements_count: steam_users_game.achievements_count, playtime_forever: steam_users_game.playtime_forever.to_i, rank: ranklist.rank_to_string } }
         return
       end
     end
 
-    accounts_other_game = @account.other_games.chose_game(@game).first
+    accounts_other_game = @account.accounts_other_games.choose_game(@game).first
     unless accounts_other_game
       render json: { status: "error", message: I18n.t("account.not_have_game") }
     else
-      render json: { status: "success", data: { achievements_count: accounts_other_game.achievements_count, playtime_forever:  accounts_other_game.playtime_forever.to_i } }
+      ranklist = @game.ranklists.choose_user(@account).first
+      render json: { status: "success", data: { achievements_count: accounts_other_game.achievements_count, playtime_forever:  accounts_other_game.playtime_forever.to_i, rank: ranklist.rank_to_string } }
     end
   end
 

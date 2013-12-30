@@ -1,3 +1,8 @@
+var suffix = function(n) {
+  var d = (n|0)%100;
+  return d > 3 && d < 21 ? 'th' : ['th', 'st', 'nd', 'rd'][d%10] || 'th';
+};
+
 function show_level($blocks) {
   var total_level = 20;
   var $levels = $blocks.find(".total-level .level");
@@ -30,9 +35,9 @@ $(document).ready(function () {
         context: this,
         data: {_method: 'delete', authenticity_token: form_token},
         error: function () {Messenger().post('退出小组失败');},
-        success: function(data, textStatus) {
-          if (textStatus === 'success') {
-            Messenger().post('成功退出小组');
+        success: function(data) {
+          if (data.status === 'success') {
+            Messenger().post("成功加入小组");
             $(this).html('加入小组');
             $(this).attr('href', '/groups/' + data.data.group_id + '/add_user.json');
             $(this).parent().attr('class', 'groups_b_cz_jr');
