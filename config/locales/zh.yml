@@ -4,6 +4,9 @@ zh:
   direction: ltr
   jquery:
     locale: "zh-CN"
+  gender:
+    male: 男
+    female: 女
   date:
     formats:
       # Use the strftime parameters for formats.
@@ -129,11 +132,50 @@ zh:
         odd: "必须为单数"
         even: "必须为双数"
         greater_than_start_date: "必须在起始日期之后"
+        record_invalide: "无效的记录"
 
-
+  account:
+    remember_me: "自动登录"
+    quit_failed_as_a_creator: "管理员无法退出小组"
+    password_not_valid: "密码由8-20位的数字、字母以及标点符号组成"
+    should_agree_the_agreement: "请同意杉果协议"
+    nick_name: "昵称"
+    password: "密码"
+    gender: "性别"
+    email: "邮箱"
   pages:
+    update: "更新"
+    cancel: "取消"
+    register: "注册"
+    login: "登录"
+    newest_trends: "最新动态"
+    browsing: "浏览发现"
+    user_homepage: "个人主页"
+    my_private_messages: "我的私信"
+    my_asset: "个人资产"
+    my_groups: "我的小组"
+    user_center: "个人中心"
+    joinin_immidiately: "马上加入"
     send_pm: "发私信"
     remove_fans: "移除粉丝"
     follow_user: "关注"
     unfollow_user: "取消关注"
     tip-off: "举报"
+    wellcome_page: "欢迎页"
+    store_page: "商城"
+    community_page: "社区"
+    forum_page: "论坛"
+    client: "客户端"
+    edit_info: "编辑"
+    all_friends: "全部好友"
+    my_friends: "我的好友"
+    manage: "管理"
+    quit: "退出"
+    add_group: "加入小组"
+    group_creator: "创建者"
+    group_members: "成员"
+    manage_account: "账号管理"
+    account_info: "个人资料"
+    account_security: "账号安全"
+    basic_info: "基本信息"
+    edit_avatar: "修改头像"

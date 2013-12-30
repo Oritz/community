@@ -121,4 +121,22 @@ describe Account do
       expect(new_account).not_to be_valid
     end
   end
+
+  context "social actions" do
+    let(:account) { create(:account) }
+
+    it "should recommend a post" do
+      post = create(:talk).post
+      recommend = account.recommend(post, "recommend reason")
+      expect(post.recommend_count).to eq 1
+      expect(account.recommend_count).to eq 1
+      expect(recommend[0]).to eq true
+    end
+
+    it "should raise an error if text is more than 140" do
+      post = create(:talk).post
+      recommend = account.recommend(post, "s"*141)
+      expect(recommend[0]).to eq false
+    end
+  end
 end

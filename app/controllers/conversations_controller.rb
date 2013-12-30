@@ -3,7 +3,7 @@ class ConversationsController < ApplicationController
   layout "center"
 
   def index
-    @private_messages = PrivateMessage.conversations(current_account).paginate(page: params[:page], per_page: 10)
+    @private_messages = PrivateMessage.conversations(current_account).page(params[:page]).per(10)
     #current_account.notification.reset(:private_message)
   end
 
@@ -12,7 +12,7 @@ class ConversationsController < ApplicationController
     return unless check_access?(conversation: @conversation)
 
     @recipient = @conversation.first_account == current_account ? @conversation.second_account : @conversation.first_account
-    @private_messages = PrivateMessage.conversation_detail(@conversation, current_account).paginate(page: params[:page], per_page: 10)
+    @private_messages = PrivateMessage.conversation_detail(@conversation, current_account).page(params[:page]).per(10)
     PrivateMessage.read(@conversation, current_account)
   end
 

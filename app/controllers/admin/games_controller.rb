@@ -7,10 +7,7 @@ class Admin::GamesController < AdminController
     auditing_games = nil
 
     if query == "" || query == nil
-      @games = GameFile.select('id, game_id, status, created_at').includes(:game).paginate(
-          :per_page => 10,
-          :page => params[:page]
-      )
+      @games = GameFile.select('id, game_id, status, created_at').includes(:game).page(params[:page]).per(10)
     else
       conditions =  "title LIKE '%#{query}%' OR alias_name LIKE '%#{query}%'"
       @games = GameFile.select('id, game_id, status, created_at').includes(:game).where(conditions).paginate(
@@ -120,12 +117,7 @@ class Admin::GamesController < AdminController
 
 
   def search
-    @admin_games = Game.paginate(
-        :page => params[:page],
-        :per_page =>10,
-        :conditions => ["title like ?", "%"+params[:query]+"%"]
-    )
-
+    @admin_games = Game.where("title like ?", "%#{params[:query]}%").page(params[:page]).per(10)
     render :index
   end
 
@@ -483,15 +475,15 @@ class Admin::GamesController < AdminController
     game_id = params[:id]
     @game = Game.find(game_id)
     if query
-      @admin_serial_numbers = GameSerialNumber.select('id, serial_number, serial_type, status, created_at, updated_at').includes(:serial_type).where("game_id=? AND serial_number LIKE ?", game_id, "%#{query}%").paginate(
-          :per_page => 10,
-          :page => params[:page]
-      )
+      @admin_serial_numbers = GameSerialNumber.select(
+        'id, serial_number, serial_type, status, created_at, updated_at'
+      ).includes(:serial_type).where(
+      "game_id=? AND serial_number LIKE ?", game_id, "%#{query}%"
+      ).page(params[:page]).per(10)
     else
-      @admin_serial_numbers = GameSerialNumber.select('id, serial_number, serial_type, status, created_at, updated_at').includes(:serial_type).where('game_id=? AND status=?', game_id, status).paginate(
-          :per_page => 10,
-          :page => params[:page]
-      )
+      @admin_serial_numbers = GameSerialNumber.select('id, serial_number, serial_type, status, created_at, updated_at'
+        ).includes(:serial_type).where('game_id=? AND status=?', game_id, status
+        ).page(params[:page]).per(10)
     end
 
     @serial_number_types = []

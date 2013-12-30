@@ -11,27 +11,24 @@
       tbody
         tr
           td
-            =t('admin.game.update_game_shell')
+            =GameFile.human_attribute_name(:shell)
           td
-            =t('admin.game.file')
             =file_field_tag 'game_shell'
           td=t('admin.tips.if_no_shell_update_use_latest')
         tr
           td
-            =t('admin.game.update_game_ini')
+            =GameFile.human_attribute_name(:ini)
           td
-            =t('admin.game.file')
             =file_field_tag "game_ini"
           td=t('admin.tips.if_no_ini_update_use_latest')
         tr
           td
-            =t('admin.game.update_game_file')
+            =GameFile.human_attribute_name(:game_file)
           td
-            =t('admin.game.file_folder')
             =select_tag "file_dir", options_for_select(((@release_dirs.size > 0)? @release_dirs.collect{|dir| [dir, dir]} : [[t('admin.tips.no_files_found'), ""]]), params[:file_dir])
           td=t('admin.tips.tips_for_game_file')
         tr
-          td=t('admin.game.crypt_type')
+          td=GameFile.human_attribute_name(:crypt_type)
           td=select_tag "crypt_type", options_for_select(@crypt_types, params[:crypt_type].to_i)
         /tr
           td=t('admin.game.crypt_ext')

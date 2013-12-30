@@ -1,21 +1,6 @@
-//= require sonkwo_textarea
-
-var get_unicode_length = function (str) {
-  var real_length = 0;
-  var len = str.length;
-  var char_code = -1;
-  
-  for (var i = 0; i < len; i++) {
-    char_code = str.charCodeAt(i);
-    if (char_code >= 0 && char_code < 128) {
-      real_length += 1;
-    }
-    else {
-      real_length += 2;
-    }
-  }
-  
-  return Math.ceil(real_length/2);
+var suffix = function(n) {
+  var d = (n|0)%100;
+  return d > 3 && d < 21 ? 'th' : ['th', 'st', 'nd', 'rd'][d%10] || 'th';
 };
 
 function show_level($blocks) {
@@ -50,9 +35,9 @@ $(document).ready(function () {
         context: this,
         data: {_method: 'delete', authenticity_token: form_token},
         error: function () {Messenger().post('退出小组失败');},
-        success: function(data, textStatus) {
-          if (textStatus === 'success') {
-            Messenger().post('成功退出小组');
+        success: function(data) {
+          if (data.status === 'success') {
+            Messenger().post("成功加入小组");
             $(this).html('加入小组');
             $(this).attr('href', '/groups/' + data.data.group_id + '/add_user.json');
             $(this).parent().attr('class', 'groups_b_cz_jr');
@@ -60,13 +45,13 @@ $(document).ready(function () {
           }
           else {
             show_message(data);
-          }          
-        },
-      });  
+          }
+        }
+      });
     }
     return false;
   };
-  
+
   var joinGroup = function () {
     var form_token = $('meta[name="csrf-token"]').attr('content');
     if (form_token) {
@@ -88,22 +73,21 @@ $(document).ready(function () {
           else {
             show_message(data);
           }
-        },
-      });  
+        }
+      });
     }
     return false;
   };
-  
+
   $('span.groups_b_cz_tc').on('click', 'a', quitGroup);
   $('span.groups_b_cz_jr').on('click', 'a', joinGroup); 
-  
-  
+
   // send message box
   function clearPM() {
     $('#pm_recipient_name').val('');
     $('#pm_recipient_content').val('');
   }
-  
+
   $('.letter-send').click(function () {
     $.fancybox.open($('#private_message_box'), {
       closeBtn: false,
@@ -113,7 +97,7 @@ $(document).ready(function () {
       afterClose: function () {clearPM();},
     });
   });
-  
+
   $('.pm_popup_closebtn').click(function () {
     $.fancybox.close();
   });
@@ -122,7 +106,7 @@ $(document).ready(function () {
     var form_token = $('meta[name="csrf-token"]').attr('content');
     var recipient_name = $.trim($('#pm_recipient_name').val());
     var recopient_content = $.trim($('#pm_recipient_content').val());
-    
+
     $.ajax({
       url: '/private_messages.json',
       type: 'POST',
@@ -141,8 +125,8 @@ $(document).ready(function () {
       }
     });
   });
-  
+
   $('#bn_pm_cancel').click(function () {
     $.fancybox.close();
-  });  
+  });
 });

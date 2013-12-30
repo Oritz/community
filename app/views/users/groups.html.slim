@@ -4,8 +4,8 @@
       .radius3px.sns_groups_data.marAuto
         .sns_groups_data_top
           .groups_top_tx
-            a href="/groups/#{group.id}"
-              img src="#{group.logo}"
+            = link_to group_path(group) do
+              = image_tag(group.logo)
           .groups_top_new
             h1
               a href="/groups/#{group.id}" =group.name
@@ -23,4 +23,4 @@
             -else
               span.groups_b_cz_jr
                 a href="/groups/#{group.id}/add_user.json" 加入小组
-  = will_paginate @groups
+  = paginate @groups

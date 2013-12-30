@@ -1,3 +1,3 @@
 -content_for :sidebar do
-  li= link_to t('admin.titles.servers'), admin_download_servers_path
+  li= link_to Admin::DownloadServer.model_name.human, admin_download_servers_path
   li= link_to t('admin.titles.servers.new'), new_admin_download_server_path

@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
   # GET /comments/index.json
   def index
     @post = Post.find(params[:post_id])
-    @comments = Comment.of_a_post(@post).includes(:creator, :original_author).order("created_at DESC").paginate(page: params[:page], per_page: 10)
+    @comments = Comment.of_a_post(@post).includes(:creator, :original_author).order("created_at DESC").page(params[:page]).per(10)
 
     respond_to do |format|
       format.html
@@ -65,7 +65,7 @@ class CommentsController < ApplicationController
   end
 
   def in
-    @comments = Comment.account_in(current_account.id).paginate(page: params[:page], per_page: 10)
+    @comments = Comment.account_in(current_account.id).page(params[:page]).per(10)
     @is_in = true
 
     current_account.notification.reset(:commented)
@@ -77,7 +77,7 @@ class CommentsController < ApplicationController
   end
 
   def out
-    @comments = Comment.account_out(current_account.id).paginate(page: params[:page], per_page: 10)
+    @comments = Comment.account_out(current_account.id).page(params[:page]).per(10)
     @is_in = false
 
     Post.downcast(@comments, "post")

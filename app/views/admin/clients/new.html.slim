@@ -8,18 +8,18 @@
       label.control-label
         =t('admin.client.patch')
       .controls
-        = file_field 'patch', ''
+        = f.file_field('patch')
     .control-group
       label.control-label
         =t('admin.client.full_pkg')
       .controls
-        = file_field 'full_pkg', ''
+        = f.file_field('full_pkg')
     .control-group
       label.control-label
         =t('admin.data.comment')
       .controls
-        = file_field 'desc', ''
-        | txt file
+        = f.file_field('desc')
+        | utf8 txt file
     .control-group
       .controls
         .alert
@@ -29,7 +29,7 @@
             =t('admin.client.upload_tip')
     .control-group
       .controls
-        input.btn.btn-primary type="submit" value="Create" onclick="ensure_name();"
+        =f.submit(:onclick => "ensure_name();", :class => 'btn btn-primary')
 =content_for(:js_files) do
   javascript:
     function ensure_name(){

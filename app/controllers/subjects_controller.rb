@@ -34,7 +34,7 @@ class SubjectsController < ApplicationController
     @cloud_storage_settings = CloudStorage.settings(current_account)
     @new_post_image = PostImage.new
     @post_images = @subject.post.post_images.includes(:cloud_storage)
-    
+
     return unless check_access?(auth_item: "oper_subjects_update", subject: @subject)
   end
 
@@ -47,13 +47,13 @@ class SubjectsController < ApplicationController
       end
       return
     end
-    
+
     @subject = Subject.find(params[:id])
     if params[:group_id]
       @group = Group.find(params[:group_id])
       @subject.group = @group
     end
-    
+
     # post button: change the subject status
     if params[:is_post].to_i == 1
       if @subject.status != Post::STATUS_DELETED

@@ -1,6 +1,7 @@
 class AccountRegistrationsController < Devise::RegistrationsController
   layout 'center', only: :edit
-
-  def update
+  def new
+    @show_register = false
+    super
   end
 end

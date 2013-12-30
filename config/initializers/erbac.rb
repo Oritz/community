@@ -9,7 +9,7 @@ Erbac.configure do |config|
 	# config.strict_check_mode = true
 
 	# check these roles first
-	# config.default_roles = []
+	config.default_roles = ["guest"]
 
 	# models and database tables
 	config.user_class = "Account"

@@ -1,0 +1,12 @@
+=content_for(:content) do
+  h1 Editing admin_account
+
+  == render 'form'
+  = link_to 'Back', admin_accounts_path
+=content_for(:js_files) do
+  javascript:
+    $(document).ready(function(){
+      $('input').iCheck({
+        checkboxClass: 'icheckbox_polaris'
+      });
+    });

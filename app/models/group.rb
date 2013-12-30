@@ -1,10 +1,4 @@
 class Group < ActiveRecord::Base
-  acts_as_api
-  api_accessible :post_info do |t|
-    t.add :id
-    t.add :name
-  end
-
   #attr_protected :member_count, :creator_id, :group_type, :status, :created_at, :updated_at
   attr_accessible :name, :description, :logo
   #mount_uploader :logo, GroupUploader
@@ -24,6 +18,9 @@ class Group < ActiveRecord::Base
   validates :status, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: self::STATUS.count }
   validates :creator, presence: true
   validates :logo, presence: true, length: { maximum: 255 }
+  validates :talk_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :subject_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :recommend_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   # Associations
   belongs_to :creator, class_name: 'Account', foreign_key: 'creator_id'
@@ -31,9 +28,9 @@ class Group < ActiveRecord::Base
   has_many :accounts, through: :groups_accounts,
     after_add: :account_added,
     after_remove: :account_removed
-  has_many :subjects
   has_many :groups_tags
   has_many :tags, through: :groups_tags
+  has_many :posts, inverse_of: :group, conditions: "status=#{Post::STATUS_NORMAL}", include: :detail
 
   # Scopes
   scope :sort_by_hot, ->(count) { order("#{table_name}.member_count DESC").limit(count) }
@@ -75,5 +72,8 @@ class Group < ActiveRecord::Base
     self.status ||= self.class::STATUS['NORMAL'] if self.attribute_names.include?("status")
     self.group_type ||= self.class::TYPE['OFFICAL'] if self.attribute_names.include?("group_type")
     self.logo ||= Settings.images.group.default if self.attribute_names.include?("logo")
+    self.talk_count ||= 0 if self.attribute_names.include?("talk_count")
+    self.subject_count ||= 0 if self.attribute_names.include?("subject_count")
+    self.recommend_count ||= 0 if self.attribute_names.include?("recommend_count")
   end
 end

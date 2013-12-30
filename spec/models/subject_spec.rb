@@ -8,7 +8,8 @@ describe Subject do
     it "is valid with valid attributes and creates a post at the same time" do
       subject = Subject.new(
                             title: "title",
-                            content: "content"
+                            content: "content",
+                            main_body: "main body"
                             )
       subject.creator = account
       expect(subject).to be_valid
@@ -26,11 +27,12 @@ describe Subject do
     end
 
     it "should update a new subject" do
-      subject = Subject.new(title: "title", content: "content")
+      subject = Subject.new(title: "title", content: "content", main_body: "main body")
       subject.creator = account
       subject.save!
 
       subject.content = "content1"
+      subject.main_body = "main body1"
       expect { subject.save! }.not_to change { account.exp }.by(exp_strategy.value)
     end
 
@@ -56,6 +58,7 @@ describe Subject do
 
       subject.content = "content"
       subject.title = "title"
+      subject.main_body = "main body"
       expect(subject.post_pending).to eq true
       expect(subject.status).to eq Post::STATUS_NORMAL
       expect(account.exp).to eq exp_strategy.value

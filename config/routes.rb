@@ -13,7 +13,10 @@ SonkwoCommunity::Application.routes.draw do
       put 'add_user'
       delete 'remove_user'
       post 'add_tags'
+      get 'posts'
+      get 'members'
     end
+    resources :talks, only: [:create]
   end
 
   resources :posts, only: [:show, :destroy] do
@@ -44,6 +47,7 @@ SonkwoCommunity::Application.routes.draw do
       get 'posts'
       get 'people'
       get 'games'
+      get 'games/:game_id', to: 'users#game'
     end
     resources :albums, only: [:index, :create, :show, :new] do
       resources :photos, only: [:index, :create]
@@ -82,6 +86,9 @@ SonkwoCommunity::Application.routes.draw do
 
   resources :games, only: [] do
     resources :game_achievements, only: [:index, :show]
+    member do
+      get :ranklist
+    end
   end
 
   resources :informations, only: [:index] do
@@ -138,12 +145,12 @@ SonkwoCommunity::Application.routes.draw do
         put :game_serial_type
       end
     end
-
+    resources :auth_items
+    resources :accounts
     resources :serial_types
     resources :download_servers
     resources :clients
     resources :recommendations
     get '/', to: 'admin#index'
-
   end
 end

@@ -13,15 +13,15 @@ html
     .sns_nav_top
       ul
         li
-          a href="#" target="_blank"  欢迎页
+          = link_to I18n.t("pages.wellcome_page"), home_pages_path
         li
-          a href="#" target="_blank"  商城
+          = link_to I18n.t("pages.store_page"), Settings.subdomains.store
         li
-          a href="#" target="_blank"  社区
+          = link_to I18n.t("pages.community_page"), "/"
         li
-          a href="#" target="_blank"  论坛
+          = link_to I18n.t("pages.forum_page"), Settings.subdomains.forum
         li
-          a href="#" target="_blank"  客户端
+          = link_to I18n.t("pages.client"), "javascript:void(0);"
     .sns_logo
       .sns_logo_logo
         a href="/" target="_blank"
@@ -33,12 +33,12 @@ html
           span#info.sns_logo_user_tx_fl.sns_logo_user_tx_id
             = link_to current_account.nick_name, user_path(current_account)
           span.sns_logo_user_tx_fl.sns_logo_user_tx_tuichu
-            = link_to "退出", destroy_account_session_path, method: :delete
+            = link_to I18n.t("pages.quit"), destroy_account_session_path, method: :delete
         - else
           span.sns_login_dl
-            = link_to "登录", new_account_session_path, class: "sns_login_dl_dl"
+            = link_to I18n.t("pages.login"), new_account_session_path, class: "sns_login_dl_dl"
           span.sns_login_dl
-            = link_to "注册", new_account_registration_path, class: "sns_login_dl_dl"
+            = link_to I18n.t("pages.register"), new_account_registration_path, class: "sns_login_dl_dl"
     -if show_account_info?
       #sns_nav
         - if current_account
@@ -46,41 +46,40 @@ html
           .nav-btn1_L_zd
             ul.nav-left1 is_hide = 0
               li.icon_nav_zd_gr_bj
-                = link_to "个人主页", user_path(current_account.id), class: "nav-left1_xx_a"
+                = link_to I18n.t("pages.user_homepage"), user_path(current_account.id), class: "nav-left1_xx_a"
               li.icon_nav_zd_email_bj
-                = link_to "我的私信", conversations_path(), class: "nav-left1_xx_a"
+                = link_to I18n.t("pages.my_private_messages"), conversations_path(), class: "nav-left1_xx_a"
                 i
                   a.badge href="#"  1
               li.icon_nav_zd_shopp_bj
-                = link_to "我的资产", "javascript:void(0);", class: "nav-left1_xx_a" 
+                = link_to I18n.t("pages.my_asset"), "javascript:void(0);", class: "nav-left1_xx_a"
                 i
                   a.badge href="#"  1
               li.icon_nav_zd_xz_bj
-                = link_to "我的小组", groups_user_path(current_account), class: "nav-left1_xx_a" 
+                = link_to I18n.t("pages.my_groups"), groups_home_index_path, class: "nav-left1_xx_a"
                 i
                   a.badge href="#"  1
               li.icon_nav_zd_grzx_bj
-                = link_to "个人中心", "javascript:void(0);", class: "nav-left1_xx_a"
+                = link_to I18n.t("pages.user_center"), "javascript:void(0);", class: "nav-left1_xx_a"
           a.nav-btn2
           .nav-btn1_R_zd
             .nav-right1 is_hide = 0
               .nav_right1_friends
                 h4.friends_titleHy
-                  a href="javascript:void(0);"  我的好友
+                  a href="javascript:void(0);" =I18n.t("pages.my_friends")
                 ul
-                  li.radius3px.friends_tx
-                    a href="#"
-                      img src="images/img/ceshi_touxiang.png"
+                  - @friends.each do |friend|
+                    li.radius3px.friends_tx
+                      = link_to user_path(friend) do
+                        = image_tag(friend.avatar, width: 37, height: 37)
                 span.friends_titleHy_span
-                  a href="javascript:void(0);"  全部
+                  = link_to I18n.t("pages.all_friends"), people_home_index_path
         .sns_nav_tab_nav
           ul
             li.margin_R_5px.sns_nav_tab_nav_1
-              a href="#"  最新动态
+              = link_to I18n.t("pages.newest_trends"), home_index_path
             li.margin_R_5px.sns_nav_tab_nav_2
-              a href="#"  浏览发现
-            li.sns_nav_tab_nav_3
-              a href="#"  精彩活动
+              = link_to I18n.t("pages.browsing"), groups_path
       .container
         == yield
     - else
