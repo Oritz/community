@@ -49,6 +49,9 @@ zh:
         serial_number_types: ["公共", "私有", "基本", "全部"]
       game_file:
         status: "发布状态"
+      auth_item:
+        auth_type: 类型
+        auth_type_names: ["操作", "任务", "角色"]
     errors:
       models:
         download_server:

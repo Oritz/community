@@ -1,0 +1,6 @@
+=content_for(:content) do
+  h1=AuthItem.human_attribute_name(:auth_type_names)[@auth_item.auth_type]
+
+  == render 'form'
+
+  = link_to 'Back', admin_auth_items_path

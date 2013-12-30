@@ -48,7 +48,7 @@
                 td= serial_number.serial_number
                 td= sonkwo_time_format(serial_number.created_at)
                 td= sonkwo_time_format(serial_number.updated_at)
-        div=will_paginate @admin_serial_numbers, :class =>'pagination', :previous_label => "&laquo; #{t('helpers.links.previous')}", :next_label => "#{t('helpers.links.next')} &raquo;"
+        div=paginate @admin_serial_numbers, :class =>'pagination'
     -else
       =t('admin.msg.no-data')
   #import_div.modal.hide.fade role='dialog'

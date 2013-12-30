@@ -11,6 +11,7 @@
 
  *= require bootstrap_and_overrides
  *= require bootstrap-datetimepicker
+ *= require_tree ./admin
  */
 
 body{padding-top: 70px;}

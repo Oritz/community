@@ -1,0 +1,21 @@
+= render 'nav'
+= content_for(:content) do
+  - if @accounts.any?
+    table.table-bordered.table-condensed.table-striped
+      tr
+        th = Account.human_attribute_name(:name)
+        th = AuthItem.human_attribute_name(:auth_type_names)[AuthItem::TYPE_ROLE]
+        th 
+
+      - @accounts.each do |a|
+        tr
+          td = a.nick_name
+          td
+            - a.auth_items.each do |item|
+              = item.name 
+              '|
+          td = link_to 'Edit', edit_admin_account_path(a)
+  - else
+  	= t('admin.errors.no_data')
+  br
+

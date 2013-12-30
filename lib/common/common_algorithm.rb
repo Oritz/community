@@ -1,5 +1,13 @@
 # -*- encoding : utf-8 -*-
 module CommonAlgorithm
+
+  def merge_list(old_arr, new_arr, &b)
+    same_ids = old_arr & new_arr
+    new_ids = new_arr - same_ids
+    drop_ids = old_arr - same_ids
+    yield(new_ids, drop_ids)
+  end
+
   def median_for_sorted(a)
     s = a.size
     

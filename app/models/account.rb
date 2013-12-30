@@ -1,6 +1,7 @@
 require "devise/encryptors/custom_sha1"
+require "common/common_algorithm"
 class Account < ActiveRecord::Base
-  #include Humanizer
+  include CommonAlgorithm
   #require_human_on :create
 
   control_access
@@ -88,6 +89,7 @@ class Account < ActiveRecord::Base
   # Scopes
   scope :post_likers, lambda { |post_id| where("post_id=?", post_id).joins("INNER JOIN accounts_like_posts ON accounts_like_posts.account_id=accounts.id").order("accounts_like_posts.created_at DESC") }
   scope :friends, lambda { |account_id| joins("INNER JOIN friendship ON follower_id=accounts.id").where("account_id=? AND is_mutual=#{Friendship::IS_MUTUAL}", account_id) }
+  scope :account_with_roles, lambda {|account_id| select('id').includes(:auth_items).where('accounts.id=? AND auth_items.auth_type=?', account_id, AuthItem::TYPE_ROLE)}
 
   # Methods
   def pending_subject
@@ -204,6 +206,23 @@ class Account < ActiveRecord::Base
     AccountsTag.import accounts_tags
   end
 
+  def roles=(role_arr)
+    roles_of_account = Account.account_with_roles(self.id)
+    exsit_role_ids = []
+    exsit_role_ids = roles_of_account.first.auth_items.map{|a| a.id.to_s} unless roles_of_account.empty? 
+
+    merge_list(exsit_role_ids, role_arr) do |new_ids, drop_ids|
+      new_ids.each do |role_id|
+        new_role = AuthItem.find(role_id)
+        Erbac.assign new_role, self
+      end
+      drop_ids.each do |drop_id|
+        drop_role = AuthItem.find(drop_id)
+        Erbac.revoke drop_role, self
+      end
+    end  
+  end
+  
   protected
   def default_values
     self.gender ||= self.class::GENDER_BOY if self.attribute_names.include?("gender")
