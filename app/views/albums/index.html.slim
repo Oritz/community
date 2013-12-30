@@ -21,4 +21,4 @@
             span.album-block-list-set.fl
               span.fr
                 = link_to "查看", user_album_path(@account, album), class: "list-set-bn rs3"
-    = will_paginate(@albums)
+    = paginate(@albums)

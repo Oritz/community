@@ -14,7 +14,7 @@ module Sonkwo
             from = value["range"]["from"].to_f
             to = value["range"]["to"].to_f
             next if ratio < to || ratio >= from
-            item.rank = r_i + 1
+            item.rank = r_i
           end
 
           if item.rank <= 1

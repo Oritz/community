@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 class Recommendation < ActiveRecord::Base
   attr_accessible :title, :body, :recommend_type, :link, :weight, :comment, :picture
   RECOMMEND_TYPE_TOP 			= 0

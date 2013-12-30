@@ -22,9 +22,9 @@
     .sns_release_data_con
       ul
         li.sns_release_data_con_fs
-          = link_to current_account.follower_count, people_user_path(current_account.id, type: "fans")
+          = link_to current_account.follower_count, people_home_index_path(type: "fans")
         li.sns_release_data_con_fx
-          = link_to current_account.following_count, people_user_path(current_account.id, type: "stars")
+          = link_to current_account.following_count, people_home_index_path(type: "stars")
         li.sns_release_data_con_pl
           = link_to current_account.talk_count+current_account.subject_count+current_account.recommend_count, user_path(current_account.id)
         li.sns_release_data_con_ft
@@ -55,7 +55,7 @@
               .snsshow1
                 p
                   a href="#"  举报
-              = f.submit "发布", id: "post_submit", disable: ""
+              = f.submit "发布", disable: ""
       .image-upload-block style="display: none;"
         .image-upload-form style="display: none;"
           form#qiniu_uploader method="post" action="http://up.qiniu.com/" enctype="multipart/form-data"

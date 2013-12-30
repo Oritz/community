@@ -8,6 +8,6 @@ FactoryGirl.define do
     gender 1
     sequence(:nick_name) { |n| "test#{n}" }
     groups []
-    tos_agreement true
+    tos_agreement 'true'
   end
 end

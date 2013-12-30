@@ -15,4 +15,4 @@ ul.unstyled
   .modal-footer
     = f.submit I18n.t("Reply"), class: "btn btn-primary"
 div
-  = will_paginate @comments
+  = paginate @comments

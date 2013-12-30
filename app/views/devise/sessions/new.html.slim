@@ -2,9 +2,13 @@
 div.login_bj
   div.login_center
     div.login_center_l
-      div.login_center_l_h1 欢迎来到杉果游戏
+      div.login_center_l_h1 加入我们，发现更多乐趣，寻找更多伙伴。
       div.login_center_l_p
-        p 这是文案
+        p 杉果游戏为您精心准备——
+        p 数量繁多，质量上乘的国内外精品正版单机
+        p 精彩纷呈，种类繁多的各种给力酷炫的活动
+        p 多姿多彩，气氛活跃的国内首个游戏化社区
+        p 还等什么，马上来吧！
     div.login_center_r
       div.login_dlTop
         h1 登陆
@@ -21,7 +25,7 @@ div.login_bj
               div.login_checkbox
                 div.login_checkbox_1
                   = f.check_box :remember_me
-                  = f.label :remember_me
+                  = f.label :remember_me, I18n.t("account.remember_me")
           div.login_checkbox_botton
             span.login_checkbox_botton_qd
               = f.submit "登录"

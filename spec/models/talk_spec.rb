@@ -11,6 +11,18 @@ describe Talk do
     talk.save!
     expect(Talk.first).to eq talk
     expect(Post.first).to eq talk.post
+    expect(account.talk_count).to eq 1
+  end
+
+  it "should create a new item with group" do
+    group = create(:group, creator: account)
+
+    talk = Talk.new(content: "content")
+    talk.group = group
+    talk.creator = account
+
+    talk.save!
+    expect(group.talk_count).to eq 1
   end
 
   it "should create a new item without image_url" do

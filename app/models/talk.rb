@@ -4,26 +4,15 @@ class Talk < ActiveRecord::Base
   attr_accessible :content, :image_url, :cloud_storage_id
   acts_as_polymorphic class_name: 'Post', name: 'detail', association: 'post'
   #acts_as_post
-  #acts_as_behavior_provider author_key: "posts.account_id",
-  #  timestamp: "posts.created_at",
-  #  status: "posts.status",
-  #  joins: "INNER JOIN posts ON posts.id=talks.id",
-  #  find_options: {include: [post: [:creator], post_image: [:cloud_storage]]}
-  acts_as_api
-  api_accessible :post_info do |t|
-    t.add :id
-    t.add :content
-    t.add :image_url
-  end
 
   # Callbacks
   before_create :add_talk_count
-  after_create { Sonkwo::Exp.increase("exp_post_talk", self.creator, self.created_at) }
+  after_create { Sonkwo::Exp.increase("exp_post_talk", self.post.creator, self.post.created_at) }
   after_save :save_post_image
 
   # Associations
   #has_one :post_image, foreign_key: "post_id"
-  has_one :post, as: :detail
+  #has_one :post, as: :detail
 
   # Validations
   validates :content, presence: true, length: { maximum: 140 }
@@ -58,8 +47,12 @@ class Talk < ActiveRecord::Base
 
   private
   def add_talk_count
-    self.creator.talk_count += 1
-    self.creator.save!
+    self.post.creator.talk_count += 1
+    self.post.creator.save!
+    if self.group
+      self.group.talk_count += 1
+      self.group.save!
+    end
   end
 
   def save_post_image

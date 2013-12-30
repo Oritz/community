@@ -78,6 +78,15 @@ describe Group do
     end
   end
 
+  context "validate count" do
+    it "is not valid without talk_count"
+    it "is not valid with talk_count not a positive integer"
+    it "is not valid without subject_count"
+    it "is not valid with subject_count not a positive integer"
+    it "is not valid without recommend_count"
+    it "is not valid with recommend_count not a positive integer"
+  end
+
   it "should be sort by hot" do
     groups = create_list(:group, 25)
     groups.each_with_index do |g, index|

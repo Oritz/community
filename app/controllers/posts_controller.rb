@@ -22,9 +22,7 @@ class PostsController < ApplicationController
     not_found if @post.detail_type != Subject.to_s
     not_found if @post.status != Post::STATUS_NORMAL
 
-    @original = @post.original.cast if @post.is_a?(Recommend)
-
-    @comments = Comment.of_a_post(@post).paginate(page: params[:page], per_page: 10)
+    @comments = Comment.of_a_post(@post).page(params[:page]).per(10)
     @new_comment = @post.comments.build
 
     respond_to do |format|
@@ -77,22 +75,13 @@ class PostsController < ApplicationController
   end
 
   def recommend
-    @recommend = Recommend.new(params[:recommend])
-    @recommend.creator = current_account
+    result = current_account.recommend(@post, params[:recommendation])
+    @recommend = result[1]
 
-    if @post.detail_type == Recommend.to_s
-      @recommend.original = @post.detail.original
-      @recommend.parent = @post
-    else
-      @recommend.original = @post
-      @recommend.parent = @post
-    end
-    @recommend.original_author = @recommend.original.creator
-    @recommend.post.detail = @recommend
     respond_to do |format|
-      if @recommend.save
+      if result[0]
         format.html { redirect_to url_for(action: :show, type: 'recommend'), notice: 'Post was successfully recommended.' }
-        format.json { render_for_api :post_info, json: @recommend.post, root: "data", meta: { status: "success" } }
+        format.json
       else
         format.html { redirect_to :back, alert: 'Recommend failed.' }
         format.json { render json: { status: "fail", data: @recommend.errors.full_messages } }

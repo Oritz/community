@@ -1,6 +1,11 @@
 class AccountSessionsController < Devise::SessionsController
   protect_from_forgery except: :create
 
+  def new
+    @show_register = true
+    super
+  end
+
   def create
     self.resource = warden.authenticate!(auth_options)
     set_flash_message(:notice, :signed_in) if is_navigational_format?
