@@ -152,6 +152,41 @@ class Account < ActiveRecord::Base
   end
 
   ###########################################
+  # GameActions
+  ###########################################
+
+  def has_game?(game)
+    steam_user = self.steam_user
+    return true if steam_user && steam_user.games.include?(game)
+    return self.other_games.include?(game)
+  end
+
+  def game_statistic(game, need_rank=true)
+    steam_user = self.steam_user
+    item = steam_user.steam_users_games.choose_game(game).first
+    unless item
+      item = self.accounts_other_games.choose_game(game).first
+      return nil unless item
+      ranklist = game.ranklists.choose_user(self).first if need_rank
+    else
+      ranklist = game.ranklists.choose_user(steam_user).first if need_rank
+    end
+    {
+      playtime_forever: item.playtime_forever,
+      achievements_count: item.achievements_count,
+      rank: need_rank ? ranklist.rank_to_string : nil,
+      user_type: item.is_a?(SteamUsersGame) ? "SteamUser" : "Account"
+    }
+  end
+
+  def game_achievements(game)
+    return [] if game.subable_type != "SteamGame"
+    return [] unless self.steam_user
+
+    game.game_achievements.choose_game(game).all_normal.with_steam_user(self.steam_user).select(%w(id name description lock_url unlock_url))
+  end
+
+  ###########################################
   # GroupActions
   ###########################################
 
@@ -205,7 +240,7 @@ class Account < ActiveRecord::Base
   def roles=(role_arr)
     roles_of_account = Account.account_with_roles(self.id)
     exsit_role_ids = []
-    exsit_role_ids = roles_of_account.first.auth_items.map{|a| a.id.to_s} unless roles_of_account.empty? 
+    exsit_role_ids = roles_of_account.first.auth_items.map{|a| a.id.to_s} unless roles_of_account.empty?
 
     merge_list(exsit_role_ids, role_arr) do |new_ids, drop_ids|
       new_ids.each do |role_id|
@@ -216,9 +251,9 @@ class Account < ActiveRecord::Base
         drop_role = AuthItem.find(drop_id)
         Erbac.revoke drop_role, self
       end
-    end  
+    end
   end
-  
+
   protected
   def default_values
     self.gender ||= self.class::GENDER_BOY if self.attribute_names.include?("gender")

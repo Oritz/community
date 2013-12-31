@@ -22,10 +22,13 @@ class GameAchievement < ActiveRecord::Base
   validates :subable_id, uniqueness: { scope: :subable_type }
 
   # Scopes
+  scope :choose_game, lambda {|game| where(game_id: game.id) }
+  scope :all_normal, where(status: self::STATUS_NORMAL)
+  scope :with_steam_user, lambda {|steam_user| joins("LEFT JOIN steam_users_game_achievements ON game_achievements.id=steam_users_game_achievements.game_achievement_id AND steam_users_game_achievements.steam_user_id=#{steam_user.id}").select("steam_user_id, steam_users_game_achievements.created_at") }
 
   # Methods
   protected
   def default_values
-    self.status ||= self.class::STATUS_NORMAL
+    self.status ||= self.class::STATUS_NORMAL if self.attribute_names.include?("status")
   end
 end
