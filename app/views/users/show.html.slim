@@ -5,7 +5,11 @@
         .home_top_Ltx_l
           .home_top_Ltx_l_tx.border_2px_viptx.avatar-block user_id=(@target.id)
             a href="javascript:void(0);"
-              = image_tag(@target.avatar, height: 112, width: 112)
+              = image_tag(@target.avatar, height: 112, width: 112, class: "user-avatar")
+            - if current_account && @target.id == current_account.id
+              span.upload-avatar-edit-button= I18n.t("pages.upload_avatar")
+              .image-upload-form style="display: none;"
+                = render "uploader/qiniu_form"
         .home_top_Ltx_r
           .home_top_Ltx_r_id
             = link_to @target.nick_name, "javascript:void(0);"
@@ -44,9 +48,6 @@
               .sns_release_data_top_bom
                 span.top_dj_cj.reputation-rank
                 span.top_dj_cj_sj
-                  ul
-                    li
-                      img src="images/img/sns_tx_id_djBJ.png"
               .sns_Cj_Dj_r_Tdj_sj
                 span.top_dj_id_sj
                   ul

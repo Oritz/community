@@ -3,9 +3,6 @@ class CloudStoragesController < ApplicationController
   protect_from_forgery :except => :create
   layout false
 
-  def index
-  end
-
   def template
     render json: {status: "success", data: MustacheTemplate.upload_image}
   end
@@ -63,10 +60,33 @@ class CloudStoragesController < ApplicationController
     storage.account = account
     storage.bucket_name = Settings.cloud_storage.avatar_bucket
     storage.key = params['hash']
+
     # TODO
     #storage.data
     storage.save!
-    ret = {dest_url: storage.url, storage_id: storage.id, img_name: params['name']}
-    render json: ret, status: 200
+
+    if proccess(params[:sonkwo_callback], storage, account: account)
+      ret = {dest_url: storage.url, storage_id: storage.id, img_name: params['name']}
+      render json: ret, status: 200
+    else
+      render json: { status: "error", message: @error_message }
+    end
+  end
+
+  private
+  def proccess(callback, storage, opts)
+    case callback
+    when "updateavatar"
+      opts[:account].avatar = storage.url+"_l"
+      if opts[:account].save
+        return true
+      else
+        @error_message = I18n.t("account.update_avatar_failed")
+        return false
+      end
+    else
+    end
+
+    true
   end
 end

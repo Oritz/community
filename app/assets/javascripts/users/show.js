@@ -1,11 +1,21 @@
 //= require ../post
 //= require ../flash_message
 //= require ../game
+//= require ../upload_image
 //= require ../../../../vendor/assets/javascripts/jquery.waterwheelCarousel.min
 
 $(document).ready(function() {
   show_level($(".total-level").parent());
   var user_id = $(".avatar-block").attr("user_id");
+
+  // upload_avatar
+  qiniu_upload({
+    trigger_item: ".upload-avatar-edit-button",
+    sonkwo_callback: "updateavatar",
+    success: function(url) {
+      $(".user-avatar").attr("src", url+"_l");
+    }
+  });
 
   // fetch posts
   start_posts("/users/"+user_id+"/posts.json");
