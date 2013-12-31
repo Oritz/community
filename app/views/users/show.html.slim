@@ -36,7 +36,7 @@
             = link_to I18n.t("pages.unfollow_user"), unfollow_users_path(target_id: @target.id), method: :delete
           - else
             = link_to I18n.t("pages.follow_user"), follow_users_path(target_id: @target.id), method: :put
-      span.sns_gr_home_top_pois
+      /!更换皮肤span.sns_gr_home_top_pois
     .sns_gr_home_top_Rzl
       .sns_gr_home_top_Rzl_b
         .sns_Cj_Dj
@@ -101,7 +101,7 @@
                   .snsshow1
                     p
                       a href="#"  举报
-                  = f.submit("发布")
+                  = f.submit "发布", disable: "", class: "issue_btn"
           .image-upload-block style="display: none;"
             .image-upload-form style="display: none;"
               form#qiniu_uploader method="post" action="http://up.qiniu.com/" enctype="multipart/form-data"
