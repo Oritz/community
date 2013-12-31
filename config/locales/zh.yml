@@ -4,6 +4,9 @@ zh:
   direction: ltr
   jquery:
     locale: "zh-CN"
+  gender:
+    male: 男
+    female: 女
   date:
     formats:
       # Use the strftime parameters for formats.
@@ -136,7 +139,13 @@ zh:
     quit_failed_as_a_creator: "管理员无法退出小组"
     password_not_valid: "密码由8-20位的数字、字母以及标点符号组成"
     should_agree_the_agreement: "请同意杉果协议"
+    nick_name: "昵称"
+    password: "密码"
+    gender: "性别"
+    email: "邮箱"
   pages:
+    update: "更新"
+    cancel: "取消"
     register: "注册"
     login: "登录"
     newest_trends: "最新动态"
@@ -165,3 +174,8 @@ zh:
     add_group: "加入小组"
     group_creator: "创建者"
     group_members: "成员"
+    manage_account: "账号管理"
+    account_info: "个人资料"
+    account_security: "账号安全"
+    basic_info: "基本信息"
+    edit_avatar: "修改头像"

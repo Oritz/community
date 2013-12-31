@@ -25,7 +25,7 @@
                     i.icon-eye-open
                   =link_to(edit_admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning') do
                     i.icon-edit
-                  = link_to(admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning', :confirm => t('helpers.links.confirm'), :method => :delete) do
+                  = link_to(admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning', :method => :delete, :confirm => t('helpers.links.confirm')) do
                     i.icon-remove
       -else
         =t('admin.msg.no_data')
@@ -53,6 +53,9 @@
                     i.icon-remove
       -else
         =t('admin.msg.no_data')
+      div
+        a.btn.btn-primary href=new_admin_recommendation_path(:recommendation_type => Recommendation::RECOMMEND_TYPE_NORMAL)
+          =t('admin.recommendation.new')
     #focus.tab-pane
       -unless @focus_recommendations.empty?
         table.table.table-striped.table-bordered.table-condensed
@@ -74,6 +77,9 @@
                     i.icon-remove
       -else
         =t('admin.msg.no_data')
+      div
+        a.btn.btn-primary href=new_admin_recommendation_path(:recommendation_type => Recommendation::RECOMMEND_TYPE_FOCUS)
+          =t('admin.recommendation.new')
   #new
 =content_for(:js_files) do
   javascript:

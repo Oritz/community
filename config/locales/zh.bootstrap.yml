@@ -1,7 +1,7 @@
 # Sample localization file for English. Add more files in this directory for other locales.
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
-en:
+zh:
   helpers:
     actions: "操作"
     links:
@@ -13,6 +13,7 @@ en:
       edit: "编辑"
       search: "搜索"
       show: "查看"
+      submit: 提交
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"

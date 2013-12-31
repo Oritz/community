@@ -16,6 +16,9 @@ class UsersGamesReputationRanklist < ActiveRecord::Base
   belongs_to :game, class_name: "AllGame", foreign_key: "game_id"
   belongs_to :user, polymorphic: true
 
+  # Scopes
+  scope :choose_user, lambda { |user| where(user_id: user.id, user_type: user.class.to_s) }
+
   # Validations
   validates :game, presence: true
   validates :user, presence: true
@@ -24,6 +27,12 @@ class UsersGamesReputationRanklist < ActiveRecord::Base
   validates :rank, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   # Methods
+  def rank_to_string
+    tmp = self.rank.to_i
+    reputation = Settings.reputation
+    reputation.values[tmp]["name"]
+  end
+
   private
   def default_values
     self.reputation ||= 0

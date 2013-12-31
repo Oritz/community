@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
-class Admin::DownloadServersController < ApplicationController
-	layout "admin"
+class Admin::DownloadServersController < AdminController
 	
   # GET /admin_download_servers
   # GET /admin_download_servers.xml

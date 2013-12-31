@@ -5,6 +5,7 @@
     - @recommendation.errors.any?
       - @recommendation.errors.full_messages.each do |msg|
         =msg
+      =@recommendation.errors
     = hidden_field_tag "recommendation[recommend_type]", @require_type
     .control-group
       - if params[:recommendation_type].to_i == Recommendation::RECOMMEND_TYPE_NORMAL
@@ -33,7 +34,7 @@
       label.control-label
         =t('admin.recommendation.picture')
         .controls
-          = file_field('image', '')
+          = f.file_field('picture')
     .control-group
       .controls
         =t('admin.recommendation.picture_size_tips')[@require_type.to_i]
