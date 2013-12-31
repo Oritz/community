@@ -4,8 +4,8 @@
     table.table.table-bordered.table-condensed.table-striped
       thead
         tr
-          th=t('admin.client.ver')
-          th=t('admin.data.created_at')
+          th=ClientUpdate.human_attribute_name(:version)
+          th=ClientUpdate.human_attribute_name(:create_at)
           th
       tbody
         -@admin_clients.each do |client|

@@ -19,7 +19,7 @@ class Admin::RecommendationsController < AdminController
   @recommendation = Recommendation.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html # show.html.slim
       format.xml  { render :xml => @recommendation }
     end
   end
@@ -39,16 +39,8 @@ class Admin::RecommendationsController < AdminController
 
   # GET /recommendations/1/edit
   def edit
-    
-       @recommendation = Recommendation.find(params[:id])
-       
-       if @recommendation.recommend_type == Recommendation::RECOMMEND_TYPE_NORMAL
-      @games = Game.find(
-        :all, 
-        :select =>"id,name",
-        :group =>"id"
-      )    
-    end
+    @recommendation = Recommendation.find(params[:id])
+    @games = Game.select('id, title') if @recommendation.recommend_type == Recommendation::RECOMMEND_TYPE_NORMAL
       
   end
 
@@ -56,37 +48,15 @@ class Admin::RecommendationsController < AdminController
   # POST /recommendations.xml
   def create
     @recommendation = Recommendation.new(params[:recommendation])
-    err = nil
-    
-    1.times do 
-      if  !params[:image]
-        @recommendation.errors[:base] << I18n.t("ERRORS.ERR_RECOMENDATED_IMG_NULL")
-        break
-      end
-      
-      file_type = params[:image][0].content_type.chomp
-      
-      if (file_type !~ /^image\/.*?jpeg|jpg|png|bmp|gif$/i)   # File type should be IMAGE
-        err = I18n.t("page.message.image_type_invalid")
-        return err, nil
-      end
-      
-      @recommendation.save
-      
-      image = params[:image][0]
-      @picture = Picture.new(@recommendation,image)
-      @recommendation.full_pic = @picture.url
-      @picture.save
-    end
-    
+    #explict assign or it will not call method pictrue= when picture is not choosen
+    @recommendation.picture = params[:recommendation][:picture]
+
     respond_to do |format|
-      if @recommendation.errors.size == 0 && @recommendation.save!
-        format.html { redirect_to(admin_recommendation_path(@recommendation), :notice => I18n.t("page.admin.release_success")) }
-        format.xml  { render :xml => @recommendation, :status => :created, :location => @recommendation }
+      if @recommendation.errors.empty? && @recommendation.save!
+        format.html { redirect_to(admin_recommendations_path(:recommend_type => @recommendation.recommend_type), :notice => t('admin.msg.success')) }
       else
-        
-        format.html { redirect_to :action => "new", :recommendation_type => @recommendation.recommend_type, :errors => @recommendation.errors[:base]}
-        format.xml  { render :xml => @recommendation.errors, :status => :unprocessable_entity }
+        flash[:alert] = @recommendation.errors[:base]
+        format.html { redirect_to :action => "new", :recommendation_type => @recommendation.recommend_type}
       end
     end
   end
@@ -94,22 +64,15 @@ class Admin::RecommendationsController < AdminController
   # PUT /recommendations/1
   # PUT /recommendations/1.xml
   def update
-  
     @recommendation = Recommendation.find(params[:id])
-  
-    if params[:image] != nil
-      image = params[:image]
-      @picture = Picture.new(@recommendation,image)
-      @picture.save
-    end
-    
+    #explict assign to validate the pic format
+    @recommendation.picture = params[:recommendation][:picture] if params[:recommendation][:picture]
     respond_to do |format|
-      if @recommendation.update_attributes(params[:recommendation])
-        format.html { redirect_to(admin_recommendation_path(@recommendation), :notice => 'Recommendation was successfully updated.') }
-        format.xml  { head :ok }
+      if @recommendation.errors.empty? && @recommendation.update_attributes!(params[:recommendation])
+        format.html { redirect_to(admin_recommendations_path(:recommend_type => @recommendation.recommend_type), :notice => t('admin.msg.success')) }
       else
+        flash[:alert] = @recommendation.errors[:base]
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @recommendation.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -118,11 +81,10 @@ class Admin::RecommendationsController < AdminController
   # DELETE /recommendations/1.xml
   def destroy
     @recommendation = Recommendation.find(params[:id])
-    @recommendation.picture.delete
     @recommendation.destroy
 
     respond_to do |format|
-      format.html { redirect_to(admin_recommendations_url) }
+      format.html { redirect_to(admin_recommendations_url(:recommend_type => @recommendation.recommend_type)) }
       format.xml  { head :ok }
     end
   end

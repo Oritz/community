@@ -1,0 +1,70 @@
+= form_for([:admin, @auth_item], :class=>'form-horizontal') do |f|
+  - if @auth_item.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@admin_auth_item.errors.count, "error")} prohibited this admin_auth_item from being saved:"
+      ul
+        - @auth_item.errors.full_messages.each do |message|
+          li = message
+  = f.hidden_field(:auth_type, value: @auth_item.auth_type)
+  .control-group
+    label.control-label
+      = AuthItem.human_attribute_name(:name)
+    .controls
+      = f.text_field(:name)
+  .control-group
+    label.control-label
+      = AuthItem.human_attribute_name(:description)
+    .controls
+      = f.text_area(:description, size: '50x3')
+  .control-group
+    label.control-label
+      = AuthItem.human_attribute_name(:bizrule)
+    .controls
+      = f.text_area(:bizrule, size: '50x2')
+  .control-group
+    label.control-label
+      = AuthItem.human_attribute_name(:data)
+    .controls
+      = f.text_field(:data, size: '50x3')
+  - unless @auth_item.auth_type == AuthItem::TYPE_OPERATION
+    .control-group
+      label.control-label
+        = AuthItem.human_attribute_name(:role)
+      .controls
+        .row
+          - @roles.each do |auth_item|
+            .span
+              - unless(auth_item.id == @auth_item.id)
+                =check_box_tag('auth_item[oper_arr][]', auth_item.id, checked = @auth_item.has_child?(auth_item))
+                =auth_item.name
+    .control-group
+      label.control-label
+        = AuthItem.human_attribute_name(:task)
+      .controls
+        .row
+
+          - @tasks.each do |auth_item|
+            .span
+              - unless(auth_item.id == @auth_item.id)
+                =check_box_tag('auth_item[oper_arr][]', auth_item.id, checked = @auth_item.has_child?(auth_item))
+                =auth_item.name
+    .control-group
+      label.control-label
+        = AuthItem.human_attribute_name(:operation)
+      .controls
+        .row
+          - @operations.each do |auth_item|
+            .span
+              =check_box_tag('auth_item[oper_arr][]', auth_item.id, checked = @auth_item.has_child?(auth_item))
+              =auth_item.name
+  .control-group
+    .controls
+      =f.submit(class: 'btn btn-primary')
+=content_for(:js_files) do
+  javascript:
+    $(document).ready(function(){
+      $('input').iCheck({
+        checkboxClass: 'icheckbox_polaris'
+      });
+    });
+

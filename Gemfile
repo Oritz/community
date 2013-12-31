@@ -39,8 +39,7 @@ gem 'jquery-rails'
 # To use debugger
 # gem 'debugger'
 
-#gem 'will_paginate'
-#gem 'delayed_job_active_record'
+gem 'kaminari'
 gem 'fastercsv'
 gem 'json'
 gem 'zip'
@@ -98,5 +97,6 @@ gem "devise-async"
 gem 'parsley-rails'
 gem 'humanizer'
 gem 'activerecord-import', '~> 0.4.1'
+gem 'activeadmin'
+gem 'meta_search'
 gem 'jbuilder'
-gem 'kaminari'

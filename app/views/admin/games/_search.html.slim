@@ -4,11 +4,11 @@
   table.table.table-striped.table-bordered.table-condensed
     thead
       tr
-        th =t 'admin.game.id'
-        th =t 'admin.game.name'
-        th =t 'admin.game.status'
+        th = Game.human_attribute_name(:id)
+        th = Game.human_attribute_name(:title)
+        th = GameFile.human_attribute_name(:status)
         th.text-center colspan=3  =t 'admin.game.release_process'
-        th =t 'admin.serial.serials'
+        th = GameSerialNumber.model_name.human
     tbody
       - @games.each do |g|
         tr class=tr_with_status(g.status)

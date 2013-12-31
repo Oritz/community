@@ -8,17 +8,17 @@
       .sns_release_data_top_r
         .sns_release_data_top_dj
           span.top_dj_id
-          = link_to current_account.nick_name, "#"
-          span.top_dj_id_sj
-            ul
-              li.sns_tx_id_yxBJ 333
-              li.sns_tx_id_jlBJ 222
-              li.sns_tx_id_sjBJ 111
+            = link_to current_account.nick_name, "#"
         .sns_release_data_top_cj
           span.top_dj_dj
             = link_to "Lv #{level(current_account.exp)}", "#"
           span.top_dj_dj_sj.total-level
             i.top_dj_dj_sj_jdt.level level=current_account.level
+        span.top_dj_id_sj1
+          ul
+            li.sns_tx_id_yxBJ 333
+            li.sns_tx_id_jlBJ 222
+            li.sns_tx_id_sjBJ 111
     .sns_release_data_con
       ul
         li.sns_release_data_con_fs
@@ -55,7 +55,7 @@
               .snsshow1
                 p
                   a href="#"  举报
-              = f.submit "发布", disable: ""
+              = f.submit "发布", disable: "", class: "issue_btn"
       .image-upload-block style="display: none;"
         .image-upload-form style="display: none;"
           form#qiniu_uploader method="post" action="http://up.qiniu.com/" enctype="multipart/form-data"

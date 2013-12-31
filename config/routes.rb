@@ -145,12 +145,12 @@ SonkwoCommunity::Application.routes.draw do
         put :game_serial_type
       end
     end
-
+    resources :auth_items
+    resources :accounts
     resources :serial_types
     resources :download_servers
     resources :clients
     resources :recommendations
     get '/', to: 'admin#index'
-
   end
 end
