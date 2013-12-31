@@ -640,7 +640,6 @@
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	margin-bottom:20px;
-	position:relative;
 }
 .sns_gr_home_top_pois {
 	position:absolute;
@@ -658,7 +657,7 @@
 	float:left;
 	background-image: url(<%= asset_path("banner/tx_tu.jpg") %>);
 	background-repeat: no-repeat;
-	float:left;
+	float:left;position: relative;
 }
 .sns_gr_home_top_Ltx_png {
 	width:390px;
@@ -701,6 +700,17 @@
 	float:left;
 	margin-top:30px;
 }
+.user-status-block a{position: absolute;
+bottom: 20px;
+right: 20px;float: left;
+height: 24px;
+line-height: 24px;
+padding: 0px 10px;
+background: none repeat scroll 0% 0% rgb(87, 170, 225);color: #fff;-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.user-status-block a:hover{ text-decoration: underline;}
 .home_top_Ltx_r_id {
 	height:30px;
 	line-height:30px;
@@ -1801,6 +1811,15 @@ border-color: rgb(204, 204, 204);}
 .option a:hover {
 	background:#2c3e50;
 	color:#fff;
+}
+.issue_btn{border:0;
+	width:112px;
+	height:35px; margin-top:3px; 
+	cursor:pointer;
+	background-color: #ccc;
+	border-radius:3px;}
+.issue_btn:hover,.issue_btn:focus {
+	background:#3498db;color: #fff;
 }
 /*社区底部*/
 	#footer {
