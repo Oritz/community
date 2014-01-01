@@ -2,14 +2,25 @@
 
 -content_for :content do
   h3 =Game.model_name.human
-  =form_tag '/admin/games', :method => :get do
-    span
-      input#search_text name='query' type='text' /
-      '
-    span
-      input.btn.btn-primary type='submit'  value=t('helpers.links.search') /
-
+  =search_form_for([:admin, @q], url: admin_games_path, class: 'form-inline') do |f|
+    =f.text_field(:game_title_cont, placeholder: Game.human_attribute_name(:title)) 
+    =f.text_field(:game_alias_name_cont, placeholder: Game.human_attribute_name(:alias_name)) 
+    - status_arr = GameFile.human_attribute_name(:status_arr)
+    =f.select(:status_eq, status_arr.map{|s| [s, status_arr.index(s)]}, {include_blank: GameFile.human_attribute_name(:status)})
+    #start_time.input-append.date
+      =f.text_field(:created_at_gteq, placeholder: "start time")
+      span.add-on : i.icon-calendar
+    #end_time.input-append.date
+      =f.text_field(:created_at_lteq, placeholder: "end time")
+      span.add-on : i.icon-calendar
+    =f.submit(class: 'btn')
   #ajaxWrapper
     =render 'search'
     =paginate @games
+-content_for(:js_files) do
+  javascript:
+    $(document).ready(function(){
+      $("#start_time").datetimepicker();
+      $("#end_time").datetimepicker();
+    })
 

@@ -97,6 +97,5 @@ gem "devise-async"
 gem 'parsley-rails'
 gem 'humanizer'
 gem 'activerecord-import', '~> 0.4.1'
-gem 'activeadmin'
-gem 'meta_search'
+gem 'ransack'
 gem 'jbuilder'

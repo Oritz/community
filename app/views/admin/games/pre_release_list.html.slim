@@ -18,8 +18,6 @@
             td
               - if game_file.status == GameFile::STATUS_NEW || game_file.status == GameFile::STATUS_TO_VERIFY
 			    = button_to t('admin.game.release.cancel_release'), cancel_pre_release_admin_game_path(:game_file_id => game_file.id, :class => 'btn')
-              - else
-                = t 'admin.msg.no_release'
     p
       a.btn.btn-info href =new_pre_release_admin_game_path
         =t 'admin.game.release.new_pre_release'

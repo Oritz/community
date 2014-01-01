@@ -3,19 +3,8 @@ require 'uuidtools'
 #require 'common/workflow_service'
 class Admin::GamesController < AdminController
   def index
-    query = params[:query] ? params[:query].chomp : nil
-    auditing_games = nil
-
-    if query == "" || query == nil
-      @games = GameFile.select('id, game_id, status, created_at').includes(:game).page(params[:page]).per(10)
-    else
-      conditions =  "title LIKE '%#{query}%' OR alias_name LIKE '%#{query}%'"
-      @games = GameFile.select('id, game_id, status, created_at').includes(:game).where(conditions).paginate(
-          :per_page => 10,
-          :page => params[:page]
-      )
-
-    end
+    @q = GameFile.search(params[:q])
+    @games = @q.result.page(params[:page]).per(10)
 
     respond_to do |format|
       format.html # index.html.slim
