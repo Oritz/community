@@ -32,6 +32,8 @@ class Group < ActiveRecord::Base
   has_many :tags, through: :groups_tags
   has_many :posts, inverse_of: :group, conditions: "status=#{Post::STATUS_NORMAL}", include: :detail
 
+  has_one :tipoff, as: :detail
+
   # Scopes
   scope :sort_by_hot, ->(count) { order("#{table_name}.member_count DESC").limit(count) }
 

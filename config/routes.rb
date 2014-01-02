@@ -106,6 +106,8 @@ SonkwoCommunity::Application.routes.draw do
     end
   end
 
+  resources :tipoffs, only: [:create]
+
   # sidekiq
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'

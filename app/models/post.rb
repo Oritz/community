@@ -45,6 +45,8 @@ class Post < ActiveRecord::Base
   has_one :image, class_name: 'PostImage', foreign_key: 'post_id'
   delegate :url, to: :image, prefix: true
 
+  has_one :tipoff, as: :detail
+
   # Recommend Association
   belongs_to :original, class_name: 'Post', foreign_key: 'original_id'
   delegate :content, :title, :creator, :image_url, to: :original, prefix: true

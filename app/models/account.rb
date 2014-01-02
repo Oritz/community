@@ -72,6 +72,8 @@ class Account < ActiveRecord::Base
   has_many :accounts_tags
   has_many :tags, through: :accounts_tags
 
+  has_one :tipoff, as: :detail
+
   # Validations
   validates :exp, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :bonus, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
@@ -160,6 +162,30 @@ class Account < ActiveRecord::Base
   def posts_from_groups
     group_ids = self.groups.map(&:id)
     Post.where(group_id: group_ids).all_public
+  end
+
+  ###########################################
+  # TipoffActions
+  ###########################################
+  def tip_off(item, reason)
+    case item.class.to_s
+    when "Group"
+      target = item.creator
+    when "Post"
+      target = item.creator
+    when "Account"
+      target = item
+    else
+      nil
+    end
+
+    tipoff = Tipoff.new
+    tipoff.account = self
+    tipoff.detail = item
+    tipoff.target = target
+    tipoff.reason = reason
+    tipoff.status = Tipoff::STATUS[:undealt]
+    tipoff.save ? tipoff : nil
   end
 
   ###########################################
