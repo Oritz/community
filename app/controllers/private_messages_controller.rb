@@ -9,7 +9,7 @@ class PrivateMessagesController < ApplicationController
     elsif params[:recipient_name]
       @recipient = Account.where(nick_name: params[:recipient_name]).first
     end
-    
+
     unless @recipient
       render json: { status: "error", message: I18n.t("priavete_message.user_not_found") }
       return

@@ -48,6 +48,7 @@ SonkwoCommunity::Application.routes.draw do
       get 'people'
       get 'games'
       get 'games/:game_id', to: 'users#game'
+      get 'games/:game_id/game_achievements', to: 'users#game_achievements'
     end
     resources :albums, only: [:index, :create, :show, :new] do
       resources :photos, only: [:index, :create]
@@ -73,6 +74,8 @@ SonkwoCommunity::Application.routes.draw do
   resources :setting, only: [:index] do
     collection do
       get 'security'
+      get 'password'
+      put 'password', to: 'setting#update_password'
       post 'bind'
       get 'bind_complete'
     end

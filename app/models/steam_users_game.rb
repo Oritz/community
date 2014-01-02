@@ -29,6 +29,8 @@ class SteamUsersGame < ActiveRecord::Base
   def default_values
     self.has_community_visible_stats ||= self.class::VISIBLE_STATS_ENABLE
     self.achievements_count ||= 0
+    self.playtime_forever ||= 0
+    self.playtime_2weeks ||= 0
   end
 
   def update_reputation

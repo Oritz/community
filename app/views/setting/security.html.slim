@@ -1,6 +1,38 @@
-h1 Bind accounts
-- if current_account.steam_user
-  p steamid:
-  = current_account.steam_user.steamid
-= form_tag url_for(action: :bind) do
-  p= submit_tag "bind"
+.my-assets
+  .manage
+    .manage-nav
+      h2.fl 账号管理
+      span.fl
+        = link_to I18n.t("pages.account_info"), edit_account_registration_path, class: "rs3 manage-style"
+      span.fl.manage-nav-bj
+        a.rs3.manage-style.manage-active href="javascript:void(0);" 账号安全
+    .user-safety.rs3
+      .binding
+        .binding-fix.fl
+          .binding-block.rs3
+            .binding-block-h3.fl
+              span 登录密码
+            .binding-block-text.fl
+              span.binding-block-text-wz.fl
+                p 互联网账号存在被盗风险
+                p 建议您定期更改密码以保护账户安全。
+              span.binding-block-text-bn.fl
+                = link_to I18n.t("pages.update_password"), password_setting_index_path, class: "rs3"
+          .binding-block.rs3
+            .binding-block-h3.fl
+              span 邮箱激活
+            .binding-block-text.fl
+              span.binding-block-text-wz.fl
+                p 您激活的邮箱：
+                p= current_account.email.gsub(/.{0,4}@/, '***@')
+              span.binding-block-text-bn.fl
+                a.rs3 href="#" 修改邮箱
+        .binding-associate.rs3.fr
+          h3.associate-h3 第三方帐号关联
+          .associate-input
+            h4 Steam帐号
+            - if current_account.steam_user
+              input.associate-input-text.rs3.fl type="text" disabled="disabled" value=current_account.steam_user.steamid
+            span
+              = form_tag url_for(action: :bind) do
+                p= submit_tag current_account.steam_user ? I18n.t("pages.update_platform_account") : I18n.t("pages.bind_platform_account"), class: "associate-input-bn rs3 fl"

@@ -4,11 +4,23 @@ require 'openid/store/filesystem'
 
 class SettingController < ApplicationController
   before_filter :sonkwo_authenticate_account
+  layout "center", only: [:security, :password, :update_password]
 
   def security
   end
 
   def account
+  end
+
+  def password
+  end
+
+  def update_password
+    if current_account.change_password(params[:account])
+      redirect_to controller: :account_sessions, action: :destroy, via: :delete
+    else
+      render :password
+    end
   end
 
   def bind
