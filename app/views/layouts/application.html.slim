@@ -99,5 +99,6 @@ html
       - if flash[:success]
         p.flash-success
           = flash[:success]
+    .tipoff style="display: none;"
     = javascript_include_tag "application"
     = javascript_include_tag "#{params[:controller]}/#{params[:action]}"
