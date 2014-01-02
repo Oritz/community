@@ -74,6 +74,8 @@ SonkwoCommunity::Application.routes.draw do
   resources :setting, only: [:index] do
     collection do
       get 'security'
+      get 'password'
+      put 'password', to: 'setting#update_password'
       post 'bind'
       get 'bind_complete'
     end

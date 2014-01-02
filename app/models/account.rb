@@ -32,7 +32,7 @@ class Account < ActiveRecord::Base
 
   UPDATE_TAG_FINISH = 3 # There're three steps
 
-  attr_accessor :relationship
+  attr_accessor :relationship, :old_password
   attr_accessible :email, :password, :password_confirmation, :remember_me, :nick_name, :gender, :tos_agreement, :relation_id
 
   # Callbacks
@@ -96,6 +96,17 @@ class Account < ActiveRecord::Base
     subject.creator = self
     subject.save!
     subject.post
+  end
+
+  def change_password(params)
+    if self.valid_password?(params[:old_password])
+      self.password = params[:password]
+      self.password_confirmation = params[:password_confirmation]
+      self.save
+    else
+      self.errors[:old_password] << I18n.t("account.old_password_invalid")
+      false
+    end
   end
 
   ###########################################

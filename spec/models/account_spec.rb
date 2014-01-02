@@ -89,6 +89,17 @@ describe Account do
     end
   end
 
+  it "should change_password" do
+    password = "12345678"
+    new_password = "asdfasdf"
+    account = create(:account, password: password)
+    expect(account.change_password({
+                                   old_password: password,
+                                   password: new_password,
+                                   password_confiramton: new_password
+                                   })).to be_true
+  end
+
   context "social actions" do
     let(:account) { create(:account) }
 
