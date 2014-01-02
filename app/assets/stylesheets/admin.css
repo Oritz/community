@@ -8,10 +8,8 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
-
- *= require bootstrap_and_overrides
- *= require bootstrap-datetimepicker
  *= require_tree ./admin
+ *= require bootstrap-datetimepicker
  */
 
 body{padding-top: 70px;}
@@ -23,6 +21,4 @@ body{padding-top: 70px;}
     text-align: right;
 }
 
-a{
-   margin: 0 3px;
-}
+

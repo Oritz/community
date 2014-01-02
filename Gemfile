@@ -18,7 +18,6 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
-  gem 'twitter-bootstrap-rails'
   gem 'bootstrap-datetimepicker-rails'
 end
 
@@ -97,6 +96,5 @@ gem "devise-async"
 gem 'parsley-rails'
 gem 'humanizer'
 gem 'activerecord-import', '~> 0.4.1'
-gem 'activeadmin'
-gem 'meta_search'
+gem 'ransack'
 gem 'jbuilder'

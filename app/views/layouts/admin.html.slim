@@ -17,16 +17,17 @@ html lang="en"
     = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
 
   body
-    .navbar.navbar-fixed-top
-      .navbar-inner
-        .container
-          a.btn.btn-navbar data-target=".nav-collapse" data-toggle="collapse"
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.brand href="#"Sonkwo Dashboard
-          .container.nav-collapse
-            ul.nav
+    nav.navbar.navbar-default.navbar-fixed-top role='navigation'
+      .navbar-header
+        button.navbar-toggle data-toggle="collapse" data-target="#sonkwo_nav"
+          span.sr-only
+            'Toggle Navigation'
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.navbar-brand href="#"Sonkwo Dashboard
+      #sonkwo_nav.collapse.navbar-collapse
+            ul.nav.navbar-nav
               li class=("active" if params[:controller] == 'admin/admin')
                 = link_to(t('admin.titles.my_page'), admin_path)
               li class=("active" if params[:controller] == 'admin/accounts')
@@ -38,7 +39,7 @@ html lang="en"
               li class=("active" if params[:controller] == 'admin/download_servers')
                 = link_to(Admin::DownloadServer.model_name.human, admin_download_servers_path)
               li.divider
-            ul.nav.pull-right
+            ul.nav.navbar-nav.navbar-right
               li= link_to t('helpers.links.logout'), destroy_account_session_path
               li.dropdown
                 a.dropdown-toggle data-toggle='dropdown' href="#"
@@ -49,13 +50,13 @@ html lang="en"
     .container
 
       .row
-        .span2
+        .col-md-2
           .well.sidebar-nav
             h3 Sidebar
             ul.nav.nav-list
               li.nav-header Sidebar
               = yield :sidebar
-        .span10
+        .col-md-10
           = sonkwo_flash
           = yield :content
 
