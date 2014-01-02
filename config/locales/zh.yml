@@ -141,6 +141,7 @@ zh:
     should_agree_the_agreement: "请同意杉果协议"
     nick_name: "昵称"
     password: "密码"
+    current_password: "当前密码"
     old_password: "当前密码"
     new_password: "新的密码"
     password_confirmation: "确认密码"

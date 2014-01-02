@@ -1,6 +1,8 @@
 SonkwoCommunity::Application.routes.draw do
   begin
-    devise_for :accounts, :controllers => { :sessions => 'account_sessions', :registrations => 'account_registrations' }
+    devise_for :accounts, :controllers => { :sessions => 'account_sessions', :registrations => 'account_registrations' } do
+      get '/accounts/sign_out', to: 'account_sessions#destroy' # used for other platforms(store, forum)
+    end
   rescue Exception => e
     puts "Devise error: #{e.class}: #{e}"
   end
