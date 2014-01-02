@@ -1,0 +1,27 @@
+.sns_gr_home_top_zs
+  .sns_gr_home_top_Ltx_zs
+    .sns_gr_home_top_Ltx_png_zs
+      .home_top_Ltx_l_zs
+        .home_top_Ltx_l_tx_zs.border_2px_viptx
+          a href="javascript:void(0);"
+            = image_tag(account.avatar, class: "user-avatar")
+      .home_top_Ltx_r_zs
+        .home_top_Ltx_r_id_zs
+          = link_to account.nick_name, user_path(account)
+        .home_top_Ltx_r_id_jdt_kuang_zs
+          span.home_top_Ltx_r_id_jdt_zs
+            = link_to "Lv #{level(account.exp)}", "javascript:void(0);"
+          span.home_top_Ltx_r_id_jdt_bj.total-level
+            i.home_top_Ltx_r_id_jdt_bj1.level level=account.level
+    span.sns_gr_home_top_pois_zs
+  .sns_gr_home_top_Rzl_zs
+    .sns_gr_home_top_Rzl_t_zs
+      ul
+        li.sns_gr_home_top_Rzl_t_con_fs_zs
+          = link_to account.follower_count, people_user_path(account, type: "fans")
+        li.sns_gr_home_top_Rzl_t_con_fx_zs
+          = link_to account.following_count, people_user_path(account, type: "stars")
+        li.sns_gr_home_top_Rzl_t_con_pl_zs
+          = link_to account.talk_count+account.subject_count+account.recommend_count, user_path(account.id)
+        li.sns_gr_home_top_Rzl_t_con_ft_zs
+          a href="#" 99

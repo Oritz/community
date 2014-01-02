@@ -48,6 +48,7 @@ SonkwoCommunity::Application.routes.draw do
       get 'people'
       get 'games'
       get 'games/:game_id', to: 'users#game'
+      get 'games/:game_id/game_achievements', to: 'users#game_achievements'
     end
     resources :albums, only: [:index, :create, :show, :new] do
       resources :photos, only: [:index, :create]

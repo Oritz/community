@@ -25,7 +25,7 @@ function change_nav_height($block) {
 
 function toggle_nav($block, position) {
   var properties;
-  var px_str = "+=255px";
+  var px_str = "+=0px";
   var is_hide = parseInt($block.attr("is_hide"));
   if(is_hide == 0)
     px_str = "-=255px";

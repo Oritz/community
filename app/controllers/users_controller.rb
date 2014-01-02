@@ -108,21 +108,21 @@ class UsersController < ApplicationController
   def game
     @game = AllGame.find(params[:game_id])
     @account = Account.find(params[:id])
-    if @game.subable_type == "SteamGame" && @account.steam_user
-      steam_users_game = @account.steam_user.steam_users_games.choose_game(@game).first
-      if steam_users_game
-        ranklist = @game.ranklists.choose_user(@account.steam_user).first
-        render json: { status: "success", data: { achievements_count: steam_users_game.achievements_count, playtime_forever: steam_users_game.playtime_forever.to_i, rank: ranklist.rank_to_string } }
-        return
+    respond_to do |format|
+      format.html do
+        @statistic = @account.game_statistic(@game, false)
+        not_found unless @statistic
+        @game_achievements_count = @game.game_achievements.count
+        @game_achievements = @account.game_achievements(@game)
       end
-    end
-
-    accounts_other_game = @account.accounts_other_games.choose_game(@game).first
-    unless accounts_other_game
-      render json: { status: "error", message: I18n.t("account.not_have_game") }
-    else
-      ranklist = @game.ranklists.choose_user(@account).first
-      render json: { status: "success", data: { achievements_count: accounts_other_game.achievements_count, playtime_forever:  accounts_other_game.playtime_forever.to_i, rank: ranklist.rank_to_string } }
+      format.json do
+        @statistic = @account.game_statistic(@game)
+        if @statistic
+          render json: { status: "success", data: @statistic }
+        else
+          format.json { render json: { status: "error", message: I18n.t("account.not_have_game") } }
+        end
+      end
     end
   end
 

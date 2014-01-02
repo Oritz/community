@@ -44,7 +44,7 @@ class CloudStorage < ActiveRecord::Base
 
   def url
     if self.bucket_name && self.key
-      "http://#{self.bucket_name}.u.qiniudn.com/#{self.key}"
+      "http://#{self.bucket_name}.qiniudn.com/#{self.key}"
     else
       ""
     end
@@ -56,7 +56,7 @@ class CloudStorage < ActiveRecord::Base
       url = url.split("http://")[1]
       tmps = url.split("/")
       key = tmps[1]
-      bucket_name = tmps[0].split(".u.qiniudn.com")
+      bucket_name = tmps[0].split(".qiniudn.com")
       self.key = key
       self.bucket_name = bucket_name[0]
     rescue

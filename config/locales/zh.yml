@@ -143,6 +143,7 @@ zh:
     password: "密码"
     gender: "性别"
     email: "邮箱"
+    not_have_game: "没有拥有该游戏"
   pages:
     update: "更新"
     cancel: "取消"
@@ -179,3 +180,4 @@ zh:
     account_security: "账号安全"
     basic_info: "基本信息"
     edit_avatar: "修改头像"
+    upload_avatar: "上传头像"

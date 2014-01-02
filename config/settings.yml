@@ -28,21 +28,26 @@ default: &defaults
       default: "/game/default.jpg"
     group:
       default: "/group/default.jpg"
+    steam_user:
+      default: "/steamuser/default.jpg"
   cloud_storage:
     default_bucket: 'sonkwo-post'
     avatar_bucket: 'sonkwo-avatar'
     snapshot_bucket: 'sonkwo-snapshot'
     post_bucket: 'sonkwo-post'
+    group_bucket: 'sonkwo-group'
     sonkwo_key: 'dsfa1315zasfz989-77'
-    token_expire: 60
+    token_expire: 86400
     callback_url: 'http://101.71.243.50:8008/cloud_storages'
-    callback_body: 'name=$(fname)&size=$(fsize)&w=$(imageInfo.width)&h=$(imageInfo.height)&hash=$(etag)&sonkwo_token=$(x:sonkwo_token)&account_id=$(x:account_id)&timestamp=$(x:timestamp)&bucket_name=$(x:bucket_name)'
+    callback_body: 'name=$(fname)&size=$(fsize)&w=$(imageInfo.width)&h=$(imageInfo.height)&hash=$(etag)&sonkwo_token=$(x:sonkwo_token)&account_id=$(x:account_id)&timestamp=$(x:timestamp)&bucket_name=$(x:bucket_name)&sonkwo_callback=$(x:sonkwo_callback)'
     callback_body_type: 'application/x-www-form-urlencoded'
     escape: 1
     async_options: ''
     return_body: '{"foo": "bar", "size": $(fsize), "hash": $(etag), "w": $(imageInfo.width), "h": $(imageInfo.height), "color": $(exif.ColorSpace.val), "sonkwo_token": $(x:sonkwo_token), "account_id": $(x:account_id), "timestamp": $(x:timestamp)}'
   reputation:
     # The ORDER IS VERY IMPORTANT
+    unknow:
+      name: "未排名"
     elite:
       name: "ELITE"
       range:
@@ -222,10 +227,11 @@ development:
     avatar_bucket: 'sonkwo-avatar'
     snapshot_bucket: 'sonkwo-snapshot'
     post_bucket: 'sonkwo-post'
+    group_bucket: 'sonkwo-group'
     sonkwo_key: 'dsfa1315zasfz989-77'
     token_expire: 60
-    callback_url: 'http://101.71.243.50:8008/cloud_storages'
-    callback_body: 'name=$(fname)&size=$(fsize)&w=$(imageInfo.width)&h=$(imageInfo.height)&hash=$(etag)&sonkwo_token=$(x:sonkwo_token)&account_id=$(x:account_id)&timestamp=$(x:timestamp)&bucket_name=$(x:bucket_name)'
+    callback_url: 'http://101.71.243.50:3000/cloud_storages'
+    callback_body: 'name=$(fname)&size=$(fsize)&w=$(imageInfo.width)&h=$(imageInfo.height)&hash=$(etag)&sonkwo_token=$(x:sonkwo_token)&account_id=$(x:account_id)&timestamp=$(x:timestamp)&bucket_name=$(x:bucket_name)&sonkwo_callback=$(x:sonkwo_callback)'
     callback_body_type: 'application/x-www-form-urlencoded'
     escape: 1
     async_options: ''

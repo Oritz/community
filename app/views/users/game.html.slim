@@ -1,0 +1,39 @@
+.sns_release
+  = render partial: "users/user_info", locals: { account: @account }
+  .my-assets
+    .top_explanation
+      span.fl
+        h3.explanation_h3.fl 我拥有的游戏
+      span.fr.game-statistical
+      .statistical-users.rs3
+        .info_introduction.fl
+          .introduction_img.fl
+            = image_tag(@game.image)
+          .introduction_text.fr
+            .introduction_h2
+              h2= @game.name
+            .introduction_info
+              p.game_total_time
+              | 总游戏时间：#{@statistic[:playtime_forever]}小时
+        span.fr.statistical-users-rate.fl
+          span.fl
+          | 成就进度：[#{@statistic[:achievements_count]}/#{@game_achievements_count}]
+          span.users-rate_sj
+            i.users-rate_sj_jdt
+      .statistical-data
+        .top_explanation
+          span.fl
+            h3.explanation_h3.fl 获得的成就
+          span.fr.statistical-data-ul.rs3
+            ul
+            - @game_achievements.each do |item|
+              li
+                span.fl.statistical-ul-img
+                  = image_tag(item.steam_user_id ? item.unlock_url : item.lock_url)
+                span.fr.statistical-ul-text.rs3
+                  span.fl
+                    h3= item.name
+                    p.cl_grayA1= item.description
+                  - if item.created_at
+                    span.fr.statistical-ul-time
+                    | 获得时间: #{item.created_at.strftime("%Y-%m-%d")}
