@@ -49,6 +49,7 @@ zh:
         serial_number_types: ["公共", "私有", "基本", "全部"]
       game_file:
         status: "发布状态"
+        status_arr: ["未发布", "新建预发布", "审核通过", "审核未通过", "取消发布", "回滚"]
       auth_item:
         auth_type: 类型
         auth_type_names: ["操作", "任务", "角色"]
