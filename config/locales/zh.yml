@@ -189,6 +189,7 @@ zh:
     basic_info: "基本信息"
     edit_avatar: "修改头像"
     upload_avatar: "上传头像"
+    upload_image: "上传图片"
     bind_platform_account: "关联"
     update_platform_account: "修改"
     update_password: "修改密码"

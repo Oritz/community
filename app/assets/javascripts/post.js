@@ -45,7 +45,6 @@ function posts(options) {
       else
         load_posts(data.data, 0, options.templates, options.wrapper, options.csrf);
       options.success(data.data);
-      
     }
     else {
       posts.status = 2;
