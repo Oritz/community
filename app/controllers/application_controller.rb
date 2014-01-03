@@ -40,6 +40,7 @@ class ApplicationController < ActionController::Base
   def load_for_layout
     if _layout == "application" && request.format != "json"
       @friends = Account.friends(current_account).limit(12).order("updated_at DESC") if current_account
+      @tipoff_reasons = TipoffReason.all
     end
   end
 

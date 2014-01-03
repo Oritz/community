@@ -17,6 +17,7 @@
 //= require_tree ../../../vendor/assets/javascripts
 //= require flash_message
 //= require misc
+//= require tipoff
 
 function change_nav_height($block) {
   nav_height = $(window).height() - 40;
@@ -123,4 +124,6 @@ $(document).ready(function () {
   });
 
   $("#sns_nav").nav_float();
+
+  // popup tipoff
 });

@@ -1,7 +1,9 @@
 class Group < ActiveRecord::Base
   #attr_protected :member_count, :creator_id, :group_type, :status, :created_at, :updated_at
   attr_accessible :name, :description, :logo
-  #mount_uploader :logo, GroupUploader
+
+  # Plugins
+  acts_as_tipoffable target: "creator"
   # Constants
   TYPE = {'OFFICAL' => 0, 'FOLK' => 1}
   STATUS = {'NORMAL' => 0}

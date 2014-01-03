@@ -6,6 +6,8 @@ class Post < ActiveRecord::Base
     find_options: {include: [:detail, :creator]}
   #acts_as_polymorphic name: "detail"
 
+  acts_as_tipoffable target: "creator"
+
   attr_accessible :recommendation
   #attr_protected :post_type, :privilege, :status, :comment_count, :recommend_count, :like_count, :created_at, :updated_at
   # Constants
@@ -44,6 +46,8 @@ class Post < ActiveRecord::Base
 
   has_one :image, class_name: 'PostImage', foreign_key: 'post_id'
   delegate :url, to: :image, prefix: true
+
+  has_one :tipoff, as: :detail
 
   # Recommend Association
   belongs_to :original, class_name: 'Post', foreign_key: 'original_id'
