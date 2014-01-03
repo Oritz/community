@@ -20,6 +20,7 @@ class Tipoff < ActiveRecord::Base
   validates :account, presence: true
   validates :detail, presence: true
   validates :reason, presence: true
+  validates :account_id, uniqueness: { scope: [:detail_type, :detail_id], message: I18n.t("tipoff.already_tipoff") }
 
   # Methods
   protected

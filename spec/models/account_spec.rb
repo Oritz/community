@@ -124,7 +124,7 @@ describe Account do
 
     it "should tip-off a group" do
       group = create(:group)
-      expect(account.tip_off(group, reason)).not_to be_nil
+      expect(account.tip_off("Group", group.id, reason)).not_to be_nil
 
       tipoff = Tipoff.first
       expect(tipoff).not_to be_nil
@@ -132,7 +132,7 @@ describe Account do
 
     it "should tip-off a post" do
       post = create(:talk).post
-      expect(account.tip_off(post, reason)).not_to be_nil
+      expect(account.tip_off("Post", post.id, reason)).not_to be_nil
 
       tipoff = Tipoff.first
       expect(tipoff).not_to be_nil
@@ -140,7 +140,7 @@ describe Account do
 
     it "should tip-off an account" do
       another = create(:account)
-      expect(account.tip_off(account, reason)).not_to be_nil
+      expect(account.tip_off("Account", account.id, reason)).not_to be_nil
 
       tipoff = Tipoff.first
       expect(tipoff).not_to be_nil

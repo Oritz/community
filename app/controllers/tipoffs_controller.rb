@@ -3,19 +3,14 @@ class TipoffsController < ApplicationController
   layout false
 
   def create
-    reason = Tipoff.find(params[:tipoff_reason_id])
-    if params[:group_id]
-      item = Group.find(params[:group_id])
-    elsif params[:post_id]
-      item = Post.find(params[:post_id])
-    elsif params[:account_id]
-      item = Account.find(params[:account_id])
-    else
-      not_found
-    end
+    reason = TipoffReason.find(params[:tipoff_reason_id])
 
-    if tipoff = current_account.tip_off(item, reason)
-      render json: { status: "success", data: { id: tipoff.id } }
+    if tipoff = current_account.tip_off(params[:detail_type], params[:detail_id], reason)
+      if tipoff.errors.empty?
+        render json: { status: "success", data: { id: tipoff.id } }
+      else
+        render json: { status: "fail", data: tipoff.errors }
+      end
     else
       render json: { status: "error", message: I18n.t("account.tipoff_failed") }
     end

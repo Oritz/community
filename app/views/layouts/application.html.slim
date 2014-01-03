@@ -86,7 +86,7 @@ html
       .push_container
         == yield
     #footer
-    div.flash-messages style="display: none;"
+    .flash-messages style="display: none;"
       - if flash[:error]
         p.flash-error
           = flash[:error]
@@ -99,6 +99,21 @@ html
       - if flash[:success]
         p.flash-success
           = flash[:success]
-    .tipoff style="display: none;"
+    .tipoff-block style="display: none;"
+      .tipoff-block-header
+        span.tipoff-block-header-text
+        | 请选择举报理由
+        span.tipoff-block-header-close
+      .tipoff-block-content
+        input name="detail_type" type="hidden" value=""
+        input name="detail_id" type="hidden" value=""
+        - @tipoff_reasons.each do |reason|
+          span
+            input name="tipoff_reason_id" type="radio" value=reason.id
+            | #{reason.name}
+        p.error-container style="display: none;" 请选择举报理由
+      .tipoff-block-footer
+        button name="cancel" 取消
+        button name="ok" 确定
     = javascript_include_tag "application"
     = javascript_include_tag "#{params[:controller]}/#{params[:action]}"

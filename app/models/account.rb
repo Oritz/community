@@ -21,6 +21,8 @@ class Account < ActiveRecord::Base
     t.add :nick_name
   end
 
+  acts_as_tipoffable
+
   EMAIL_NOT_VERIFY = 0
   EMAIL_VERIFIED = 1
   INVITED = 1
@@ -167,25 +169,18 @@ class Account < ActiveRecord::Base
   ###########################################
   # TipoffActions
   ###########################################
-  def tip_off(item, reason)
-    case item.class.to_s
-    when "Group"
-      target = item.creator
-    when "Post"
-      target = item.creator
-    when "Account"
-      target = item
-    else
-      nil
-    end
-
+  def tip_off(item_type, item_id, reason)
     tipoff = Tipoff.new
+    tipoff.detail_type = item_type
+    tipoff.detail_id = item_id
+    return nil unless tipoff.detail
+
     tipoff.account = self
-    tipoff.detail = item
-    tipoff.target = target
+    tipoff.target = tipoff.detail.tipoff_target
     tipoff.reason = reason
     tipoff.status = Tipoff::STATUS[:undealt]
-    tipoff.save ? tipoff : nil
+    tipoff.save
+    tipoff
   end
 
   ###########################################

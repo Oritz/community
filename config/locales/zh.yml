@@ -149,6 +149,9 @@ zh:
     email: "邮箱"
     not_have_game: "没有拥有该游戏"
     old_password_invalid: "当前密码不正确"
+    tipoff_failed: "举报失败"
+  tipoff:
+    already_tipoff: "您已举报过该问题"
   pages:
     update: "更新"
     cancel: "取消"
