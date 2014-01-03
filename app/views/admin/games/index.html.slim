@@ -1,20 +1,27 @@
 =render 'nav'
 
 -content_for :content do
-  h3 =Game.model_name.human
-  =search_form_for([:admin, @q], url: admin_games_path, class: 'form-inline') do |f|
-    =f.text_field(:game_title_cont, placeholder: Game.human_attribute_name(:title)) 
-    =f.text_field(:game_alias_name_cont, placeholder: Game.human_attribute_name(:alias_name)) 
-    - status_arr = GameFile.human_attribute_name(:status_arr)
-    =f.select(:status_eq, status_arr.map{|s| [s, status_arr.index(s)]}, {include_blank: GameFile.human_attribute_name(:status)})
-    #start_time.input-append.date
-      =f.text_field(:created_at_gteq, placeholder: "start time")
-      span.add-on : i.icon-calendar
-    #end_time.input-append.date
-      =f.text_field(:created_at_lteq, placeholder: "end time")
-      span.add-on : i.icon-calendar
-    =f.submit(class: 'btn')
-  #ajaxWrapper
+  .row
+    h3 =Game.model_name.human
+    =search_form_for([:admin, @q], url: admin_games_path, class: 'form-inline') do |f|
+      .form-group
+        =f.text_field(:game_title_cont, placeholder: Game.human_attribute_name(:title), class: 'form-control')
+      .form-group
+        =f.text_field(:game_alias_name_cont, placeholder: Game.human_attribute_name(:alias_name), class: 'form-control') 
+
+      - status_arr = GameFile.human_attribute_name(:status_arr)
+      .form-group
+        =f.select(:status_eq, status_arr.map{|s| [s, status_arr.index(s)]}, {include_blank: GameFile.human_attribute_name(:status)}, class: 'form-control')
+      .form-group
+        #start_time.input-group
+          =f.text_field(:created_at_gteq, placeholder: "start time", class: 'form-control')
+          span.input-group-addon.glyphicon.glyphicon-calendar
+      .form-group
+        #end_time.input-group
+          =f.text_field(:created_at_lteq, placeholder: "end time", class: 'form-control')
+          span.input-group-addon.glyphicon.glyphicon-calendar
+      =f.submit(class: 'btn btn-default')
+  .row
     =render 'search'
     =paginate @games
 -content_for(:js_files) do

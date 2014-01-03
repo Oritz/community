@@ -127,8 +127,9 @@ SonkwoCommunity::Application.routes.draw do
 
   end
   # match ':controller(/:action(/:id))(.:format)'
+  get 'admin', to: 'admin#index'
   namespace :admin do
-    resources :games do
+    resources :games, only: [:index] do
       member do
         get :pre_release_list
         get :submit_release
@@ -152,6 +153,8 @@ SonkwoCommunity::Application.routes.draw do
     resources :download_servers
     resources :clients
     resources :recommendations
-    get '/', to: 'admin#index'
+    resources :all_games do
+      resources :achievements
+    end
   end
 end

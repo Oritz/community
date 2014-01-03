@@ -1,0 +1,21 @@
+= form_for [:admin, @game], class: 'form-horizontal' do |f|
+  - if @game.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@game.errors.count, "error")} prohibited this game from being saved:"
+      ul
+        - @game.errors.full_messages.each do |message|
+          li = message
+  .form-group
+    label for='name' =Game.human_attribute_name(:title)
+    =f.text_field(:name, placeholder: Game.human_attribute_name(:title), class: 'form-control')
+  .from-group
+    = f.fields_for :subable do |detail|
+      .form-group
+        label for='appid' STEAM APPID
+        = detail.text_field(:appid, placeholder: 'APPID', class: 'form-control')
+        = f.hidden_field :subable_type, value: @game.subable_type
+  .form-group
+    label for='image'
+    =image_tag(@game.image)
+
+  .actions = f.submit 'save'

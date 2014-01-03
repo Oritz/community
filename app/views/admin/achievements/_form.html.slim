@@ -1,0 +1,30 @@
+= form_for [:admin_all, @admin_achievement], class: 'form-horizontal' do |f|
+  - if @admin_achievement.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@admin_achievement.errors.count, "error")} prohibited this admin_achievement from being saved:"
+      ul
+        - @admin_achievement.errors.full_messages.each do |message|
+          li = message
+  .form-group
+    label for='name' =GameAchievement.human_attribute_name(:name)
+    =f.text_field(:name, class: 'form-control')
+  .form-group
+    label for='description' =GameAchievement.human_attribute_name(:description)
+    =f.text_area(:description, class: 'form-control')
+  .form-group
+    = f.fields_for :subable do |detail|
+      .form-group
+        label for='api_name' =SteamGameAchievement.human_attribute_name(:api_name)
+        = detail.text_field(:api_name, class: 'form-control')
+        = f.hidden_field :subable_type, value: @admin_achievement.subable_type
+      .form-group
+        label for='percent' =SteamGameAchievement.human_attribute_name(:percent)
+        =detail.text_field(:percent, class: 'form-control')
+  .form-group
+    /todo : replace the hidden default value to file chose button
+    label =GameAchievement.human_attribute_name(:lock_url)
+    =f.hidden_field(:lock_url, value: Settings.images.game.default)
+  .form-group
+    label =GameAchievement.human_attribute_name(:unlock_url)
+    =f.hidden_field(:unlock_url, value: Settings.images.game.default)
+  .actions = f.submit 'Save'

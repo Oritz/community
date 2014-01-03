@@ -18,44 +18,42 @@ html lang="en"
 
   body
     nav.navbar.navbar-default.navbar-fixed-top role='navigation'
-      .navbar-header
-        button.navbar-toggle data-toggle="collapse" data-target="#sonkwo_nav"
-          span.sr-only
-            'Toggle Navigation'
-          span.icon-bar
-          span.icon-bar
-          span.icon-bar
-        a.navbar-brand href="#"Sonkwo Dashboard
-      #sonkwo_nav.collapse.navbar-collapse
-            ul.nav.navbar-nav
-              li class=("active" if params[:controller] == 'admin/admin')
-                = link_to(t('admin.titles.my_page'), admin_path)
-              li class=("active" if params[:controller] == 'admin/accounts')
-                = link_to(Account.model_name.human, admin_accounts_path)
-              li class=("active" if params[:controller] == 'admin/games')
-                = link_to(Game.model_name.human, admin_games_path)
-              li class=("active" if params[:controller] == 'admin/clients')
-                = link_to(ClientUpdate.model_name.human, admin_clients_path)
-              li class=("active" if params[:controller] == 'admin/download_servers')
-                = link_to(Admin::DownloadServer.model_name.human, admin_download_servers_path)
-              li.divider
-            ul.nav.navbar-nav.navbar-right
-              li= link_to t('helpers.links.logout'), destroy_account_session_path
-              li.dropdown
-                a.dropdown-toggle data-toggle='dropdown' href="#"
-                  =t('helpers.language')
-                ul.dropdown-menu
-                  li= link_to t('helpers.languages.chinese'), '#'
-                  li= link_to t('helpers.languages.english'), '#'
+      .container
+        .navbar-header
+          button.navbar-toggle data-toggle="collapse" data-target="#sonkwo_nav"
+            span.sr-only
+              'Toggle Navigation'
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand href="#" Sonkwo Dashboard
+        #sonkwo_nav.collapse.navbar-collapse
+              ul.nav.navbar-nav
+                li class=("active" if params[:controller] == 'admin')
+                  = link_to(t('admin.titles.my_page'), admin_path)
+                li class=("active" if(%w(admin/accounts admin/auth_items).include?(params[:controller])))
+                  = link_to(Account.model_name.human, admin_accounts_path)
+                li class=("active" if(%w(admin/games admin/serial_types admin/recommendations admin/all_games).include?(params[:controller])))
+                  = link_to(Game.model_name.human, admin_games_path)
+                li class=("active" if params[:controller] == 'admin/clients')
+                  = link_to(ClientUpdate.model_name.human, admin_clients_path)
+                li class=("active" if params[:controller] == 'admin/download_servers')
+                  = link_to(Admin::DownloadServer.model_name.human, admin_download_servers_path)
+                li.divider
+              ul.nav.navbar-nav.navbar-right
+                li= link_to t('helpers.links.logout'), destroy_account_session_path
+                li.dropdown
+                  a.dropdown-toggle data-toggle='dropdown' href="#"
+                    =t('helpers.language')
+                  ul.dropdown-menu
+                    li= link_to t('helpers.languages.chinese'), '#'
+                    li= link_to t('helpers.languages.english'), '#'
     .container
 
       .row
-        .col-md-2
-          .well.sidebar-nav
-            h3 Sidebar
-            ul.nav.nav-list
-              li.nav-header Sidebar
-              = yield :sidebar
+        .col-md-2.sidebar-offcanvas role='navigation'
+          .list-group
+            = yield :sidebar
         .col-md-10
           = sonkwo_flash
           = yield :content

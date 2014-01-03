@@ -1,0 +1,23 @@
+=render 'admin/games/nav'
+-content_for :content do
+  .row
+    ul#my_tab.nav.nav-tabs
+      li id="steam_games"
+        =link_to('Steam', '#steam')
+    .tab-content
+      #steam.tab-pane.active
+        table.table.table-striped.table-bordered.table-condensed
+          tr
+            th=GameAchievement.human_attribute_name(:name)
+            th=GameAchievement.human_attribute_name(:lock_url)
+            th=GameAchievement.human_attribute_name(:unlock_url)
+          - @admin_achievements.each do |admin_achievement|
+            tr
+              td = admin_achievement.name
+              td = image_tag(admin_achievement.lock_url)
+              td = image_tag(admin_achievement.unlock_url)
+              td = link_to 'Edit', edit_admin_all_game_achievement_path(admin_achievement.id, all_game_id: params[:all_game_id])
+              td = link_to 'Destroy', admin_all_game_achievement_path(params[:all_game_id], admin_achievement.id), data: {:confirm => 'Are you sure?'}, :method => :delete
+        = t('admin.msg.no_data') if @admin_achievements.empty?
+        div
+          = link_to 'New Achievement', new_admin_all_game_achievement_path
