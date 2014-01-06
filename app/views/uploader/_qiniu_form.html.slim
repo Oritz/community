@@ -3,6 +3,7 @@ form#qiniu_uploader_form action="http://up.qiniu.com/" method="post" enctype="mu
   input name="x:account_id" value=current_account.id
   input name="x:timestamp" value=@cloud_storage_settings[:now]
   input name="x:sonkwo_token" value=@cloud_storage_settings[:sonkwo_token]
-  input name="x:bucket_name" value=@bucket_name
-  input name="x:sonkwo_callback" value=""
+  input name="x:bucket_name" value=@bucket
+  input name="x:sonkwo_callback" value=@callback_name
+  input name="x:sonkwo_callback_params" value=@callback_params
   input name="file" type="file"

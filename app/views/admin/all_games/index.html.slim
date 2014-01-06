@@ -1,0 +1,60 @@
+=render 'admin/games/nav'
+-content_for :content do
+  .row
+    h3 =Game.model_name.human
+    =search_form_for([:admin, @q], url: admin_all_games_path, class: 'form-inline') do |f|
+      .input-group
+        =f.text_field(:name_cont, placeholder: Game.human_attribute_name(:title), class: 'form-control')
+        span.input-group-btn
+          =f.submit(class: 'btn')
+  .row
+    ul#my_tab.nav.nav-tabs
+      li id="all_games"
+        =link_to('All', '#all')
+      li id="steam_games"
+        =link_to('Steam', '#steam')
+
+    .tab-content
+      #all.tab-pane
+        - if @all_games.empty?
+          = t 'admin.msg.no_game'
+        - else
+          table.table.table-striped.table-bordered.table-condensed
+            thead
+              tr
+                th = Game.human_attribute_name(:title)
+            tbody
+              - @all_games.each do |g|
+                tr
+                  td=g.name
+                  td=link_to t('helpers.actions.edit'), edit_admin_all_game_path(g) 
+                  td=link_to GameAchievement.model_name.human, admin_all_game_achievements_path(g)
+        =paginate @all_games
+        /=link_to t('helpers.actions.new'), new_admin_all_game_path
+
+      #steam.tab-pane
+        - if @steam_games.empty?
+          = t 'admin.msg.no_game'
+        - else
+          table.table.table-striped.table-bordered.table-condensed
+            thead
+              tr
+                th = Game.human_attribute_name(:title)
+            tbody
+              - @steam_games.each do |g|
+                tr
+                  td=g.name
+                  td=link_to t('helpers.actions.edit'), edit_admin_all_game_path(g) 
+                  td=link_to GameAchievement.model_name.human, admin_all_game_achievements_path(g)   
+        =paginate @steam_games
+        =link_to t('helpers.actions.new'), new_admin_all_game_path(game_type: 'SteamGame')
+
+
+    
+=content_for(:js_files) do
+  javascript:
+    $("#steam_games a").tab('show');
+    $('#my_tab a').click(function(e){
+      e.preventDefault();
+      $(this).tab('show')
+    })

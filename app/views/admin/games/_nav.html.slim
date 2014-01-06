@@ -1,4 +1,5 @@
 -content_for :sidebar do
-  li= link_to Game.model_name.human, admin_games_path
-  li= link_to GameSerialNumber.human_attribute_name(:serial_type), admin_serial_types_path
-  li= link_to Recommendation.model_name.human, admin_recommendations_path
+  = link_to Game.model_name.human, admin_games_path, class: "list-group-item active"
+  = link_to GameSerialNumber.human_attribute_name(:serial_type), admin_serial_types_path, class: "list-group-item"
+  = link_to Recommendation.model_name.human, admin_recommendations_path, class: "list-group-item"
+  = link_to AllGame.model_name.human, admin_all_games_path, class: "list-group-item"

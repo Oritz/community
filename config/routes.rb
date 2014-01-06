@@ -1,6 +1,8 @@
 SonkwoCommunity::Application.routes.draw do
   begin
-    devise_for :accounts, :controllers => { :sessions => 'account_sessions', :registrations => 'account_registrations' }
+    devise_for :accounts, :controllers => { :sessions => 'account_sessions', :registrations => 'account_registrations' } do
+      get '/accounts/sign_out', to: 'account_sessions#destroy' # used for other platforms(store, forum)
+    end
   rescue Exception => e
     puts "Devise error: #{e.class}: #{e}"
   end
@@ -104,6 +106,8 @@ SonkwoCommunity::Application.routes.draw do
     end
   end
 
+  resources :tipoffs, only: [:create]
+
   # sidekiq
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
@@ -129,8 +133,9 @@ SonkwoCommunity::Application.routes.draw do
 
   end
   # match ':controller(/:action(/:id))(.:format)'
+  get '/admin', to: 'admin#index'
   namespace :admin do
-    resources :games do
+    resources :games, only: [:index] do
       member do
         get :pre_release_list
         get :submit_release
@@ -154,6 +159,8 @@ SonkwoCommunity::Application.routes.draw do
     resources :download_servers
     resources :clients
     resources :recommendations
-    get '/', to: 'admin#index'
+    resources :all_games do
+      resources :achievements
+    end
   end
 end

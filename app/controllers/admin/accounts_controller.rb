@@ -1,6 +1,7 @@
 class Admin::AccountsController < AdminController
 	def index
-    @accounts = Account.includes(:auth_items).page(params[:page]).per(10)
+    @q = Account.includes(:auth_items).search(params[:q])
+    @accounts = @q.result.page(params[:page]).per(10)
 	end
 
   def edit

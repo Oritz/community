@@ -24,11 +24,11 @@ class CloudStorage < ActiveRecord::Base
 
   # Methods
   class << self
-    def settings(account)
+    def settings(account, bucket_name=Settings.cloud_storage.default_bucket)
       now = Time.now.to_i
       sonkwo_token = Digest::MD5.hexdigest("#{account.id},#{now},#{Settings.cloud_storage.sonkwo_key}")
       upload_token = Qiniu::RS.generate_upload_token(
-                                                     scope: Settings.cloud_storage.avatar_bucket,
+                                                     scope: bucket_name,
                                                      expires_in: Settings.cloud_storage.token_expire,
                                                      callback_url: Settings.cloud_storage.callback_url,
                                                      callback_body: Settings.cloud_storage.callback_body,

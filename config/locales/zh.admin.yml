@@ -33,6 +33,8 @@ zh:
       game_file: "游戏发布"
       game_serial_number: "序列号"
       serial_type: "序列号类型"
+      all_game: "社区游戏"
+      recommendation: "商城推荐模块"
     attributes:
       game:
         id: "游戏ID"
@@ -49,6 +51,7 @@ zh:
         serial_number_types: ["公共", "私有", "基本", "全部"]
       game_file:
         status: "发布状态"
+        status_arr: ["未发布", "新建预发布", "审核通过", "审核未通过", "取消发布", "回滚"]
       auth_item:
         auth_type: 类型
         auth_type_names: ["操作", "任务", "角色"]
@@ -76,31 +79,5 @@ zh:
           blank: "名字必须填写"
         weight:
           blank: "权限必须指定"
-      template:
-        header:
-          one:    "由于发生了一个错误 %{model} 无法保存"
-          other:  "%{count} 个错误使得 %{model} 无法保存"
-      messages:
-        inclusion: "不包含于列表中"
-        exclusion: "是保留关键字"
-        record_invalid: "是无效的"
-        confirmation: "与确认值不匹配"
-        accepted: "必须是可被接受的"
-        empty: "不能留空"
-        blank: "不能为空字符"
-        too_long: "过长（最长为 %{count} 个字符）"
-        too_short: "过短（最短为 %{count} 个字符）"
-        wrong_length: "长度非法（必须为 %{count} 个字符）"
-        taken: "已经被使用"
-        not_a_number: "不是数字"
-        not_a_date: "不是合法日期"
-        greater_than: "必须大于 %{count}"
-        greater_than_or_equal_to: "必须大于或等于 %{count}"
-        equal_to: "必须等于 %{count}"
-        less_than: "必须小于 %{count}"
-        less_than_or_equal_to: "必须小于或等于 %{count}"
-        odd: "必须为单数"
-        even: "必须为双数"
-        greater_than_start_date: "必须在起始日期之后"
 
 

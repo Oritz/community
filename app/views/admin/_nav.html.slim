@@ -1,4 +1,4 @@
 -content_for :sidebar do
-  li= link_to t('admin.titles.admin_info'), '#'
-  li= link_to t('admin.titles.about_sonkwo'), '#'
-  li= link_to t('admin.titles.my_workflow'), '#'
+  = link_to t('admin.titles.admin_info'), '#', class: "list-group-item active"
+  = link_to t('admin.titles.about_sonkwo'), '#', class: "list-group-item"
+  = link_to t('admin.titles.my_workflow'), '#', class: "list-group-item"

@@ -1,22 +1,31 @@
 = form_for(@group) do |f|
+  = f.hidden_field :logo
   .fl
     .groups_name_T
-      h4 
-        | 小组名 
-        - if @group.errors.has_key?(:name)
-          span.cl_red.fr =@group.errors[:name][0]
+      h4
+      | 小组名
+      - if @group.errors.has_key?(:name)
+        span.cl_red.fr =@group.errors[:name][0]
     .groups_name_form
       .form-input.fl
         = f.text_field :name, placeholder:"请输入3~6位中文或英文字符", class:"radius3px"
   .fl
     .groups_name_T
-      h4 
-        | 小组介绍
-        - if @group.errors.has_key?(:description)
-          span.cl_red.fr =@group.errors[:description][0]   
+      h4
+      | 小组介绍
+      - if @group.errors.has_key?(:description)
+        span.cl_red.fr =@group.errors[:description][0]
     .groups_name_form
       .form-input.fl
         = f.text_area :description, placeholder:"请输入小组介绍", class:"radius3px"
   .groups_button.fl
     =f.submit "提交申请", class:"radius3px"
 
+.fl
+  .groups_name_t
+    h4
+    | 小组图片
+  .groups_name_form
+    = image_tag @group.logo, class: "group-logo"
+    .image-upload-form style="display: none;"
+      = render "uploader/qiniu_form"

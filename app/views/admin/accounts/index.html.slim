@@ -1,5 +1,10 @@
 = render 'nav'
 = content_for(:content) do
+  = search_form_for [:admin, @q], class: 'form-inline' do |f|
+    = f.text_field :email_cont, class: 'input-small', placeholder: 'Email'
+    = f.text_field :nick_name_cont, class: 'input-small', placeholder: 'nick_name'
+
+    = f.submit(class: 'btn') 
   - if @accounts.any?
     table.table-bordered.table-condensed.table-striped
       tr

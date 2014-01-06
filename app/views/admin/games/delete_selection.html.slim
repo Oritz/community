@@ -6,32 +6,30 @@
       - @delete_form.errors.full_messages.each do |msg|
         =msg
     = f.hidden_field :game_id
-    .control-group
+    .form-group
       label.control-label
         =t('admin.serial.batch')
       .controls
         = f.select :batch_number, options_for_select(@delete_form.batch_numbers), :include_blank => true
-    .control-group
+    .form-group
       label.control-label
         =t('admin.titles.serial_type')
       .controls
         = f.select :serial_type, options_for_select(@delete_form.serial_types), :include_blank => true
-    .control-group
+    .form-group
       label.control-label
         =t('helpers.label.start_time')
       .controls
-        #start_time.input-append.date
+        #start_time.input-group
           input data-format="yyyy/MM/dd hh:mm:ss" type="text" id="admin_game_serial_number_delete_form_start_time" name="admin_game_serial_number_delete_form[start_time]"
-          span.add-on
-            i.icon-calendar
-    .control-group
+          span.input-group-addon.glyphicon.glyphicon-calendar
+    .form-group
       label.control-label
         =t('helpers.label.end_time')
       .controls
-        #end_time.input-append.date
+        #end_time.input-group
           input data-format="yyyy/MM/dd hh:mm:ss" type="text" id="admin_game_serial_number_delete_form_end_time" name="admin_game_serial_number_delete_form[end_time]"
-          span.add-on
-            i.icon-calendar
+          span.input-group-addon.glyphicon.glyphicon-calendar
     .control-group
       .controls
         = f.submit t('helpers.links.submit'), :class=>'btn btn-primary'
