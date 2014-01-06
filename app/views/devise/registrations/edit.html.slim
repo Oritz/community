@@ -11,7 +11,7 @@
         #subNav
           span.active =I18n.t("pages.basic_info")
       .one
-        = image_tag(resource.avatar, class: "avatar-image")
+        = image_tag(resource.avatar_l, class: "avatar-image")
         = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: {method: :put, 'parsley-validate' => ''}) do |f|
           .navCont-mail
             = f.label :nick_name, I18n.t("account.nick_name")
