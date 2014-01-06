@@ -11,6 +11,7 @@
         #subNav
           span.active =I18n.t("pages.basic_info")
       .one
+        = image_tag(resource.avatar, class: "avatar-image")
         = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: {method: :put, 'parsley-validate' => ''}) do |f|
           .navCont-mail
             = f.label :nick_name, I18n.t("account.nick_name")
@@ -29,3 +30,5 @@
               = f.error :current_password
           .navCont-mali-bn
             = f.submit(I18n.t("pages.update"), class: "send-con-bn rs3 bjcl_f39d12")
+      .qiniup-form style="display: none;"
+        = render "uploader/qiniu_form"

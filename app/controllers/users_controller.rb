@@ -2,7 +2,6 @@ require 'sonkwo/behavior/fetcher'
 
 class UsersController < ApplicationController
   before_filter :sonkwo_authenticate_account, only: [:follow, :unfollow]
-  before_filter :qiniu_prepare, only: [:show]
 
   def show
     @target = Account.find(params[:id])
@@ -11,7 +10,9 @@ class UsersController < ApplicationController
     @relation = current_account.get_relation(@target) if current_account
 
     respond_to do |format|
-      format.html
+      format.html do
+        qiniu_prepare(Settings.cloud_storage.avatar_bucket, "updateavatar")
+      end
       format.json { render json: @target }
     end
   end

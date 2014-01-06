@@ -16,4 +16,5 @@
  *= require ./popbox
  *= require_tree ./community
  *= require_tree ../../../vendor/assets/stylesheets
+ *= require qiniu_image_upload
  */

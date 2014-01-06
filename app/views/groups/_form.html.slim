@@ -1,4 +1,5 @@
 = form_for(@group) do |f|
+  = f.hidden_field :logo
   .fl
     .groups_name_T
       h4
@@ -25,7 +26,6 @@
     h4
     | 小组图片
   .groups_name_form
-    = image_tag(@group.logo)
-    span.upload-image-edit-button= I18n.t("pages.upload_image")
+    = image_tag @group.logo, class: "group-logo"
     .image-upload-form style="display: none;"
       = render "uploader/qiniu_form"

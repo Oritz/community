@@ -4,4 +4,9 @@ class AccountRegistrationsController < Devise::RegistrationsController
     @show_register = false
     super
   end
+
+  def edit
+    qiniu_prepare(Settings.cloud_storage.avatar_bucket, "updateavatar")
+    super
+  end
 end

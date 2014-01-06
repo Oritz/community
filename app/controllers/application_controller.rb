@@ -44,8 +44,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def qiniu_prepare
-    @cloud_storage_settings = CloudStorage.settings(current_account)
+  def qiniu_prepare(bucket, callback_name=nil, callback_params=nil)
+    @cloud_storage_settings = CloudStorage.settings(current_account, bucket)
+    @bucket = bucket
+    @callback_name = callback_name
+    @callback_params = callback_params.to_json
   end
 
   def check_access?(options={})

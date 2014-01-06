@@ -2,7 +2,6 @@ require 'sonkwo/behavior/fetcher'
 
 class GroupsController < ApplicationController
   before_filter :sonkwo_authenticate_account, except: [:index, :show, :posts, :members]
-  before_filter :qiniu_prepare, only: [:new]
 
   # GET /groups
   # GET /groups.json
@@ -47,7 +46,9 @@ class GroupsController < ApplicationController
     @group = Group.new
 
     respond_to do |format|
-      format.html # new.html.slim
+      format.html do
+        qiniu_prepare(Settings.cloud_storage.group_bucket)
+      end
       format.json { render json: @group }
     end
   end
@@ -56,6 +57,7 @@ class GroupsController < ApplicationController
   def edit
     @group = Group.find(params[:id])
     return unless check_access?(auth_item: "oper_groups_update", group: @group)
+    qiniu_prepare(Settings.cloud_storage.group_bucket)
   end
 
   # POST /groups
@@ -71,6 +73,7 @@ class GroupsController < ApplicationController
         format.json { render json: @group, status: :created, location: @group }
       else
         format.html do
+          qiniu_prepare(Settings.cloud_storage.group_bucket)
           render action: "new"
         end
         format.json { render json: @group.errors, status: :unprocessable_entity }
