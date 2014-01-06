@@ -44,6 +44,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def qiniu_prepare
+    @cloud_storage_settings = CloudStorage.settings(current_account)
+  end
+
   def check_access?(options={})
     options[:auth_item] ||= "oper_#{params[:controller]}_#{params[:action]}"
     auth_item_name = options.delete(:auth_item)

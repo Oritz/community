@@ -1,6 +1,6 @@
 //= require flash_message
 
-function qiniu_upload(options) {
+function qiniu_upload(opts) {
   function image_upload($form) {
     $(options.block).one("submit", function() {
       $(this).ajaxSubmit({
@@ -23,14 +23,15 @@ function qiniu_upload(options) {
     $form.submit();
   }
 
-  options = $.extend(true, {
+  var defaults = {
     block: "#qiniu_uploader_form",
     trigger_item: undefined,
     sonkwo_callback: "",
     success: function(image_url) {
     }
-  }, options);
+  };
 
+  var options = $.extend({}, defaults, opts);
 
   $(options.block).find("[name='x:sonkwo_callback']").attr("value", options.sonkwo_callback);
   var $file_input = $(options.block).find(":file");

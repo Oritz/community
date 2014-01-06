@@ -2,6 +2,7 @@ require 'sonkwo/behavior/fetcher'
 
 class GroupsController < ApplicationController
   before_filter :sonkwo_authenticate_account, except: [:index, :show, :posts, :members]
+  before_filter :qiniu_prepare, only: [:new]
 
   # GET /groups
   # GET /groups.json
@@ -43,7 +44,7 @@ class GroupsController < ApplicationController
   # GET /groups/new.json
   def new
     return unless check_access?(auth_item: "oper_groups_create")
-    @group = flash[:group] || Group.new
+    @group = Group.new
 
     respond_to do |format|
       format.html # new.html.slim
@@ -70,8 +71,7 @@ class GroupsController < ApplicationController
         format.json { render json: @group, status: :created, location: @group }
       else
         format.html do
-          flash[:group] = @group
-          redirect_to action: "new", group: @group
+          render action: "new"
         end
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end

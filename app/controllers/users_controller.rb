@@ -2,11 +2,11 @@ require 'sonkwo/behavior/fetcher'
 
 class UsersController < ApplicationController
   before_filter :sonkwo_authenticate_account, only: [:follow, :unfollow]
+  before_filter :qiniu_prepare, only: [:show]
 
   def show
     @target = Account.find(params[:id])
     @new_talk = Talk.new
-    @cloud_storage_settings = CloudStorage.settings(@target)
     @relation = Friendship::IRRESPECTIVE
     @relation = current_account.get_relation(@target) if current_account
 
