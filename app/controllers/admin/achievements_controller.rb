@@ -25,7 +25,7 @@ class Admin::AchievementsController < AdminController
   def new
     @admin_achievement = AllGame.find(params[:all_game_id]).game_achievements.build
     @admin_achievement.subable = @admin_achievement.get_subable
-    
+
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @admin_achievement }
@@ -44,7 +44,7 @@ class Admin::AchievementsController < AdminController
     game_achievement = game.game_achievements.build(params[:game_achievement])
     game_achievement.subable.steam_game_id = game.subable_id
     respond_to do |format|
-      if game_achievement.save!
+      if game_achievement.save
         format.html { redirect_to admin_all_game_achievements_path, notice: 'Achievement was successfully created.' }
       else
         format.html { redirect_to new_admin_all_game_achievement_path}
@@ -71,6 +71,7 @@ class Admin::AchievementsController < AdminController
   # DELETE /admin/achievements/1
   # DELETE /admin/achievements/1.json
   def destroy
+    raise "Can't delete achievments, please using edit instead"
     @admin_achievement = GameAchievement.find(params[:id])
     @admin_achievement.subable.delete
     @admin_achievement.delete
