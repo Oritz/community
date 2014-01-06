@@ -43,10 +43,12 @@ class GroupsController < ApplicationController
   # GET /groups/new.json
   def new
     return unless check_access?(auth_item: "oper_groups_create")
-    @group = flash[:group] || Group.new
+    @group = Group.new
 
     respond_to do |format|
-      format.html # new.html.slim
+      format.html do
+        qiniu_prepare(Settings.cloud_storage.group_bucket)
+      end
       format.json { render json: @group }
     end
   end
@@ -55,6 +57,7 @@ class GroupsController < ApplicationController
   def edit
     @group = Group.find(params[:id])
     return unless check_access?(auth_item: "oper_groups_update", group: @group)
+    qiniu_prepare(Settings.cloud_storage.group_bucket)
   end
 
   # POST /groups
@@ -70,8 +73,8 @@ class GroupsController < ApplicationController
         format.json { render json: @group, status: :created, location: @group }
       else
         format.html do
-          flash[:group] = @group
-          redirect_to action: "new", group: @group
+          qiniu_prepare(Settings.cloud_storage.group_bucket)
+          render action: "new"
         end
         format.json { render json: @group.errors, status: :unprocessable_entity }
       end

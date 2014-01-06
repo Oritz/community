@@ -40,7 +40,15 @@ class ApplicationController < ActionController::Base
   def load_for_layout
     if _layout == "application" && request.format != "json"
       @friends = Account.friends(current_account).limit(12).order("updated_at DESC") if current_account
+      @tipoff_reasons = TipoffReason.all
     end
+  end
+
+  def qiniu_prepare(bucket, callback_name=nil, callback_params=nil)
+    @cloud_storage_settings = CloudStorage.settings(current_account, bucket)
+    @bucket = bucket
+    @callback_name = callback_name
+    @callback_params = callback_params.to_json
   end
 
   def check_access?(options={})

@@ -1,6 +1,8 @@
 SonkwoCommunity::Application.routes.draw do
   begin
-    devise_for :accounts, :controllers => { :sessions => 'account_sessions', :registrations => 'account_registrations' }
+    devise_for :accounts, :controllers => { :sessions => 'account_sessions', :registrations => 'account_registrations' } do
+      get '/accounts/sign_out', to: 'account_sessions#destroy' # used for other platforms(store, forum)
+    end
   rescue Exception => e
     puts "Devise error: #{e.class}: #{e}"
   end
@@ -74,6 +76,8 @@ SonkwoCommunity::Application.routes.draw do
   resources :setting, only: [:index] do
     collection do
       get 'security'
+      get 'password'
+      put 'password', to: 'setting#update_password'
       post 'bind'
       get 'bind_complete'
     end
@@ -101,6 +105,8 @@ SonkwoCommunity::Application.routes.draw do
       post :confirm_step
     end
   end
+
+  resources :tipoffs, only: [:create]
 
   # sidekiq
   require 'sidekiq/web'

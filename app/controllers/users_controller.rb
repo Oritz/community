@@ -6,12 +6,13 @@ class UsersController < ApplicationController
   def show
     @target = Account.find(params[:id])
     @new_talk = Talk.new
-    @cloud_storage_settings = CloudStorage.settings(@target)
     @relation = Friendship::IRRESPECTIVE
     @relation = current_account.get_relation(@target) if current_account
 
     respond_to do |format|
-      format.html
+      format.html do
+        qiniu_prepare(Settings.cloud_storage.avatar_bucket, "updateavatar")
+      end
       format.json { render json: @target }
     end
   end

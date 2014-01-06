@@ -21,6 +21,8 @@ class Account < ActiveRecord::Base
     t.add :nick_name
   end
 
+  acts_as_tipoffable
+
   EMAIL_NOT_VERIFY = 0
   EMAIL_VERIFIED = 1
   INVITED = 1
@@ -32,7 +34,7 @@ class Account < ActiveRecord::Base
 
   UPDATE_TAG_FINISH = 3 # There're three steps
 
-  attr_accessor :relationship
+  attr_accessor :relationship, :old_password
   attr_accessible :email, :password, :password_confirmation, :remember_me, :nick_name, :gender, :tos_agreement, :relation_id
 
   # Callbacks
@@ -72,6 +74,8 @@ class Account < ActiveRecord::Base
   has_many :accounts_tags
   has_many :tags, through: :accounts_tags
 
+  has_one :tipoff, as: :detail
+
   # Validations
   validates :exp, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :bonus, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
@@ -96,6 +100,17 @@ class Account < ActiveRecord::Base
     subject.creator = self
     subject.save!
     subject.post
+  end
+
+  def change_password(params)
+    if self.valid_password?(params[:old_password])
+      self.password = params[:password]
+      self.password_confirmation = params[:password_confirmation]
+      self.save
+    else
+      self.errors[:old_password] << I18n.t("account.old_password_invalid")
+      false
+    end
   end
 
   ###########################################
@@ -149,6 +164,23 @@ class Account < ActiveRecord::Base
   def posts_from_groups
     group_ids = self.groups.map(&:id)
     Post.where(group_id: group_ids).all_public
+  end
+
+  ###########################################
+  # TipoffActions
+  ###########################################
+  def tip_off(item_type, item_id, reason)
+    tipoff = Tipoff.new
+    tipoff.detail_type = item_type
+    tipoff.detail_id = item_id
+    return nil unless tipoff.detail
+
+    tipoff.account = self
+    tipoff.target = tipoff.detail.tipoff_target
+    tipoff.reason = reason
+    tipoff.status = Tipoff::STATUS[:undealt]
+    tipoff.save
+    tipoff
   end
 
   ###########################################

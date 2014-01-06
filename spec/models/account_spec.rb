@@ -122,6 +122,17 @@ describe Account do
     end
   end
 
+  it "should change_password" do
+    password = "12345678"
+    new_password = "asdfasdf"
+    account = create(:account, password: password)
+    expect(account.change_password({
+                                   old_password: password,
+                                   password: new_password,
+                                   password_confiramton: new_password
+                                   })).to be_true
+  end
+
   context "social actions" do
     let(:account) { create(:account) }
 
@@ -137,6 +148,35 @@ describe Account do
       post = create(:talk).post
       recommend = account.recommend(post, "s"*141)
       expect(recommend[0]).to eq false
+    end
+  end
+
+  context "tip-off" do
+    let(:account) { create(:account) }
+    let(:reason) { create(:tipoff_reason) }
+
+    it "should tip-off a group" do
+      group = create(:group)
+      expect(account.tip_off("Group", group.id, reason)).not_to be_nil
+
+      tipoff = Tipoff.first
+      expect(tipoff).not_to be_nil
+    end
+
+    it "should tip-off a post" do
+      post = create(:talk).post
+      expect(account.tip_off("Post", post.id, reason)).not_to be_nil
+
+      tipoff = Tipoff.first
+      expect(tipoff).not_to be_nil
+    end
+
+    it "should tip-off an account" do
+      another = create(:account)
+      expect(account.tip_off("Account", account.id, reason)).not_to be_nil
+
+      tipoff = Tipoff.first
+      expect(tipoff).not_to be_nil
     end
   end
 end

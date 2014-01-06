@@ -5,55 +5,30 @@
       span.fl.manage-nav-bj
         = link_to I18n.t("pages.account_info"), edit_account_registration_path, class: "rs3 manage-style manage-active"
       span.fl
-        = link_to I18n.t("pages.account_security"), edit_account_registration_path, class: "rs3 manage-style"
+        = link_to I18n.t("pages.account_security"), security_setting_index_path, class: "rs3 manage-style"
     .cutover.rs3
       .cutover-subNav
         #subNav
           span.active =I18n.t("pages.basic_info")
-          span =I18n.t("pages.edit_avatar")
-        = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, 'parsley-validate' => '' }) do |f|
-          .one style="display: block;"
-            span.navCont-mail
-              h3= I18n.t("account.email")
-              input.navCont-input.rs3 disabled="disabled" name="" type="text" value="我是账号不可以修改"
-                span
-                  a.navCont-bn.rs3 href="#" 修改邮箱
-            span.navCont-mail
-              h3= I18n.t("account.nick_name")
-              = f.text_field :nick_name, class: "navCont-input rs3", required: '', 'parsley-trigger' => 'focusin focusout'
-              span
-                | error
-            span.navCont-mail
-              h3= I18n.t("account.gender")
-              = select_tag(:gender, options_for_select([[I18n.t("gender.male"), Account::GENDER_BOY], [I18n.t("gender.female"), Account::GENDER_GIRL]], Account::GENDER_BOY), class: "navCont-select-nv rs3")
-            span.navCont-mali-bn
-              = f.submit(I18n.t("pages.update"), class: "send-con-bn rs3 bjcl_f39d12")
-              a.rs3.send-con-bn.bjcl_ccc href="#" 取消
-        .two style="display: none;"
-          span.upload-photos
-            span.photos-img
-              span.photos-img-area.fl.rs3
-                span.preview-upload
-                  span.photos-head
-                    span.localhost-img 本地图片
-                    form action="" enctype="multipart/form-data" method="post" name="upfiles"
-                      span.file-fl
-                        input#viewfile.photos-viewfile.rs3.fl name="viewfile" type="text"
-                          label.bottom for="upload"
-                          span.clear
-                            a.submit href="#"
-                          input.file name="upload" onchange="document.getElementById('viewfile').value=this.value;" size="27" type="file"
-                      span.four-mb 请选择小于4MB的JPG、PNG的格式的照片
-              span.photos-img-size
-                span.fl
-                  span.photos-img-size1.rs3
-                  p.photos-img-text 大图
-                span.fl
-                  span.photos-img-size2.rs3
-                  p.photos-img-text 小图
-                span.fl
-                  span.photos-img-size3.rs3
-                  p.photos-img-text 迷你图
-            span.photos-bn.fl
-              a.send-con-bn.rs3.bjcl_f39c12 href="#"
-              a.rs3.send-con-bn.bjcl_ccc href="#"
+      .one
+        = image_tag(resource.avatar, class: "avatar-image")
+        = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: {method: :put, 'parsley-validate' => ''}) do |f|
+          .navCont-mail
+            = f.label :nick_name, I18n.t("account.nick_name")
+            = f.input_field :nick_name, class: "navCont-input rs3 required", 'parsley-trigger' => 'focusin focusout'
+            span.account-error
+              = f.error :nick_name
+          .navCont-mail
+            = f.label :gender, I18n.t("account.gender")
+            = f.input_field :gender, collection: [[I18n.t("gender.male"), Account::GENDER_BOY], [I18n.t("gender.female"), Account::GENDER_GIRL]], include_blank: false, class: "navCont-select-nv rs3"
+            span.account-error
+              = f.error :gender
+          .navCont-mail
+            = f.label :current_password, I18n.t("account.current_password")
+            = f.input_field :current_password, class: "navCont-input rs3 required", 'parsley-trigger' => 'change'
+            span.account-error
+              = f.error :current_password
+          .navCont-mali-bn
+            = f.submit(I18n.t("pages.update"), class: "send-con-bn rs3 bjcl_f39d12")
+      .qiniup-form style="display: none;"
+        = render "uploader/qiniu_form"
