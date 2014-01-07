@@ -5,6 +5,7 @@ class Game < ActiveRecord::Base
   has_many :game_files
   has_many :game_serial_numbers
   has_many :recommendations, foreign_key: 'link'
+  scope :no_releases, -> {select('id, title, alias_name').includes(:game_files).where(:game_files =>{:game_id => nil})}
 
   def serial_type_arr=(arr)
     # puts "publisher_arr=#{arr}"

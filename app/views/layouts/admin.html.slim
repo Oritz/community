@@ -33,7 +33,7 @@ html lang="en"
                   = link_to(t('admin.titles.my_page'), admin_path)
                 li class=("active" if(%w(admin/accounts admin/auth_items).include?(params[:controller])))
                   = link_to(Account.model_name.human, admin_accounts_path)
-                li class=("active" if(%w(admin/games admin/serial_types admin/recommendations admin/all_games).include?(params[:controller])))
+                li class=("active" if(%w(admin/games admin/serial_types admin/recommendations admin/all_games admin/achievements).include?(params[:controller])))
                   = link_to(Game.model_name.human, admin_games_path)
                 li class=("active" if params[:controller] == 'admin/clients')
                   = link_to(ClientUpdate.model_name.human, admin_clients_path)

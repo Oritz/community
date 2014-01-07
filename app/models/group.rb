@@ -38,6 +38,21 @@ class Group < ActiveRecord::Base
   scope :sort_by_hot, ->(count) { order("#{table_name}.member_count DESC").limit(count) }
 
   # Methods
+  def logo_l
+    return self.logo if self.logo == Settings.images.group
+    self.logo + "_l" if self.logo
+  end
+
+  def logo_m
+    return self.logo if self.logo == Settings.images.group
+    self.logo + "_m" if self.logo
+  end
+
+  def logo_s
+    return self.logo if self.logo == Settings.images.group
+    self.logo + "_s" if self.logo
+  end
+
   def joined?(account)
     self.accounts.include?(account)
   end

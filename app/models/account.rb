@@ -92,6 +92,21 @@ class Account < ActiveRecord::Base
   scope :account_with_roles, lambda {|account_id| select('id').includes(:auth_items).where('accounts.id=? AND auth_items.auth_type=?', account_id, AuthItem::TYPE_ROLE)}
 
   # Methods
+  def avatar_l
+    return self.avatar if self.avatar == Settings.images.avatar
+    self.avatar + "_l" if self.avatar
+  end
+
+  def avatar_m
+    return self.avatar if self.avatar == Settings.images.avatar
+    self.avatar + "_m" if self.avatar
+  end
+
+  def avatar_s
+    return self.avatar if self.avatar == Settings.images.avatar
+    self.avatar + "_s" if self.avatar
+  end
+
   def pending_subject
     subject = Post.pending_of_account(self).first
     return subject if subject

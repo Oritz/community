@@ -3,6 +3,9 @@
     width: 100px;
     height: 100px;
 }
+.qiniu-image-upload .qiniu-image-upload-original-image {
+    width: 100%;
+}
 .qiniu-image-upload .qiniu-upload-image-edit-button {
     cursor: pointer;
     display: none;

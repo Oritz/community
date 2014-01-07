@@ -5,76 +5,11 @@ class Admin::GamesController < AdminController
   def index
     @q = GameFile.search(params[:q])
     @games = @q.result.page(params[:page]).per(10)
+    @not_released_games = Game.no_releases.page(params[:un_release_page]).per(10)
 
     respond_to do |format|
       format.html # index.html.slim
       format.xml  { render :xml => @admin_games }
-    end
-  end
-
-  # GET /admin_games/1
-  # GET /admin_games/1.xml
-  def show
-    @game = Game.find(
-        :all,
-        :select => "games.id AS id, ext_id, title, ext_platform",
-        :joins => "LEFT JOIN game_ext_ids ON games.id = game_ext_ids.game_id",
-        :conditions => ["games.id =?", params[:id]]
-    )
-
-    @ext_servers = YAML.load_file("#{Rails.root}/config/app_data/ext_platforms.yml")
-
-    respond_to do |format|
-      format.html # show.html.slim
-      format.xml  { render :xml => @game }
-    end
-  end
-
-  # GET /admin_games/new
-  # GET /admin_games/new.xml
-  def new
-    @game = Game.new
-
-    respond_to do |format|
-      format.html # new.html.slim
-      format.xml  { render :xml => @game }
-    end
-  end
-
-  # GET /admin_games/1/edit
-  def edit
-    @game = Game.find(params[:id])
-  end
-
-  # POST /admin_games
-  # POST /admin_games.xml
-  def create
-    @game = Game.new(params[:game])
-
-    respond_to do |format|
-      if @game.save
-        format.html { redirect_to(@game, :notice => 'Admin::Game was successfully created.') }
-        format.xml  { render :xml => @game, :status => :created, :location => @game }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @game.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
-
-
-  # PUT /admin_games/1.xml
-  def update
-    @game = Game.find(params[:id])
-
-    respond_to do |format|
-      if @game.update_attributes(params[:game])
-        format.html { redirect_to(@game, :notice => 'Admin::Game was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @game.errors, :status => :unprocessable_entity }
-      end
     end
   end
 
@@ -141,10 +76,16 @@ class Admin::GamesController < AdminController
       @crypt_types << [sta, i]
       i += 1
     end
-    socket = TCPSocket.new(Settings.sys_params.file_server_host, Settings.sys_params.file_server_port)
-    socket.puts("LIST_DIR##{@game.alias_name}")
-    dirs_json = socket.gets
-    socket.close
+
+    begin
+      socket = TCPSocket.new(Settings.sys_params.file_server_host, Settings.sys_params.file_server_port)
+      socket.puts("LIST_DIR##{@game.alias_name}")
+      dirs_json = socket.gets
+      socket.close     
+    rescue Exception => e
+      raise e.inspect + t('admin.errors.could_not_conect_to_release_server')
+    end
+
 
     @release_dirs = ActiveSupport::JSON.decode(dirs_json)
 

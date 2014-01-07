@@ -1,6 +1,5 @@
 module AdminHelper
   ALERT_TYPES = [:danger, :info, :success, :warning]
-
   def sonkwo_flash
     flash_messages = []
     flash.each do |type, message|
@@ -24,12 +23,7 @@ module AdminHelper
   def sonkwo_time_format(time)
     return time.to_formatted_s(:db)
   end
-  STATUS_NEW         = 0
-  STATUS_TO_VERIFY   = 1
-  STATUS_VALIDATED   = 2
-  STATUS_REJECTED    = 3
-  STATUS_CANCELED    = 4
-  STATUS_ROLLBACKED  = 5
+
   def tr_with_status(status)
     red_status = [GameFile::STATUS_REJECTED, GameFile::STATUS_CANCELED, GameFile::STATUS_ROLLBACKED]
     green_status = [GameFile::STATUS_NEW, GameFile::STATUS_TO_VERIFY]
@@ -55,5 +49,9 @@ module AdminHelper
     end
 
     return select_arrary
+  end
+
+  def current_li?(li_controllers, current_controller)
+    li_controllers.include?(current_controller) ? 'list-group-item active' : 'list-group-item'
   end
 end
