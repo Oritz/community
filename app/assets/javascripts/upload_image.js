@@ -17,7 +17,7 @@ function qiniu_upload(opts) {
             show_message(data);
           else
           {
-            $qiniu_item.find(".qiniu-image-upload-original-image").attr("src", data.dest_url);
+            $qiniu_item.find(".qiniu-image-upload-original-image").attr("src", data.dest_url+options.suffix);
             options.success(data.dest_url);
           }
           is_uploading = false;
@@ -42,6 +42,7 @@ function qiniu_upload(opts) {
     block: "#qiniu_uploader_form",
     item: undefined,
     edit_text: "上传图片",
+    suffix: "",
     sonkwo_callback: "",
     success: function(image_url) {
     }

@@ -42,7 +42,7 @@ class CloudStoragesController < ApplicationController
   def proccess(callback, storage, opts)
     case callback
     when "updateavatar"
-      opts[:account].avatar = storage.url+"_l"
+      opts[:account].avatar = storage.url
       if opts[:account].save
         return true
       else

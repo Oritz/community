@@ -133,7 +133,7 @@ SonkwoCommunity::Application.routes.draw do
 
   end
   # match ':controller(/:action(/:id))(.:format)'
-  get 'admin', to: 'admin#index'
+  get '/admin', to: 'admin#index'
   namespace :admin do
     resources :games, only: [:index, :destroy] do
       member do

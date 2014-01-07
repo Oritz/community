@@ -64,6 +64,7 @@ class Admin::AllGamesController < AdminController
   # DELETE /admin/all_games/1
   # DELETE /admin/all_games/1.json
   def destroy
+    raise "Can't destroy games anymore, please using update instead"
     @game = AllGame.find(params[:id])
     @game.destroy
 
