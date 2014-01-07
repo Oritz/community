@@ -2,7 +2,6 @@
 
 -content_for :content do
   .row
-    h3 =Game.model_name.human
     =search_form_for([:admin, @q], url: admin_games_path, class: 'form-inline') do |f|
       .form-group
         =f.text_field(:game_title_cont, placeholder: Game.human_attribute_name(:title), class: 'form-control')
@@ -22,12 +21,29 @@
           span.input-group-addon.glyphicon.glyphicon-calendar
       =f.submit(class: 'btn btn-default')
   .row
-    =render 'search'
-    =paginate @games
+    ul#my_tab.nav.nav-tabs
+      li.active
+        =link_to(t('admin.game_file.releasing_or_released'), '#released')
+      li
+        =link_to(t('admin.game_file.unrelease'), '#unrelease')
+
+    .tab-content
+      #released.tab-pane
+        =render 'released'
+        =paginate @games
+      #unrelease.tab-pane
+        =render 'unrelease'
+        =paginate @not_released_games, param_name: :un_release_page
 -content_for(:js_files) do
   javascript:
     $(document).ready(function(){
       $("#start_time").datetimepicker();
       $("#end_time").datetimepicker();
+    })
+
+    $("#released a").tab('show');
+    $('#my_tab a').click(function(e){
+      e.preventDefault();
+      $(this).tab('show')
     })
 

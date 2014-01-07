@@ -135,7 +135,7 @@ SonkwoCommunity::Application.routes.draw do
   # match ':controller(/:action(/:id))(.:format)'
   get 'admin', to: 'admin#index'
   namespace :admin do
-    resources :games, only: [:index] do
+    resources :games, only: [:index, :destroy] do
       member do
         get :pre_release_list
         get :submit_release

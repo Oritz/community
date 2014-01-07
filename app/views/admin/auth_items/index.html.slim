@@ -1,6 +1,5 @@
 =render 'admin/accounts/nav'
 =content_for(:content) do
-  h1 Listing admin_auth_items
   ul#my_tab.nav.nav-tabs
     li id="#{AuthItem::TYPE_ROLE}"
       =link_to(AuthItem.human_attribute_name(:auth_type_names)[AuthItem::TYPE_ROLE], '#role')
@@ -20,12 +19,12 @@
               tr
                 td = role.name
                 td
-                  =link_to(admin_auth_item_path(role), :class=>'btn btn-small btn-warning') do
-                    i.icon-eye-open
-                  =link_to(edit_admin_auth_item_path(role), :class=>'btn btn-small btn-warning') do
-                    i.icon-edit
-                  = link_to(admin_auth_item_path(role), :class=>'btn btn-small btn-warning', :method => :delete, :confirm => t('helpers.links.confirm')) do
-                    i.icon-remove
+                  =link_to(admin_auth_item_path(role)) do
+                    span.glyphicon.glyphicon-eye-open
+                  =link_to(edit_admin_auth_item_path(role)) do
+                    span.glyphicon.glyphicon-edit
+                  = link_to(admin_auth_item_path(role), :method => :delete, :confirm => t('helpers.links.confirm')) do
+                    span.glyphicon.glyphicon-remove
       -else
         =t('admin.msg.no_data')
       div
