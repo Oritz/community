@@ -163,4 +163,10 @@ SonkwoCommunity::Application.routes.draw do
       resources :achievements
     end
   end
+  
+  # search api
+  get 'search', to: 'search#index'
+  get 'search/users', to: 'search#users'
+  get 'search/posts', to: 'search#posts'
+  get 'search/groups', to: 'search#groups'
 end

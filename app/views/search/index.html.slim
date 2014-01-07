@@ -1,0 +1,25 @@
+h1 搜索结果
+h2 相关用户
+- if (defined? @first_page_users) && (@first_page_users.total != 0)
+  p #{@first_page_users.total}个用户：
+  - @first_page_users.each_hit_with_result do |hit, result|
+    p id: #{result.id}, nick_name: #{raw display_highlight(hit.highlights(:nick_name))}
+- else
+  p 无结果
+
+h2 相关小组  
+- if (defined? @first_page_groups) && (@first_page_groups.total != 0)
+  p #{@first_page_groups.total}个小组：
+  - @first_page_groups.each_hit_with_result do |hit, result|
+    p id: #{result.id}, name: #{raw display_highlight(hit.highlights(:name))}, description: #{raw display_highlight(hit.highlights(:description))}
+- else
+  p 无结果
+  
+h2 相关文章
+- if (defined? @first_page_posts) && (@first_page_posts.total != 0)
+  p #{@first_page_posts.total}个文章：
+  - @first_page_posts.each_hit_with_result do |hit, result|
+    p id: #{result.id}, nick_name: #{raw display_highlight(hit.highlights(:nick_name))}
+- else
+  p 无结果
+  

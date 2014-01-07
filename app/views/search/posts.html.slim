@@ -1,0 +1,8 @@
+h1 搜索结果
+h2 相关文章
+- if (defined? @page_posts) && (@page_posts.total != 0)
+  p #{@page_posts.total}个文章：
+  - @page_posts.each_hit_with_result do |hit, result|
+    p id: #{result.id}, nick_name: #{raw display_highlight(hit.highlights(:nick_name))}
+- else
+  p 无结果

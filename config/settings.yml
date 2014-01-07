@@ -214,6 +214,10 @@ default: &defaults
           rcpt: zhaochuan@ceasia.com.cn
           msg_title: "{{game_name}}"
           msg_body: "{{game_name}}game seed have been uploaded：{{download_server}}。"
+  search:
+    accounts_per_page: 20
+    groups_per_page: 20
+    posts_per_page: 20
 
 development:
   <<: *defaults

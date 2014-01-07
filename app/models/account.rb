@@ -338,4 +338,8 @@ class Account < ActiveRecord::Base
     album.account = self
     album.save!
   end
+  
+  searchable :only_reindex_attribute_changes_of => [ :nick_name ], :if => :confirmed do
+    text :nick_name, :stored => true
+  end
 end
