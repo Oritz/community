@@ -216,6 +216,10 @@ default: &defaults
           msg_body: "{{game_name}}game seed have been uploaded：{{download_server}}。"
   rights:
     basic_items: {admin: 'oper_admin', accounts_admin: 'oper_accounts', games_admin: 'oper_games', clients_admin: 'oper_clients', download_servers_admin: 'oper_download_servers', game_files_admin: 'oper_game_files', serials_admin: 'oper_serials', recommendations: 'oper_recommendations', community_games_admin: 'oper_community_games', accounts_roles: 'oper_accounts_roles', items_admin: 'oper_items'}
+  search:
+    accounts_per_page: 20
+    groups_per_page: 20
+    posts_per_page: 20
 development:
   <<: *defaults
   subdomains:

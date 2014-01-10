@@ -1,0 +1,8 @@
+h1 搜索结果
+h2 相关小组  
+- if (defined? @page_groups) && (@page_groups.total != 0)
+  p #{@page_groups.total}个小组：
+  - @page_groups.each_hit_with_result do |hit, result|
+    p id: #{result.id}, name: #{raw display_highlight(hit.highlights(:name))}, description: #{raw display_highlight(hit.highlights(:description))}
+- else
+  p 无结果

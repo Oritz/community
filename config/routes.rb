@@ -164,4 +164,41 @@ SonkwoCommunity::Application.routes.draw do
     get 'game/get_game_news', to: 'game#get_game_news'
 
   end
+  # match ':controller(/:action(/:id))(.:format)'
+  get '/admin', to: 'admin#index'
+  namespace :admin do
+    resources :games, only: [:index, :destroy] do
+      member do
+        get :pre_release_list
+        get :submit_release
+        get :new_pre_release
+        get :audit_release
+        get :game_serial_numbers
+        get :delete_selection
+        get :game_serial_type
+        post :pre_release_list
+        post :submit_release
+        post :new_pre_release
+        post :cancel_pre_release
+        post :audit_release
+        put :import_serials
+        put :game_serial_type
+      end
+    end
+    resources :auth_items
+    resources :accounts
+    resources :serial_types
+    resources :download_servers
+    resources :clients
+    resources :recommendations
+    resources :all_games do
+      resources :achievements
+    end
+  end
+  
+  # search api
+  get 'search', to: 'search#index'
+  get 'search/users', to: 'search#users'
+  get 'search/posts', to: 'search#posts'
+  get 'search/groups', to: 'search#groups'
 end

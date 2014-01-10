@@ -1,0 +1,9 @@
+h1 搜索结果
+h2 相关用户
+- if (defined? @page_users) && (@page_users.total != 0)
+  p #{@page_users.total}个用户：
+  - @page_users.each_hit_with_result do |hit, result|
+    p id: #{result.id}, nick_name: #{raw display_highlight(hit.highlights(:nick_name))}
+  = paginate @page_users.hits
+- else
+  p 无结果
