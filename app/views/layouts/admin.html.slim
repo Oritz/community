@@ -10,11 +10,6 @@ html lang="en"
     /! Le HTML5 shim, for IE6-8 support of HTML elements
     /[if lt IE 9]
     = stylesheet_link_tag "admin", :media => "all"
-    = favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144'
-    = favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114'
-    = favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72'
-    = favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
-    = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
 
   body
     nav.navbar.navbar-default.navbar-fixed-top role='navigation'
@@ -31,23 +26,30 @@ html lang="en"
               ul.nav.navbar-nav
                 li class=("active" if params[:controller] == 'admin')
                   = link_to(t('admin.titles.my_page'), admin_path)
-                li class=("active" if(%w(admin/accounts admin/auth_items).include?(params[:controller])))
-                  = link_to(Account.model_name.human, admin_accounts_path)
-                li class=("active" if(%w(admin/games admin/serial_types admin/recommendations admin/all_games admin/achievements).include?(params[:controller])))
-                  = link_to(Game.model_name.human, admin_games_path)
-                li class=("active" if params[:controller] == 'admin/clients')
-                  = link_to(ClientUpdate.model_name.human, admin_clients_path)
-                li class=("active" if params[:controller] == 'admin/download_servers')
-                  = link_to(Admin::DownloadServer.model_name.human, admin_download_servers_path)
+                - if check_access?({:auth_item => 'oper_accounts'})
+                  li class=("active" if(%w(admin/accounts admin/auth_items).include?(params[:controller])))
+                    = link_to(Account.model_name.human, admin_accounts_path)
+                - if check_access?({:auth_item => 'oper_games'})
+                  li class=("active" if(%w(admin/games admin/serial_types admin/recommendations admin/all_games admin/achievements).include?(params[:controller])))
+                    = link_to(Game.model_name.human, admin_games_path)
+                - if check_access?({:auth_item => 'oper_clients'})
+                  li class=("active" if params[:controller] == 'admin/clients')
+                    = link_to(ClientUpdate.model_name.human, admin_clients_path)
+                - if check_access?({:auth_item => 'oper_download_servers'})
+                  li class=("active" if params[:controller] == 'admin/download_servers')
+                    = link_to(Admin::DownloadServer.model_name.human, admin_download_servers_path)
                 li.divider
               ul.nav.navbar-nav.navbar-right
-                li= link_to t('helpers.links.logout'), destroy_account_session_path
+                li
+                  = link_to destroy_account_session_path do
+                    => current_account.nick_name
+                    span.glyphicon.glyphicon-log-out
                 li.dropdown
                   a.dropdown-toggle data-toggle='dropdown' href="#"
                     =t('helpers.language')
                   ul.dropdown-menu
-                    li= link_to t('helpers.languages.chinese'), '#'
-                    li= link_to t('helpers.languages.english'), '#'
+                    li= link_to t('helpers.languages.chinese'), :locale => 'zh'
+                    li= link_to t('helpers.languages.english'), :locale => 'en'
     .container
 
       .row

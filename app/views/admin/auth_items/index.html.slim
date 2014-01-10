@@ -41,12 +41,12 @@
               tr
                 td=task.name
                 td
-                  =link_to(admin_auth_item_path(task), :class=>'btn btn-small btn-warning') do
-                    span.icon-eye-open
-                  =link_to(edit_admin_auth_item_path(task), :class=>'btn btn-small btn-warning') do
-                    span.icon-edit
-                  = link_to(admin_auth_item_path(task), :class=>'btn btn-small btn-warning', :confirm => t('helpers.links.confirm'), :method => :delete) do
-                    span.icon-remove
+                  =link_to(admin_auth_item_path(task)) do
+                    span.glyphicon.glyphicon-eye-open
+                  =link_to(edit_admin_auth_item_path(task)) do
+                    span.glyphicon.glyphicon-edit
+                  = link_to(admin_auth_item_path(task), :confirm => t('helpers.links.confirm'), :method => :delete) do
+                    span.glyphicon.glyphicon-remove
       -else
         =t('admin.msg.no_data')
       div
@@ -63,12 +63,12 @@
               tr
                 td=operation.name
                 td
-                  =link_to(admin_auth_item_path(operation), :class=>'btn btn-small btn-warning') do
-                    i.icon-eye-open
-                  =link_to(edit_admin_auth_item_path(operation), :class=>'btn btn-small btn-warning') do
-                    i.icon-edit
-                  = link_to(admin_auth_item_path(operation), :class=>'btn btn-small btn-warning', :confirm => t('helpers.links.confirm'), :method => :delete) do
-                    i.icon-remove
+                  =link_to(admin_auth_item_path(operation)) do
+                    span.glyphicon.glyphicon-eye-open
+                  =link_to(edit_admin_auth_item_path(operation)) do
+                    span.glyphicon.glyphicon-edit
+                  = link_to(admin_auth_item_path(operation), :confirm => t('helpers.links.confirm'), :method => :delete) do
+                    span.glyphicon.glyphicon-remove
       -else
         =t('admin.msg.no_data')
       div

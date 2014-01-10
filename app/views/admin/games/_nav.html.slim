@@ -1,5 +1,9 @@
 -content_for :sidebar do
-  = link_to Game.model_name.human, admin_games_path, class: current_li?(%w(admin/games), params[:controller])
-  = link_to GameSerialNumber.human_attribute_name(:serial_type), admin_serial_types_path, class: current_li?(%w(admin/serial_types), params[:controller])
-  = link_to Recommendation.model_name.human, admin_recommendations_path, class: current_li?(%w(admin/recommendations), params[:controller])
-  = link_to AllGame.model_name.human, admin_all_games_path, class: current_li?(%w(admin/all_games admin/achievements), params[:controller])
+  - if check_access?({:auth_item => 'oper_game_files'})
+    = link_to Game.model_name.human, admin_games_path, class: current_li?(%w(admin/games), params[:controller])
+  - if check_access?({:auth_item => 'oper_serials'})
+    = link_to GameSerialNumber.human_attribute_name(:serial_type), admin_serial_types_path, class: current_li?(%w(admin/serial_types), params[:controller])
+  - if check_access?({:auth_item => 'oper_recommendations'})
+    = link_to Recommendation.model_name.human, admin_recommendations_path, class: current_li?(%w(admin/recommendations), params[:controller])
+  - if check_access?({:auth_item => 'oper_community_games'})
+    = link_to AllGame.model_name.human, admin_all_games_path, class: current_li?(%w(admin/all_games admin/achievements), params[:controller])

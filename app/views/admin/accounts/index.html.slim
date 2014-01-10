@@ -1,10 +1,15 @@
 = render 'nav'
 = content_for(:content) do
-  = search_form_for [:admin, @q], class: 'form-inline' do |f|
-    = f.text_field :email_cont, class: 'input-small', placeholder: 'Email'
-    = f.text_field :nick_name_cont, class: 'input-small', placeholder: 'nick_name'
+  = search_form_for [:admin, @q], html: {class: 'form-inline', role: 'form'} do |f|
+    .form-group>
+      label.sr-only 'Email'
+      = f.text_field :email_cont, placeholder: 'Email', class: 'form-control'
+    .form-group>
+      label.sr-only 'Nick Name'
+      = f.text_field :nick_name_cont, placeholder: 'nick_name', class: 'form-control'
 
     = f.submit(class: 'btn') 
+  br
   - if @accounts.any?
     table.table-bordered.table-condensed.table-striped
       tr
@@ -19,8 +24,9 @@
             - a.auth_items.each do |item|
               = item.name 
               '|
-          td = link_to 'Edit', edit_admin_account_path(a)
+          td 
+            = link_to edit_admin_account_path(a) do
+              span.glyphicon.glyphicon-edit
   - else
   	= t('admin.errors.no_data')
-  br
-
+  =paginate @accounts

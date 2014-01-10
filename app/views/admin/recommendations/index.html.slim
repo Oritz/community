@@ -21,12 +21,12 @@
                 td=h recommendation.link
                 td=image_tag(recommendation.picture.thumbnail_url, :border =>1)
                 td
-                  =link_to(admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning') do
-                    i.icon-eye-open
-                  =link_to(edit_admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning') do
-                    i.icon-edit
-                  = link_to(admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning', :method => :delete, :confirm => t('helpers.links.confirm')) do
-                    i.icon-remove
+                  =link_to(admin_recommendation_path(recommendation)) do
+                    span.glyphicon.glyphicon-eye-open
+                  =link_to(edit_admin_recommendation_path(recommendation)) do
+                    span.glyphicon.glyphicon-edit
+                  = link_to(admin_recommendation_path(recommendation), :method => :delete, :confirm => t('helpers.links.confirm')) do
+                    span.glyphicon.glyphicon-remove
       -else
         =t('admin.msg.no_data')
       div
@@ -45,12 +45,12 @@
                 td=recommendation.title
                 td=image_tag(recommendation.picture.thumbnail_url)
                 td
-                  =link_to(admin_recommendation_path(recommendation.id), :class=>'btn btn-small btn-warning') do
-                    i.icon-eye-open
-                  =link_to(edit_admin_recommendation_path(recommendation.id), :class=>'btn btn-small btn-warning') do
-                    i.icon-edit
-                  = link_to(admin_recommendation_path(recommendation.id), :class=>'btn btn-small btn-warning', :confirm => t('helpers.links.confirm'), :method => :delete) do
-                    i.icon-remove
+                  =link_to(admin_recommendation_path(recommendation.id)) do
+                    span.glyphicon.glyphicon-eye-open
+                  =link_to(edit_admin_recommendation_path(recommendation.id)) do
+                    span.glyphicon.glyphicon-edit
+                  = link_to(admin_recommendation_path(recommendation.id), :confirm => t('helpers.links.confirm'), :method => :delete) do
+                    span.glyphicon.glyphicon-remove
       -else
         =t('admin.msg.no_data')
       div
@@ -70,11 +70,11 @@
                 td=image_tag(recommendation.picture.thumbnail_url, :border =>1)
                 td
                   =link_to(admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning') do
-                    i.icon-eye-open
+                    span.glyphicon.glyphicon-eye-open
                   =link_to(edit_admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning') do
-                    i.icon-edit
+                    span.glyphicon.glyphicon-edit
                   = link_to(admin_recommendation_path(recommendation), :class=>'btn btn-small btn-warning', :confirm => t('helpers.links.confirm'), :method => :delete) do
-                    i.icon-remove
+                    span.glyphicon.glyphicon-remove
       -else
         =t('admin.msg.no_data')
       div

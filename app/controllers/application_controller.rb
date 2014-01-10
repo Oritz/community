@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   respond_to :html, :json
   layout :layout_by_resource
 
-  before_filter :load_for_layout
+  before_filter :load_for_layout, :set_locale
 
   def sonkwo_authenticate_account
     case request.format
@@ -66,4 +66,13 @@ class ApplicationController < ActionController::Base
       false
     end
   end
+
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
+
+  def default_url_options(options={})
+    {locale: I18n.locale}    
+  end
+  
 end

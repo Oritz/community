@@ -1,4 +1,6 @@
 class Admin::AccountsController < AdminController
+  before_filter {|controller| controller.check_access?({:auth_item => 'oper_accounts'})}
+
 	def index
     @q = Account.includes(:auth_items).search(params[:q])
     @accounts = @q.result.page(params[:page]).per(10)
