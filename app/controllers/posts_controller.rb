@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
-  before_filter :sonkwo_authenticate_account, except: [:destroy, :templates]
-  before_filter :check_post_available, only: [:show, :like, :unlike, :recommend, :destroy]
+  before_filter :sonkwo_authenticate_account, except: [:show]
+  before_filter :check_post_available, only: [:show, :like, :unlike, :recommend, :destroy, :edit, :update]
 
   #layout "community"
 
@@ -15,13 +15,100 @@ class PostsController < ApplicationController
   #  end
   #end
 
+  def new
+    # Only create a subject
+    @post = current_account.pending_subject!
+    qiniu_prepare(Settings.cloud_storage.post_bucket)
+    @new_post_image = PostImage.new
+    @post_images = @post.post_images.includes(:cloud_storage)
+
+    if params[:group_id]
+      @group = Group.find(params[:group_id])
+      @post.group = @group
+    end
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @group }
+    end
+  end
+
+  def create
+    # Only create a Talk
+    @post = Post.new(params[:post])
+    @post.post_type = Post::TYPE_TALK
+    @post.creator = current_account
+    if(params[:group_id])
+      @group = Group.find(params[:group_id])
+      @post.group = @group
+    end
+
+    respond_to do |format|
+      if @post.save
+        format.html
+        format.json
+      else
+        format.html
+        format.json { render json: { status: "fail", data: @post.errors } }
+      end
+    end
+  end
+
+  def edit
+    # Only for subjects
+    not_found unless @post.is_subject?
+
+    @post = current_account.pending_subject!
+    qiniu_prepare(Settings.cloud_storage.post_bucket)
+    @new_post_image = PostImage.new
+    @post_images = @post.post_images.includes(:cloud_storage)
+
+    if params[:group_id]
+      @group = Group.find(params[:group_id])
+      @post.group = @group
+    end
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @group }
+    end
+  end
+
+  def update
+    not_found unless @post.is_subject?
+
+    if params[:group_id]
+      @group = Group.find(params[:group_id])
+      @post.group = @group
+    end
+
+    @post.status = Post::STATUS_NORMAL if params[:is_post].to_i == 1
+
+    respond_to do |format|
+      if @post.update_attributes(params[:post])
+        format.html do
+          if @post.is_normal?
+            redirect_to @post, notice: I18n.t("post.subject_created_successfully")
+          else
+            render action: :edit
+          end
+        end
+        format.json { render json: { status: "success", data: { id: @post.id } } }
+      else
+        format.html do
+          qiniu_prepare(Settings.cloud_storage.post_bucket)
+          @new_post_image = PostImage.new
+          @post_images = @post.post_images.includes(:cloud_storage)
+          render action: :edit
+        end
+        format.json { render json: { status: "fail", data: @post.errors } }
+      end
+    end
+  end
+
   # GET /posts/1
   # GET /posts/1.json
   def show
-    @post = Post.find(params[:id])
-    not_found if @post.detail_type != Subject.to_s
-    not_found if @post.status != Post::STATUS_NORMAL
-
     @comments = Comment.of_a_post(@post).page(params[:page]).per(10)
     @new_comment = @post.comments.build
 
@@ -87,18 +174,6 @@ class PostsController < ApplicationController
         format.json { render json: { status: "fail", data: @recommend.errors.full_messages } }
       end
     end
-  end
-
-  def templates
-    templates = {
-      talk: MustacheTemplate.talk,
-      subject: MustacheTemplate.subject,
-      recommend: MustacheTemplate.recommend,
-      recommend_pop: MustacheTemplate.recommend_pop,
-      comment: MustacheTemplate.comment
-    }
-
-    render json: { status: 'success', data: templates }
   end
 
   protected

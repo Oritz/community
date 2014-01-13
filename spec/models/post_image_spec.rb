@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe PostImage do
   let(:account) { create(:account) }
-  let(:talk) { talk = Talk.new(content: "content"); talk.creator = account; talk.save!; talk }
-  let(:post) { talk.post}
+  let(:talk) { create(:talk) }
+  let(:post) { talk}
   let(:cloud_storage) { create(:cloud_storage_image, account: account) }
 
   it "is valid using valid attributes" do
@@ -46,12 +46,10 @@ describe PostImage do
   end
 
   it "is not valid if create more than one images with talk" do
-    talk = Talk.new(content: "content", cloud_storage_id: cloud_storage.id)
-    talk.creator = account
-    talk.save!
+    post = create(:talk, cloud_storage_id: cloud_storage.id, creator: account)
 
     post_image = PostImage.new
-    post_image.post = talk.post
+    post_image.post = post
     post_image.cloud_storage = create(:cloud_storage)
 
     post_image.valid?

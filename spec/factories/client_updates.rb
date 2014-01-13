@@ -5,8 +5,9 @@ FactoryGirl.define do
     sequence(:major_ver) { |n| n }
     sequence(:minor_ver) { |n| n }
     sequence(:tiny_ver) { |n| n }
-    full_pkg_file ""
+    full_pkg_file "full pkg file"
     status ClientUpdate::STATUS_RELEASED
-    full_pkg_digest ""
+    full_pkg_digest "full pkg digest"
+    description "description"
   end
 end

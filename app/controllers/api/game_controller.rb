@@ -13,17 +13,17 @@ class Api::GameController < ApplicationController
       online_user_games =nil
 
       online_user_games = OrderGame.find(
-                                        :all,
-                                        :select =>"games.id AS gameId, games.title AS gameName, games.alias_name AS gameEngName,
+        :all,
+        :select =>"games.id AS gameId, games.title AS gameName, games.alias_name AS gameEngName,
            games.cap_image AS gameThumbnail, games.icon_image AS gameIcon, games.product_image AS productImage, games.rating AS gameRating,
            games.parent_id AS gameParent, games.install_type AS installType, games.manual AS manualUri,
            games.forum_addr AS forumAddr, MAX(game_files.patch_ver) AS patchVer, MAX(game_files.ini_ver) AS iniVer, MAX(game_files.shell_ver) AS shellVer",
-                                        :joins =>"INNER JOIN games ON games.id=order_games.game_id
+        :joins =>"INNER JOIN games ON games.id=order_games.game_id
                   LEFT JOIN game_files ON game_files.game_id=games.id",
-                                        :conditions => ["order_games.account_id=?", account_id],
-                                        :group => "order_games.game_id",
-                                        :order=>"games.id ASC"
-                                        )
+        :conditions => ["order_games.account_id=?", account_id],
+        :group => "order_games.game_id",
+        :order=>"games.id ASC"
+      )
       offline_games = UserGameSerial.find(
         :all,
         :select =>"user_game_serials.game_id AS gameId, games.title AS gameName, games.alias_name AS gameEngName,
@@ -39,7 +39,7 @@ class Api::GameController < ApplicationController
 
       user_games = online_user_games + offline_games
 
-      all_patch_vers = {} 
+      all_patch_vers = {}
       user_games.collect do |game|
         game.forumAddr ||= 'http://' + Settings.subdomains.forum  # add by shx, replace the default value
 
@@ -88,7 +88,7 @@ class Api::GameController < ApplicationController
     rescue
       ret = { :status => "fail", :data => {:err=>$!.to_s} }
     end
-    
+
     render :json=>ret
   end
 
@@ -143,8 +143,8 @@ class Api::GameController < ApplicationController
       game_id = params[:game_id].to_i
       data = Game.find(
         :all,
-        :select =>"games.id AS gameId, games.title AS gameName, games.alias_name AS gameEngName, games.product_image AS iconImage, 
-           games.release_date AS releaseDate, games.description AS description, games.sell_price AS sellPrice, games.link AS link",
+        :select =>"games.id AS gameId, games.title AS gameName, games.alias_name AS gameEngName, games.product_image AS iconImage,
+           games.release_date AS releaseDate, games.description AS description, games.link AS link",
         :conditions => ["parent_id=?", game_id],
         :order=>"games.id ASC"
       )
@@ -158,13 +158,14 @@ class Api::GameController < ApplicationController
           :iconImage => item.iconImage ? item.iconImage.gsub("public://", "http://#{Settings.subdomains.store}/sites/default/files/") : "",
           :releaseDate => item.releaseDate,
           :description => item.description,
-          :sellPrice => item.sellPrice,
+          #:sellPrice => item.sellPrice,
           :link => "http://#{Settings.subdomains.store}/node/#{item.gameId}"
         }
       end
 
       ret = { :status => "success", :data => {:base_game_id=>game_id, :dlcs=>dlcs} }
     rescue
+      p $!.inspect
       ret = { :status => "fail", :data => {:err => $!.to_s} }
     end
     

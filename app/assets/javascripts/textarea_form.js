@@ -3,6 +3,7 @@
 // options:
 //  form_selector:  selector of form
 //  limit_num:      limited length of charater in textarea
+//  reset:          true or false
 //  success:        callback of success
 //  error:          callback of failed
 //------------------------------------------------------------------------------------------------------------------------
@@ -63,6 +64,9 @@ function textarea_form(options) {
       dataType: 'json',
       data: post_values,
       error: function (data) {
+        if(options.reset) {
+          $post_form.find(":input").not("[name=utf8]").not("[name=authenticity_token]").not(":submit").attr("value", "");
+        }
         if (options.error) {
           options.error(data);
         }
@@ -70,6 +74,9 @@ function textarea_form(options) {
       success: function(data) {
         // clear value
         $text_area.val('');
+        if(options.reset) {
+          $post_form.find(":input").not("[name=utf8]").not("[name=authenticity_token]").not(":submit").attr("value", "");
+        }
         $charlimit_hint.html(default_text);
         if (options.success) {
           options.success(data);

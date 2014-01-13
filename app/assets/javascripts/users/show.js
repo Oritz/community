@@ -1,4 +1,6 @@
 //= require ../post
+//= require ../cascading
+//= require ../textarea_form
 //= require ../flash_message
 //= require ../game
 //= require ../upload_image
@@ -17,8 +19,28 @@ $(document).ready(function() {
     }
   });
 
-  // fetch posts
-  start_posts("/users/"+user_id+"/posts.json");
+  var posts = post("/home/posts.json");
+  var cascadings = cascading({
+    itemSelector: ".item_Container",
+    columnWidth: 341,
+    posts: posts,
+    on_loading: function() {
+      $(".post-loading").hide();
+    },
+    after_fetch: function() {
+      $(".post-loading").hide();
+    }
+  });
+  cascadings.start();
+
+  var comments = comment({
+    get_success: function() {
+      cascadings.refresh();
+    }
+  });
+  posts.bind_like_event(".post-item");
+  posts.bind_recommend_event(".post-item", function() {});
+  posts.bind_comment_event(".post-item", comments, cascadings.refresh, cascadings.refresh);
 
   // get games
   $.ajax({

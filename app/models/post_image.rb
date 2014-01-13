@@ -51,7 +51,7 @@ class PostImage < ActiveRecord::Base
 
   def only_one_with_talk
     return if self.post == nil || self.cloud_storage == nil
-    return unless self.post.detail_type == Talk.to_s
-    errors[:base] << I18n.t("talk.more_than_one_image") if PostImage.where(post_id: self.post.id).first
+    return unless self.post.post_type == Post::TYPE_TALK
+    errors[:base] << I18n.t("post.talk_more_than_one_image") if PostImage.where(post_id: self.post.id).first
   end
 end

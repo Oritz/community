@@ -1,17 +1,28 @@
-p
-  = link_to post.creator.nick_name, user_path(post.creator)
-  = t("recommended")
-small
-  p= link_to post.content, post_path(post.id)
-  div
-    -if post.original.status == Post::STATUS_DELETED
-      span= t("messages.posts.deleted")
-    -elsif post.original.post_type == Post::TYPE_TALK
-      = post.original.cast.content
-    -else
-      p
-        = post.original.cast.title
-      div
-        = raw truncate_html(post.original.cast.content, length: 1000, omission: "...")
-
-= render partial: "posts/post_op.html.slim", locals: {post: post}
+.pop-layer.radius3px.brd1.pop-box
+  .prompt
+    .writing
+      h3 转发文章
+    .prompt-bn
+      a.sonkwo-dialog-closebtn href="javascript:void(0);"
+  .area
+    .area-turn
+      p.area-turn-h3.rs3
+        a.creator-name href=""
+        span.post-content
+      .area-turn-text
+        #msgBox
+          =form_tag("", class: "recommend-form-dialog") do
+            .countTxt_block
+              span.countTxt 还能输入
+              strong.maxNum 140
+              span 个字
+            .conBoxwidth1
+              textarea#recommend_content.f-text name="recommendation"
+            .sendBtn_tr_width1
+              .sendBtn_tr
+                .sendBtn_tr_R
+                  .sendBtn_tr_R
+                    span.emotion
+                      a href="#"
+                    input name="commit" type="submit" value="发 布" class="issue_btn sonkwo-dialog-submit"
+                    input.cancelBtn.sonkwo-dialog-cancel type="button" value="取 消"

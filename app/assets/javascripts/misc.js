@@ -3,6 +3,16 @@ var suffix = function(n) {
   return d > 3 && d < 21 ? 'th' : ['th', 'st', 'nd', 'rd'][d%10] || 'th';
 };
 
+function Timer(condition) {
+  this.condition = condition;
+}
+
+Timer.prototype.wait = function() {
+  if(this.condition)
+    return;
+  setTimeout(this.wait(), 100);
+}
+
 function show_level($blocks) {
   var total_level = 20;
   var $levels = $blocks.find(".total-level .level");
@@ -18,7 +28,7 @@ function show_level($blocks) {
       return;
     level_count = parseInt(level_count);
     var level_width = $total_level.width() * level_count / total_level;
-    $level.width(level_width);
+    $level.animate({width: level_width}, 1000);
   }
 }
 

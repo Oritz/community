@@ -3,7 +3,7 @@
     <div class="item_GR_top">
       <div class="item_GR_top_tx_kuang">
         <div class="radius3px item_GR_top_tx top_txvip">
-          <img src="{{creator_avatar}}" width="60" height="60">
+          <img src="{{creator_avatar}}" width="48" height="48">
         </div>
       </div>
       <div class="item_GR_sns_release_data_top_r">
@@ -11,7 +11,7 @@
           <span class="item_GR_top_dj_id">
             <a class="snshideid" href="/users/{{creator_id}}">{{creator_nick_name}}</a>
             <div class="snsshowid">
-              <p><a href="javascript:void(0);" class="tipoff" detail_class="Account" detail_id={{creator_id}}>举报</a></p>
+              <p><a href="javascript:void(0);" class="tipoff" detail_type="Account" detail_type={{creator_id}}>举报</a></p>
             </div>
           </span>
         </div>
@@ -25,26 +25,39 @@
         </div>
       </div>
     </div>
+    {{#original_content}}
+    {{/original_content}}
+    {{^original_content}}
+      <div class="forward_cent">
+        <div class="forward_cent_mian">
+          <span>{{content}}</span>
+        </div>
+      </div>
+    {{/original_content}}
     <div class="article_cent">
-      <h2><a href="javascript:void(0);">{{title}}</a></h2>
       <div class="article_cent_text">
-        <p class="post-content">{{content}}</p>
+        {{#original_content}}
+          <p class="post-content">{{original_content}}</p>
+        {{/original_content}}
+        {{^original_content}}
+          <p class="post-content">{{content}}</p>
+        {{/original_content}}
       </div>
       <div class="article_cent_text_xx">
         <span class="text_xx_time">{{created_at}}</span>
         <span class="text_xx_report">
           <a href="javascript:void(0);" class="tipoff" detail_type="Post" detail_id={{id}}>举报</a>
         </span>
-        <span class="text_xx_full">
-          <a href="/posts/{{id}}" target="_blank">全文</a>
-        </span>
       </div>
     </div>
     <div class="img_cent">
       <a href="#" target="_blank">
-        {{#detail.image_url}}
+        {{#original_image_url}}
+          <img src="{{original_image_url}}?imageView/2/w/326">
+        {{/original_image_url}}
+        {{#image_url}}
           <img src="{{image_url}}?imageView/2/w/326">
-        {{/detail.image_url}}
+        {{/image_url}}
       </a>
     </div>
     <div class="article_cent_comment">

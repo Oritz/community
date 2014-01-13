@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Comment do
   let(:creator) { create(:account) }
   let(:talk) { create(:talk) }
-  let(:post) { talk.post }
+  let(:post) { talk }
 
   it "is valid with valid attributes" do
     comment = Comment.new(comment: "comment")

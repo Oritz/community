@@ -33,10 +33,12 @@ class Comment < ActiveRecord::Base
 
   # Associations
   belongs_to :creator, class_name: 'Account', foreign_key: 'author_id'
+  delegate :nick_name, :avatar, :level, to: :creator, prefix: true
   belongs_to :post
   belongs_to :post_author, class_name: 'Account', foreign_key: 'post_author_id'
   belongs_to :original, class_name: 'Comment', foreign_key: 'original_id'
   belongs_to :original_author, class_name: 'Account', foreign_key: 'original_author_id'
+  delegate :nick_name, :avatar, :level, to: :original_author, prefix: true
 
   # Scopes
   scope :of_a_post, lambda { |post| where("post_id=? AND status=?", post.id, Comment::STATUS_NORMAL).includes(:creator, :original_author).order("created_at DESC") }

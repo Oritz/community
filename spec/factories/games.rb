@@ -7,13 +7,12 @@ FactoryGirl.define do
     dir_name "dir_name"
     description "description"
     status Game::STATUS_NORMAL
-    game_type Game::TYPE_GAME
-    sell_price 0.0
-    list_price 0.0
-    downloadable 1
+    game_tag ""
+    install_type "Green"
 
     trait :dlc do
       association :parent, factory: :game
+      game_tag "DLC"
     end
 
     factory :game_dlc, traits: [:dlc]

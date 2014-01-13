@@ -1,3 +1,37 @@
-h1 New post
-= render 'form'
-= link_to 'Back', posts_path
+.sns_release
+  .detail_breadNav
+    h1 发布图文文章
+  .popup_boxs style="display: none;"
+    .pop-layer.radius3px.brd1.subject_popup#insert_img_box
+      .prompt
+        .writing
+          h3 添加图片
+        .prompt-bn
+          a.subject_popup_closebtn href="javascript:void(0);"
+      .upload_img_box
+        form#subject_qiniu_upload method="post" action="http://up.qiniu.com/" enctype="multipart/form-data"
+          input name="token" type="hidden" value=@cloud_storage_settings[:upload_token]
+          input name="x:account_id" type="hidden" value=current_account.id
+          input name="x:timestamp" type="hidden" value=@cloud_storage_settings[:now]
+          input name="x:sonkwo_token" type="hidden" value=@cloud_storage_settings[:sonkwo_token]
+          input#upload_img_file name="file" type="file"
+          input name="x:bucket_name" type="hidden" value="sonkwo-post"
+      .upload_img_show
+      .upload_img_actions
+        input#upload_img_save type="button" value="保存"
+        input#upload_img_cancel type="button" value="取消"
+    .pop-layer.radius3px.brd1.subject_popup#insert_link_box
+      .prompt
+        .writing
+          h3 添加链接
+        .prompt-bn
+          a.subject_popup_closebtn href="javascript:void(0);"
+      .link_text
+        input#link_text_desc type="text" placeholder="输入链接描述"
+      .link_url
+        input#link_text_url type="text" placeholder="输入链接网址"
+      .link_actions
+        input#link_save type="button" value="确定"
+        input#link_cancel type="button" value="取消"
+  .editing_article.radius3px
+    = render 'form'

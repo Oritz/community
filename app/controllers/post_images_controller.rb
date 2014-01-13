@@ -2,11 +2,11 @@ class PostImagesController < ApplicationController
   before_filter :sonkwo_authenticate_account
 
   def create
-    subject = Subject.find(params[:subject_id])
+    post = Post.find(params[:post_id])
     cloud_storage = CloudStorage.find(params[:cloud_storage_id])
 
     post_image = PostImage.new(params[:post_image])
-    post_image.post = subject.post
+    post_image.post = post
     post_image.cloud_storage = cloud_storage
 
     respond_to do |format|
@@ -21,11 +21,11 @@ class PostImagesController < ApplicationController
   end
 
   def destroy
-    subject = Subject.find(params[:subject_id])
+    post = Post.find(params[:post_id])
     post_image = PostImage.find(params[:id])
 
-    if(post_image.post_id != subject.post.id)
-      render json: { status: "error", message: I18n.t("subject.image_is_not_belongs_to") }
+    if(post_image.post_id != post.id)
+      render json: { status: "error", message: I18n.t("post.image_is_not_belongs_to") }
       return
     else
       respond_to do |format|
