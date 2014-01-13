@@ -23,4 +23,8 @@ body{padding-top: 70px;}
 
 .row{margin-bottom: 10px;}
 
+table td a{
+  margin: 0 5px;
+}
+
 

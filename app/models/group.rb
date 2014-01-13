@@ -93,4 +93,10 @@ class Group < ActiveRecord::Base
     self.subject_count ||= 0 if self.attribute_names.include?("subject_count")
     self.recommend_count ||= 0 if self.attribute_names.include?("recommend_count")
   end
+  
+  searchable  :only_reindex_attribute_changes_of => [ :name, :description, :group_type ] do
+    text :name, :stored => true, :boost => 2.0
+    text :description, :stored => true
+    integer :group_type
+  end
 end

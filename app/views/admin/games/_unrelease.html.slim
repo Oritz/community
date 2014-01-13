@@ -1,0 +1,17 @@
+- if @not_released_games.empty?
+  = t 'admin.msg.no_game'
+- else
+  table.table.table-striped.table-bordered.table-condensed
+    thead
+      tr
+        th = Game.human_attribute_name(:title)
+        th =t 'admin.game.release_process'
+        th = GameSerialNumber.model_name.human
+    tbody
+      - @not_released_games.each do |g|
+        tr class=tr_with_status(g.status)
+          td title=g.alias_name =g.title
+          td
+            =link_to t('admin.titles.pre_release') + ' ', pre_release_list_admin_game_path(g.id)
+          td
+            =link_to t('admin.game.serial_number'), game_serial_numbers_admin_game_path(g.id)

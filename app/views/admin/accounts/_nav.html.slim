@@ -1,3 +1,5 @@
 -content_for :sidebar do
-  =link_to(Account.model_name.human, admin_accounts_path, class: "list-group-item active")
-  =link_to(AuthItem.model_name.human, admin_auth_items_path, class: "list-group-item")
+  - if check_access?({:auth_item => 'oper_accounts_roles'})
+    =link_to(Account.model_name.human, admin_accounts_path, class: current_li?(%w(admin/accounts), params[:controller]))
+  - if check_access?({:auth_item => 'oper_items'})
+    =link_to(AuthItem.model_name.human, admin_auth_items_path, class: current_li?(%w(admin/auth_items), params[:controller]))

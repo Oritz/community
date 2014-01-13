@@ -12,10 +12,10 @@
             td=serial_type.type_name
             td
               .btn-toolbar
-                a.btn.btn-small.btn-warning href=edit_admin_serial_type_path(serial_type)
-                  i.icon-edit
-                =link_to(admin_serial_type_path(serial_type), :class=>'btn btn-small btn-warning', :confirm => t('helpers.links.confirm'), :method => :delete) do
-                  i.icon-remove
+                a href=edit_admin_serial_type_path(serial_type)
+                  span.glyphicon.glyphicon-edit
+                =link_to(admin_serial_type_path(serial_type), :confirm => t('helpers.links.confirm'), :method => :delete) do
+                  span.glyphicon.glyphicon-remove
   - else
     =t('admin.msg.no_data')
   div

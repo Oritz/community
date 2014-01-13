@@ -13,7 +13,7 @@
             td="#{client.major_ver}.#{client.minor_ver}.#{client.tiny_ver}"
             td= sonkwo_time_format(client.created_at)
             td
-              =link_to(admin_client_path(client), :class=>"btn btn-small btn-warning", :confirm => t('helpers.links.confirm'), :method => :delete) do
-                i.icon-remove
+              =link_to(admin_client_path(client), :confirm => t('helpers.links.confirm'), :method => :delete) do
+                span.glyphicon.glyphicon-remove
   -else
     =t('admin.msg.no_data')

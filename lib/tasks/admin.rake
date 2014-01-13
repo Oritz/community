@@ -10,8 +10,20 @@ namespace :admin do
       ActiveRecord::Base.transaction do
         administrator = AuthItem.create!(:name =>'administrator', :auth_type => AuthItem::TYPE_ROLE, :description => 'root administrator')
         administrator.assign account
-        puts 'Success!'
+        puts 'Create Administrator success!'
+        puts 'Initing basic items...'
       end
+
+      operates = Settings.rights.basic_items
+      operates.each do |k, v|
+        role = AuthItem.create!(:name => k.to_s, :auth_type => AuthItem::TYPE_ROLE, :description => k.to_s)
+        oper = AuthItem.create!(:name => v, :auth_type => AuthItem::TYPE_OPERATION, :description => v)
+        role.add_child oper
+        administrator.add_child role
+        puts "Create #{k.to_s} success."
+      end
+      
+      puts '-------------Complete!-------------------'
     rescue Exception => e
       puts e
     end

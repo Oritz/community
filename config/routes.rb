@@ -7,9 +7,7 @@ SonkwoCommunity::Application.routes.draw do
   rescue Exception => e
     puts "Devise error: #{e.class}: #{e}"
   end
-
   root :to => "home_pages#index"
-
   resources :home_pages, only: [:index]
   resources :groups do
     member do
@@ -102,6 +100,38 @@ SonkwoCommunity::Application.routes.draw do
 
   resources :tipoffs, only: [:create]
 
+  # match ':controller(/:action(/:id))(.:format)'
+  get '/admin', to: 'admin#index'
+  namespace :admin do
+    resources :games, only: [:index, :destroy] do
+      member do
+        get :pre_release_list
+        get :submit_release
+        get :new_pre_release
+        get :audit_release
+        get :game_serial_numbers
+        get :delete_selection
+        get :game_serial_type
+        post :pre_release_list
+        post :submit_release
+        post :new_pre_release
+        post :cancel_pre_release
+        post :audit_release
+        put :import_serials
+        put :game_serial_type
+      end
+    end
+    resources :auth_items
+    resources :accounts, only: [:index, :edit]
+    resources :serial_types
+    resources :download_servers
+    resources :clients
+    resources :recommendations
+    resources :all_games do
+      resources :achievements
+    end
+  end
+
   # sidekiq
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
@@ -129,7 +159,7 @@ SonkwoCommunity::Application.routes.draw do
   # match ':controller(/:action(/:id))(.:format)'
   get '/admin', to: 'admin#index'
   namespace :admin do
-    resources :games, only: [:index] do
+    resources :games, only: [:index, :destroy] do
       member do
         get :pre_release_list
         get :submit_release
@@ -157,4 +187,10 @@ SonkwoCommunity::Application.routes.draw do
       resources :achievements
     end
   end
+
+  # search api
+  get 'search', to: 'search#index'
+  get 'search/users', to: 'search#users'
+  get 'search/posts', to: 'search#posts'
+  get 'search/groups', to: 'search#groups'
 end
