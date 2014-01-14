@@ -148,10 +148,13 @@ function post(url) {
           end_id = undefined;
       }
 
+      var new_url;
       if(end_id)
-        url = url + "?end_id=" + end_id;
+        new_url = url + "?end_id=" + end_id;
+      else
+        new_url = url;
       $.ajax({
-        url: url,
+        url: new_url,
         cache: false,
         beforeSend: function(data) {
           options.loading();

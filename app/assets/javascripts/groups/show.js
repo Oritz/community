@@ -34,7 +34,7 @@ $(document).ready(function() {
 
   // bind events
   posts.bind_like_event(".post-item");
-  posts.bind_recommend_event(".post-item", cascadings.add_item);
+  posts.bind_recommend_event(".post-item", cascadings.prepend_item);
   posts.bind_comment_event(".post-item", comments, cascadings.refresh, cascadings.refresh);
 
   // upload image
