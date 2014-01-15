@@ -19,9 +19,23 @@
 
 .SK-container-right {
     background-color: $background-white;
-    margin-left: 20%;
+    margin-left: $body-left-width;
     min-height: $body-height;
     width: $body-right-width;
+    .SK-container-right-left {
+        float: left;
+        min-height: $body-height;
+        width: $body-right-left-width;
+    }
+    .SK-container-right-right {
+        margin-left: $body-right-left-width;
+        min-height: $body-height;
+        width: $body-right-right-width;
+    }
+    &:after {
+        content: "";
+        clear: both;
+    }
 }
 
 .SK-profile-card {
