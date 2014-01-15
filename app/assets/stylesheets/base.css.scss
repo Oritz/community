@@ -1,0 +1,52 @@
+@import 'colors';
+@import 'misc';
+
+body {
+    background-color: $background-gray;
+    font: normal 13px $font-stack;
+    height: 100%;
+    margin: 0;
+}
+
+div {
+    display: block;
+}
+
+p {
+    display: block;
+}
+
+ul, ol {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: $yellow;
+    cursor: pointer;
+    text: {
+        decoration: none;
+    }
+    &:hover {
+        text: {
+            decoration: underline;
+        }
+    }
+}
+
+h1, h2, h3, h4 {
+    margin: 0;
+    font: {
+        size: 100%;
+        weight: normal;
+    }
+}
+
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}

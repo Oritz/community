@@ -1,0 +1,31 @@
+@import 'colors';
+@import 'misc';
+@import 'mixins';
+
+.SK-container {
+    @include box-shadow(0, 1px, 1px, rgba(0,0,0,0.5));
+    margin: 0 auto;
+    width: $body-width;
+}
+
+.SK-container-left {
+    background-color: $background-dark-gray;
+    float: left;
+    min-height: $body-height;
+    width: 20%;
+    &>* {
+        width: 100%;
+    }
+}
+
+.SK-container-right {
+    background-color: $background-white;
+    margin-left: 20%;
+    min-height: $body-height;
+    width: 80%;
+}
+
+.SK-profile-card {
+    padding: 4%;
+    width: 92%;
+}

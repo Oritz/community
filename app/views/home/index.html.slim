@@ -1,79 +1,13 @@
-.sns_release
-  .radius3px.sns_release_data
-    .sns_release_data_top
-      .sns_release_data_top_tx_kuang
-        .radius3px.sns_release_data_top_tx.top_txvip
-          = image_tag(current_account.avatar, height: 60, width: 60)
-          .sns_release_data_top_tx_vip
-      .sns_release_data_top_r
-        .sns_release_data_top_dj
-          span.top_dj_id
-            = link_to current_account.nick_name, "#"
-        .sns_release_data_top_cj
-          span.top_dj_dj
-            = link_to "Lv #{level(current_account.exp)}", "#"
-          span.top_dj_dj_sj.total-level
-            i.top_dj_dj_sj_jdt.level level=current_account.level
-    .sns_release_data_con
-      ul
-        li.sns_release_data_con_fs
-          = link_to current_account.follower_count, people_home_index_path(type: "fans")
-        li.sns_release_data_con_fx
-          = link_to current_account.following_count, people_home_index_path(type: "stars")
-        li.sns_release_data_con_pl
-          = link_to current_account.talk_count+current_account.subject_count+current_account.recommend_count, user_path(current_account.id)
-        li.sns_release_data_con_ft
-          a href="#"  999999999
-    .sns_release_data_bom
-      = link_to "", security_setting_index_path
-  .radius3px.sns_release_enter
-    #msgBox
-      = form_for(@new_talk) do |f|
-        = f.hidden_field :cloud_storage_id
-        .countTxt_block
-          span.countTxt 还能输入
-          strong.maxNum 140
-          span 个字
-        .conBoxwidth1
-          = f.text_area :content, class: "f-text", style: "width: 638px;height:90px;"
-        .sendBtn_tr_width1
-          .sendBtn_tr
-            .sendBtn_tr_L
-              span.emotion
-                a href="#"  表情
-              span.emotion_img
-                a href="javascript:void(0);" class="post-pic"  图片
-              span.emotion_text
-                = link_to "长文章", new_post_path
-              span.emotion_xian
-            .sendBtn_tr_R
-              .snsshow1
-                p
-                  a href="#"  举报
-              = f.submit "发布", disable: "", class: "issue_btn"
-      .image-upload-block style="display: none;"
-        .image-upload-form style="display: none;"
-          = render "uploader/qiniu_form"
-        .image-upload-result
-          span.image-upload-before
-            a href="javascript:void(0);" class="image-upload-btn" 上传图片
-          span.image-upload-loading style="display: none;"
-            img src="loading.gif"
-          span.image-upload-after style="display: none;"
-            div
-              img src="" /
-            div
-              span
-                a href="javascript:void(0);" class="image-upload-cancel" 取消上传
-              span
-                a href="javascript:void(0);" class="image-upload-reselect" 重新选择
-.sns_hr_wrapper
-#wrapper end_id=0
-.post-loading style="display: none;"
-.templates style="display: none;"
-  .post-template
-    = render "posts/stream_post"
-  .recommend-template
-    = render "posts/recommend"
-  .comment-template
-    = render "posts/comment"
+-content_for :container_left do
+  .SK-profile-card
+    = link_to user_path(current_account), class: "SK-avatar" do
+      = image_tag current_account.avatar, alt: current_account.nick_name, width: 50, height: 50
+  ul.SK-nav.SK-nav-pills.SK-nav-stacked
+    li.active
+      = link_to I18n.t("pages.my_home"), home_index_path
+    li
+      = link_to I18n.t("pages.my_private_messages"), conversations_path
+    li
+      = link_to I18n.t("pages.my_friends"), people_home_index_path
+
+-content_for :container_right do

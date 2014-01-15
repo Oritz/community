@@ -1,0 +1,21 @@
+@import 'colors';
+@import 'mixins';
+
+.SK-pulldown {
+    .SK-pulldown-menu-right {
+        float: right;
+    }
+}
+
+.SK-pulldown-menu {
+    @include box-shadow(0, 1px, 1px, rgba(0,0,0,0.15));
+    background-color: $white;
+    float: left;
+    left: 0;
+    list-style: none;
+    min-width: 100%;
+    padding: 5px 0;
+    position: absolute;
+    top: 100%;
+    z-index: 1000;
+}

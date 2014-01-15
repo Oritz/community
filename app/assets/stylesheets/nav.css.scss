@@ -1,0 +1,49 @@
+.SK-nav {
+    list-style: none;
+    margin-bottom: 0;
+    padding-left: 0;
+    &>li {
+        display: block;
+        position: relative;
+        &>a {
+            position: relative;
+            display: block;
+            padding: 10px 15px;
+            &:hover, &:focus {
+                background-color: $gray;
+                text-decoration: none;
+            }
+        }
+    }
+    &:after {
+        clear: both;
+    }
+    &:before, &:after {
+        content: " ";
+        display: table;
+    }
+}
+
+.SK-nav-pills {
+    float: left;
+    margin: 0;
+    &>li {
+        float: left;
+    }
+    &>li.active {
+        &>a {
+            background-color: $yellow;
+            color: $white;
+        }
+    }
+}
+
+.SK-nav-pills-right {
+    float: right!important;
+}
+
+.SK-nav-stacked {
+    &>li {
+        float: none;
+    }
+}
