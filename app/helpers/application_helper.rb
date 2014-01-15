@@ -4,6 +4,10 @@ module ApplicationHelper
     Sonkwo::Exp.level(exp)
   end
 
+  def myself?(target)
+    target.id == current_account.id
+  end
+
   def show_account_info?
     if current_account && current_account.update_tag.to_i >= Account::UPDATE_TAG_FINISH
       true

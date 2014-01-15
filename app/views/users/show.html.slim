@@ -2,7 +2,7 @@
   .SK-image-container
     .SK-thumbnail
       = image_tag @target.avatar_l, alt: @target.nick_name, width: 120, height: 120
-  ul.SK-nav.SK-nav-pills.SK-nav-stacked
+  ul.SK-nav.SK-nav-pills.SK-nav-stacked.SK-triangle-indicate
     li.active
       = link_to I18n.t("pages.his_profile"), user_path(@target)
     li
@@ -12,4 +12,8 @@
 
 -content_for :container_right do
   .SK-container-right-left
+    .SK-container-block.SK-grid
+      h3.SK-grid-left = @target.nick_name
+      - if myself?(@target)
+        = link_to I18n.t("pages.edit"), edit_account_registration_path, class: "SK-grid-right"
   .SK-container-right-right

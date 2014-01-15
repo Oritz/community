@@ -25,12 +25,17 @@
     .SK-container-right-left {
         float: left;
         min-height: $body-height;
+        padding: 15px 0px 0px 20px;
         width: $body-right-left-width;
     }
     .SK-container-right-right {
         margin-left: $body-right-left-width;
         min-height: $body-height;
+        padding: 15px 20px 0px 10px;
         width: $body-right-right-width;
+    }
+    .SK-container-block {
+        display: block;
     }
     &:after {
         content: "";
@@ -41,4 +46,19 @@
 .SK-profile-card {
     padding: 4%;
     width: 92%;
+}
+
+.SK-triangle-indicate {
+    &>li.active {
+        &>a:after {
+            border: 20px solid transparent;
+            border-right-color: $white;
+            content: "";
+            height: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 0;
+        }
+    }
 }
