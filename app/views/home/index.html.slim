@@ -9,5 +9,15 @@
       = link_to I18n.t("pages.my_private_messages"), conversations_path
     li
       = link_to I18n.t("pages.my_friends"), people_home_index_path
-
+      
 -content_for :container_right do
+  .SK-content-communities
+    .SK-content-community-list
+      .SK-content-community-header
+        h3 我的小组
+        a#find-community-link 发现小组
+      .SK-content-community-thumbs
+    .SK-content-community-detail
+  .SK-content-b
+  .SK-content-c
+
