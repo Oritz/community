@@ -126,6 +126,8 @@ GEM
     figaro (0.7.0)
       bundler (~> 1.0)
       rails (>= 3, < 5)
+    font-awesome-sass (4.0.2)
+      sass-rails (>= 3.1.1)
     foreigner (1.6.0)
       activerecord (>= 3.0.0)
     formatador (0.2.4)
@@ -374,6 +376,7 @@ DEPENDENCIES
   fastercsv
   faye
   figaro (~> 0.7.0)
+  font-awesome-sass
   foreigner
   guard
   humanizer

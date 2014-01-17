@@ -68,7 +68,7 @@ class Account < ActiveRecord::Base
     before_add: :forbid_callback
   has_one :notification, foreign_key: 'id', dependent: :destroy
   has_one :steam_user
-  delegate :steam_id, to: :steam_user
+  delegate :steamid, to: :steam_user
 
   belongs_to :cloud_storage, class_name: "CloudStorage", foreign_key: "avatar_id"
   has_many :accounts_other_games
@@ -78,6 +78,10 @@ class Account < ActiveRecord::Base
   has_many :tags, through: :accounts_tags
 
   has_one :tipoff, as: :detail
+
+  # machine info
+  has_one :machine, class_name: "UserEnv", order: "id DESC"
+  delegate :cpu, :os, :graphics_card, :ram, :hdd, to: :machine, prefix: true
 
   # Validations
   validates :exp, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
@@ -236,6 +240,17 @@ class Account < ActiveRecord::Base
     return [] unless self.steam_user
 
     game.game_achievements.choose_game(game).all_normal.with_steam_user(self.steam_user).select(%w(id name description lock_url unlock_url))
+  end
+
+  def game_count
+    steam_game_count = 0
+    steam_game_count = self.steam_user.games.count if self.steam_user
+    steam_game_count + self.other_games.count.to_i
+  end
+
+  def recent_game_achievements(count)
+    return [] unless self.steam_user
+    self.steam_user.steam_users_game_achievements.includes(:game_achievement).order("created_at DESC").map(&:game_achievement)
   end
 
   ###########################################

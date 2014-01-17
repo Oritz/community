@@ -1,21 +1,35 @@
-@import 'colors';
-@import 'mixins';
-
 .SK-pulldown {
-    .SK-pulldown-menu-right {
-        float: right;
+    position: relative;
+    .SK-pulldown-toggle {
+        &:hover + .SK-pulldown-menu {
+            display: block;
+        }
     }
-}
-
-.SK-pulldown-menu {
-    @include box-shadow(0, 1px, 1px, rgba(0,0,0,0.15));
-    background-color: $white;
-    float: left;
-    left: 0;
-    list-style: none;
-    min-width: 100%;
-    padding: 5px 0;
-    position: absolute;
-    top: 100%;
-    z-index: 1000;
+    .SK-pulldown-menu {
+        @include box-shadow(0, 1px, 1px, rgba(0,0,0,0.15));
+        background-color: $white;
+        display: none;
+        float: left;
+        list-style: none;
+        padding: 5px 0;
+        position: absolute;
+        top: 100%;
+        width: 100%;
+        z-index: 1000;
+        &:hover {
+            display: block;
+        }
+        &>li {
+            display: block;
+            position: relative;
+            &>a {
+                display: block;
+                padding: 5px;
+                &:hover {
+                    background-color: $gray;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
 }
