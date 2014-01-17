@@ -125,5 +125,14 @@ $(document).ready(function () {
 
   $("#sns_nav").nav_float();
 
-  // popup tipoff
+  // faye
+  /*
+  var home_account_id = $(".home-account").attr("account_id");
+  if(parseInt(home_account_id) > 0) {
+    var faye = new Faye.Client('http://10.1.1.248:9292/notifications');
+    faye.subscribe('/notifications/'+home_account_id, function(data) {
+      alert(data.id);
+    });
+  }
+   */
 });

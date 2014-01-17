@@ -5,7 +5,6 @@ class UsersController < ApplicationController
 
   def show
     @target = Account.find(params[:id])
-    @new_talk = Talk.new
     @relation = Friendship::IRRESPECTIVE
     @relation = current_account.get_relation(@target) if current_account
 
@@ -102,7 +101,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render_for_api :game_basic_info, json: @games, root: "data", meta: {status: "success"} }
+      format.json
     end
   end
 

@@ -30,11 +30,13 @@ class AllGame < ActiveRecord::Base
   validates :subable_id, uniqueness: { scope: :subable_type }, if: Proc.new { |a| a.subable_id }
 
   # Scopes
-  scope :belong_to_account, lambda { |account| joins("INNER JOIN users_games_reputation_ranklists ON game_id=all_games.id").where("(user_id=? AND user_type=?) OR (user_id=? AND user_type=?)", account.id, account.class.to_s, account.steam_user, account.steam_user.class.to_s).group(:id) }
-  scope :sonkwo_games, ->{where('subable_id is NULL')}
+  scope :belong_to_account, lambda { |account| joins("INNER JOIN users_games_reputation_ranklists ON game_id=all_games.id").where("(user_id=? AND user_type=?) OR (user_id=? AND user_type=?)", account.id, account.class.to_s, account.steam_user, account.steam_user.class.to_s).group("all_games.id") }
+  scope :sonkwo_games, where('all_games.subable_id is NULL')
+  scope :available, where(status: self::STATUS_NORMAL)
+
   # Methods
   def self.have_type?(type)
-    %w(SteamGame LiveGame).include?(type)
+    %w(SteamGame).include?(type)
   end
 
   protected

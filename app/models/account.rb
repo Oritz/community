@@ -47,6 +47,9 @@ class Account < ActiveRecord::Base
   has_many :groups, through: :groups_accounts
   has_many :accounts_like_posts
   has_many :posts, inverse_of: :creator
+  has_many :talks, conditions: "post_type=#{Post::TYPE_TALK}", class_name: "Post"
+  has_many :subjects, conditions: "post_type=#{Post::TYPE_SUBJECT}", class_name: "Post"
+  has_many :recommends, conditions: "post_type=#{Post::TYPE_RECOMMEND}", class_name: "Post"
   has_many :like_posts, through: :accounts_like_posts, source: :post,
     after_add: :post_liked,
     after_remove: :post_unliked
@@ -107,14 +110,15 @@ class Account < ActiveRecord::Base
     self.avatar + "_s" if self.avatar
   end
 
-  def pending_subject
-    subject = Post.pending_of_account(self).first
-    return subject if subject
-    subject = Subject.new
-    subject.status = Post::STATUS_PENDING
-    subject.creator = self
-    subject.save!
-    subject.post
+  def pending_subject!
+    post = self.subjects.pending.first
+    return post if post
+    post = Post.new
+    post.post_type = Post::TYPE_SUBJECT
+    post.status = Post::STATUS_PENDING
+    post.creator = self
+    post.save!
+    post
   end
 
   def change_password(params)
@@ -148,13 +152,14 @@ class Account < ActiveRecord::Base
   def recommend(target, text, opts={})
     post = Post.new
     post.creator = self
+    post.post_type = Post::TYPE_RECOMMEND
     post.parent = target
-    if target.detail_type == "Talk" || target.detail_type == "Subject"
-      post.original = target
-    else
+    if target.original
       post.original = target.original
+    else
+      post.original = target
     end
-    post.recommendation = text
+    post.content = text
     result = post.save
     [result, post]
   end

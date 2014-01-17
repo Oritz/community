@@ -1,6 +1,7 @@
 SonkwoCommunity::Application.routes.draw do
   begin
-    devise_for :accounts, :controllers => { :sessions => 'account_sessions', :registrations => 'account_registrations' } do
+    devise_for :accounts, :controllers => { :sessions => 'account_sessions', :registrations => 'account_registrations' }
+    devise_scope :accounts do
       get '/accounts/sign_out', to: 'account_sessions#destroy' # used for other platforms(store, forum)
     end
   rescue Exception => e
@@ -16,23 +17,16 @@ SonkwoCommunity::Application.routes.draw do
       get 'posts'
       get 'members'
     end
-    resources :talks, only: [:create]
+    resources :posts, only: [:create]
   end
 
-  resources :posts, only: [:show, :destroy] do
+  resources :posts do
     resources :comments
     member do
       put 'like'
       delete 'unlike'
       post 'recommend'
     end
-    collection do
-      get 'templates'
-    end
-  end
-
-  resources :talks, only: [:show, :create]
-  resources :subjects, only: [:show, :new, :create, :edit, :update] do
     resources :post_images, only: [:create, :destroy]
   end
 
@@ -137,11 +131,21 @@ SonkwoCommunity::Application.routes.draw do
         resources :achievements
       end
     end
-
-    # sidekiq
-    require 'sidekiq/web'
-    mount Sidekiq::Web => '/sidekiq'
+    resources :auth_items
+    resources :accounts, only: [:index, :edit]
+    resources :serial_types
+    resources :download_servers
+    resources :clients
+    resources :recommendations
+    resources :all_games do
+      resources :achievements
+    end
   end
+
+  # sidekiq
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   # old routes (need to be cleaned in future)
   namespace :api do
     post 'client/post_err_msg', to: 'client#post_err_msg'
@@ -200,7 +204,7 @@ SonkwoCommunity::Application.routes.draw do
       resources :achievements
     end
   end
-  
+
   # search api
   get 'search', to: 'search#index'
   get 'search/users', to: 'search#users'

@@ -1,19 +1,14 @@
-li[comment_id=comment.id]
-  .container-fluid
-    .row-fluid
-      .span1
-        = image_tag(comment.creator.avatar.m.url, alt: comment.creator.nick_name, class: "img-rounded", width: "50px")
-      .span8
-        .well.well-small
-          - if comment.original_author.nil?
-            span= link_to comment.creator.nick_name, user_path(comment.creator)
-          - else
-            span
-              = comment.creator.nick_name
-              = I18n.t('reply')
-              = comment.original_author.nick_name
-          span= comment.created_at.strftime("%Y-%m-%d %H:%M:%S")
-          span
-            a.new_comment_comment data-toggle="modal" href="#new_comment_comment" = t("Reply")
-        div
-          span= comment.comment
+.up_mian_con_reply.comment-detail comment_id="" nick_name=""
+  .up_mian_con_reply_tx
+    span.up_mian_con_reply_tx_tx
+      a.creator-link href=""
+        img.creator-avatar height=30 src=""
+    span.up_mian_con_reply_tx_id
+      a.creator-link.creator-name href=""
+      span.replay-tag =I18n.t("pages.reply")
+      a.replay-tag.target-link href=""
+  .up_mian_con_reply_text
+    p.comment-content
+  div
+    span.up_mian_con_reply_tx_time.comment-time
+    a.comment-reply href="javascript:void(0)" =I18n.t("pages.reply")

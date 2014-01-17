@@ -5,12 +5,11 @@ class HomeController < ApplicationController
   before_filter :check_update_tag, only: [:index]
 
   def index
-    @new_talk = Talk.new
-    @cloud_storage_settings = CloudStorage.settings(current_account)
+    @new_talk = Post.new
+    @new_talk.post_type = Post::TYPE_TALK
+    qiniu_prepare(Settings.cloud_storage.post_bucket)
 
     params[:type] ||= "posts"
-    #fetcher = Sonkwo::Behavior::Fetcher.new(current_account)
-    #@behaviors = fetcher.behaviors(limit: 10, status: Post::STATUS_NORMAL)
   end
 
   def groups

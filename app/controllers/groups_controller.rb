@@ -26,9 +26,9 @@ class GroupsController < ApplicationController
   # GET /groups/1.json
   def show
     @group = Group.find(params[:id])
-    @new_talk = Talk.new
+    @new_talk = Post.new
     @new_talk.group = @group
-    @cloud_storage_settings = CloudStorage.settings(current_account) if current_account
+    qiniu_prepare(Settings.cloud_storage.post_bucket)
     @tags = @group.tags
     @newcomers = @group.accounts.order("groups_accounts.created_at DESC").limit(21)
     @is_added = current_account ? @group.accounts.include?(current_account) : false

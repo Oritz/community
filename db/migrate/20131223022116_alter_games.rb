@@ -4,6 +4,7 @@ class AlterGames < ActiveRecord::Migration
     change_column :games, :game_tag, :string, null: false
     change_column :games, :install_type, :string, null: false
     remove_column :games, :cap_image
+    remove_column :games, :sell_price
     remove_column :games, :list_price
     remove_column :games, :downloadable
   end

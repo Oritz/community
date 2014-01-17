@@ -9,7 +9,7 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render_for_api :comment_info, json: @comments, root: "data", meta: { status: "success" } }
+      format.json
     end
   end
 
@@ -43,7 +43,7 @@ class CommentsController < ApplicationController
     respond_to do |format|
       if @comment.save
         format.html { redirect_to post, notice: 'Comment was successfully created.'}
-        format.json { render_for_api :comment_info, json: @comment, root: "data", meta: { status: "success" } }
+        format.json
       else
         format.html { render action: "show", controller: "posts" }
         format.json { render json: { status: "fail", data: @comment.errors } }

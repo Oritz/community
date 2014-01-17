@@ -1,0 +1,54 @@
+.item_Container.post-item
+  .item.item_GR
+    .item_GR_top
+      .item_GR_top_tx_kuang
+        .radius3px.item_GR_top_tx.top_txvip
+          img.creator-avatar height="48" src="/avatar/default.jpg" width="48"
+      .item_GR_sns_release_data_top_r
+        .item_GR_sns_release_data_top_dj
+          span.item_GR_top_dj_id
+            a.snshideid.creator-link.creator-name href=""
+            .snsshowid
+              p
+                a.tipoff detail_id="" detail_type="Account" href="javascript:void(0);"
+        .item_GR_sns_release_data_top_cj
+          span.item_GR_top_dj_dj
+            a.creator-level href="javascript:void(0);" target="_blank"
+          span.item_GR_top_dj_dj_sj.total-level
+            i.item_GR_top_dj_dj_sj_jdt.level level=""
+    .forward_cent.recommendation
+      .forward_cent_mian
+        span.post-content
+    .article_cent
+      .article_cent_text
+        p.post-content.post-original
+      .article_cent_text_xx
+        span.text_xx_time.post-time
+        span.text_xx_report
+          a.tipoff detail_id="" detail_type="Post" href="javascript:void(0);" =I18n.t("pages.tip-off")
+        span.text_xx_full
+          a.post-link href="" =I18n.t("pages.post_detail")
+    .img_cent
+      a href="javascript:void(0);" target="_blank"
+        img.post-image src=""
+    .article_cent_comment
+      a.article_cent_comment_up.like-op href="javascript:void(0);"
+        span.like-count
+      a.article_cent_comment_zhuan.recommend-op href="javascript:void(0);"
+        span.recommend-count
+      a.article_cent_comment_huifu.up1.comment-op href="javascript:void(0);"
+        span.comment-count
+  .up_mian.comments-block
+    .up_mian_bj
+    .up_mian_con
+      .up_mian_con_input
+        .up_mian_con_input_center
+          = form_tag("") do
+            span.reply-name
+            textarea.up_mian_con_input_style name="comment[comment]"
+            input name="original_id" type="hidden" value=""
+            span
+              a.up_mian_con_buttonQ.up1.cancel 取消
+            span
+              input.up_mian_con_buttonE name="commit" type="submit" value="评论"
+            .comments

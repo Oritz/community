@@ -196,3 +196,5 @@ zh:
     enter_current_password: "请输入当前密码"
     enter_password: "请输入密码"
     enter_confirmation_password: "请再次输入密码"
+    post_detail: "全文"
+    reply: "回复"
