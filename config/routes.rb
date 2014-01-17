@@ -165,7 +165,7 @@ SonkwoCommunity::Application.routes.draw do
   # match ':controller(/:action(/:id))(.:format)'
   get '/admin', to: 'admin#index'
   namespace :admin do
-    resources :games, only: [:index, :destroy], shallow: true do
+    resources :games, only: [:index, :destroy] do
       member do
         get :pre_release_list
         get :submit_release
@@ -182,7 +182,13 @@ SonkwoCommunity::Application.routes.draw do
         put :import_serials
         put :game_serial_type
       end
-      resources:serial_numbers
+      resources:serial_numbers, only: [:index], shallow: true do
+        collection do
+          get :delete_selection
+          delete :delete_serials
+          post :import
+        end
+      end
     end
     resources :auth_items
     resources :accounts

@@ -43,7 +43,7 @@ zh:
       game_serial_number:
         serial_type: "序列号类型"
         status: "状态"
-        status_arr: ["未使用", "已使用", "已分配", "全部", "序列号状态"]
+        status_arr: ["未使用", "已使用", "已分配"]
         batch_number: 批次
         serial_file: 序列号文件
         allocated_for_third_part: 允许来自第三方的序列号

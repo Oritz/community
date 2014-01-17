@@ -5,7 +5,7 @@
     table.table.table-bordered.table-condensed
       thead
         th=GameSerialNumber.human_attribute_name(:serial_type)
-        - index = (0..GameSerialNumber::STATUS-2) #include all tag
+        - index = (0..GameSerialNumber::STATUS_ALL-1) #include all tag
         - index.each do |i|
           th=GameSerialNumber.human_attribute_name(:status_arr)[i]
       tbody

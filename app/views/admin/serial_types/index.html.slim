@@ -19,14 +19,15 @@
   - else
     =t('admin.msg.no_data')
   div
-    a.btn.btn-primary href=new_admin_serial_type_path data-target='#modal' data-toggle='modal'
-      =t('admin.titles.new_serial_type')
-  #modal.modal.hide.fade role='dialog'
-    .modal-header
-      button.close data-dismiss='modal' aria-hidden='true'
-        |
-          &times;
-      h3 =yield :modal_title
-    .modal-body
+    button.btn.btn-primary href=new_admin_serial_type_path data-target='#modal' data-toggle='modal' =t('admin.serial.create_product_key')  
+  #modal.modal.fade role='dialog' tabindex='-1' aria-hidden='true' aria-labelledby='modal_label'
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close data-dismiss='modal' aria-hidden='true'
+            |
+              &times;
+          h3#modal_label.modal-title =yield :modal_title
+        .modal-body
 
 

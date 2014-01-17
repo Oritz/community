@@ -1,0 +1,31 @@
+#import_div.modal.fade role='dialog' tabindex='-1' aria-hidden='true' aria-labelledby='modal_label'
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close data-dismiss='modal' aria-hidden='true'
+          |
+            &times;
+        h3#modal_label.modal-title =t('admin.titles.import_serial_numbers')
+      .modal-body
+        =form_for(@game, :html => {:multipart => true, :id=>'import_form', :class=>'form-horizontal'},  :url => { :action => 'import' }, :method => 'post') do |g|
+          =hidden_field_tag 'serial_number[game_id]', params[:game_id]
+          .form-group
+            label.control-label.col-sm-3 for='batch_number'
+              =GameSerialNumber.human_attribute_name(:batch_number)
+            .col-sm-2
+              =select_tag('serial_number[batch_number]', options_for_select((0..34), 0), class: 'form-control')
+          .form-group
+            label.control-label.col-sm-3 for='serial_type'
+              = GameSerialNumber.human_attribute_name(:serial_type)
+            .col-sm-4
+              =>select_tag('serial_number[serial_type]', options_from_collection_for_select(@serial_types,'id', 'type_name'), prompt: t('helpers.tip.select_something'), class: 'form-control')
+              =link_to(t('admin.serial.bind_new_type'), game_serial_type_admin_game_path(params[:game_id]))
+              /<a id="bind_new_type_link" href="<%= admin_serial_types_path(:game_id => @game.id) -%>">绑定新类型</a>
+          .form-group
+            label.control-label.col-sm-3 for='serial_file'
+              =GameSerialNumber.human_attribute_name(:serial_file)
+            .col-sm-4
+              =file_field_tag 'serial_file'
+          .modal-footer
+            button.btn.btn-default data-dismiss='modal' =t('helpers.links.close')
+            input.btn.btn-primary type='submit'

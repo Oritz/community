@@ -27,4 +27,8 @@ table td a{
   margin: 0 5px;
 }
 
+.form-inline .form-group input.short{
+  width: 90px;
+}
+
 

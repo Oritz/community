@@ -1,0 +1,70 @@
+=render 'admin/games/nav'
+-content_for(:content) do
+  h3=@game.title
+  - status_arr = GameSerialNumber.human_attribute_name(:status_arr)
+  - unless @serial_number_types.empty?
+    table.table.table-bordered.table-condensed
+      thead
+        th=GameSerialNumber.human_attribute_name(:serial_type)
+        - index = (0..(status_arr.size-1)) #include all tag
+        - index.each do |i|
+          th=GameSerialNumber.human_attribute_name(:status_arr)[i]
+      tbody
+        - @serial_number_types.each do |s|
+          - next unless s
+          tr
+            td=s[:type_desc]
+            - index.each do |i|
+              td=s[:number][i] || 0
+
+  =search_form_for([:admin, @q], class: 'form-inline') do |f|
+    .form-group>
+      =f.text_field(:serial_number_cont, placeholder: GameSerialNumber.human_attribute_name(:serial_number), class: 'form-control')
+    .form-group>
+      - status_arr = GameSerialNumber.human_attribute_name(:status_arr)
+      =f.select(:status_eq, status_arr.map{|s| [s, status_arr.index(s)]}, {include_blank: GameSerialNumber.human_attribute_name(:status)}, class: 'form-control')
+    .form-group>
+      #start_time.date.datetime.input-group
+        =f.text_field(:created_at_gteq, placeholder: "start time", class: 'form-control short')
+        span.input-group-addon.add-on.glyphicon.glyphicon-calendar
+    .form-group>
+      #end_time.input-group.date.datetime
+        =f.text_field(:created_at_lteq, placeholder: "end time", class: 'form-control short')
+        span.input-group-addon.add-on.glyphicon.glyphicon-calendar
+    .form-group>
+      =f.submit(class: 'btn btn-default')
+  br
+  - unless @game_serial_numbers.empty?
+    .tab-pane
+      table.table.table-bordered.table-condensed.table-striped
+        thead
+          th=GameSerialNumber.human_attribute_name(:serial_type)
+          th=GameSerialNumber.human_attribute_name(:serial_number)
+          th=GameSerialNumber.human_attribute_name(:created_at)
+          th=GameSerialNumber.human_attribute_name(:status)
+        tbody
+          -@game_serial_numbers.each do |serial_number|
+            tr
+              td= serial_number.serialtype.type_desc
+              td= serial_number.serial_number
+              td= sonkwo_time_format(serial_number.created_at)
+              td= GameSerialNumber.human_attribute_name(:status_arr)[serial_number.status]
+      div
+        =paginate @game_serial_numbers
+  -else
+    =t('admin.msg.no-data')
+
+  .btn-toolbar
+    button.btn.btn-primary data-target="#import_div" data-toggle='modal' =t('admin.serial.import_serial_number')
+    button.btn.btn-primary data-target="#create_div" data-toggle='modal' =t('admin.serial.create_product_key')    
+    =link_to t('admin.serial.delete_serials'), delete_selection_admin_game_serial_numbers_path(@game.id), :class => "btn btn-danger"
+  =render 'import'
+  =render 'create'
+
+-unless @game_serial_numbers.empty?
+  -content_for(:js_files) do
+    javascript:
+      $(document).ready(function(){
+        $("#start_time").datetimepicker();
+        $("#end_time").datetimepicker();
+      })

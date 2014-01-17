@@ -1,0 +1,42 @@
+=render 'nav'
+-content_for(:content) do
+  h3=@game.title
+  =form_for @delete_form, :url => delete_serials_admin_game_serial_numbers_path(@game), :class=>'form-horizontal', :method => 'delete' do |f|
+    - @delete_form.errors.any?
+      - @delete_form.errors.full_messages.each do |msg|
+        =msg
+    = f.hidden_field :game_id
+    .form-group
+      label.control-label
+        =t('admin.serial.batch')
+      .controls
+        = f.select :batch_number, options_for_select(@delete_form.batch_numbers), :include_blank => true
+    .form-group
+      label.control-label
+        =t('admin.titles.serial_type')
+      .controls
+        = f.select :serial_type, options_for_select(@delete_form.serial_types), :include_blank => true
+    .form-group
+      label.control-label
+        =t('helpers.label.start_time')
+      .controls
+        #start_time.date.datetime.input-group
+          input data-format="yyyy/MM/dd hh:mm:ss" type="text" id="admin_game_serial_number_delete_form_start_time" name="admin_game_serial_number_delete_form[start_time]"
+          span.input-group-addon.add-on.glyphicon.glyphicon-calendar
+    .form-group
+      label.control-label
+        =t('helpers.label.end_time')
+      .controls
+        #end_time.input-group.date.datetime
+          input data-format="yyyy/MM/dd hh:mm:ss" type="text" id="admin_game_serial_number_delete_form_end_time" name="admin_game_serial_number_delete_form[end_time]"
+          span.input-group-addon.add-on.glyphicon.glyphicon-calendar
+    .control-group
+      .controls
+        = f.submit t('helpers.links.submit'), :class=>'btn btn-primary'
+
+-content_for(:js_files) do
+  javascript:
+    $(document).ready(function(){
+      $("#start_time").datetimepicker({pickTime: true});
+      $("#end_time").datetimepicker({pickTime: true});
+    })
