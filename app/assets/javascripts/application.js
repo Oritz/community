@@ -18,6 +18,7 @@
 //= require flash_message
 //= require misc
 //= require tipoff
+//= require hovercard
 
 function change_nav_height($block) {
   nav_height = $(window).height() - 40;

@@ -3,6 +3,8 @@
 //= require ../template
 //= require ../post
 //= require ../cascading
+//= require ../vendor/modernizr.custom.17475
+//= require ../vendor/jquery.elastislide
 
 $(document).ready(function() {
   show_level($(".total-level").parent());
@@ -71,3 +73,34 @@ $(document).ready(function() {
     }
   });
 });
+
+
+(function () {
+   // slider
+  var current = 0,
+    //$preview = $('#preview'),
+    $carouselEl = $('#carousel'),
+    $carouselItems = $carouselEl.children(),
+    carousel = $carouselEl.elastislide( {
+      current : current,
+      minItems : 6,
+      onClick : function( el, pos, evt ) {
+        changeImage(el, pos);
+        evt.preventDefault();
+      },
+      onReady : function() {
+        changeImage( $carouselItems.eq( current ), current );
+      }
+    });
+
+  function changeImage( el, pos ) {
+    //$preview.attr( 'src', el.data( 'preview' ) );
+    $carouselItems.removeClass( 'current-img' );
+    el.addClass( 'current-img' );
+    if (typeof carousel.setCurrent !== 'undefined') {
+      carousel.setCurrent( pos );
+    }
+  }  
+})();
+
+

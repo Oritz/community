@@ -1,0 +1,13 @@
+.group-hovercard {
+  border: 1px solid black;
+  border-radius: 2px;
+  box-shadow: 0 0 6px 1px rgba(0,0,0,.4);
+  padding-right: 4px;
+}
+
+.group-hovercard > .inner {
+  border:solid 2px #ddd;
+  background:#fff;
+  background-color: #FEF7E4;
+  padding: 2px;
+}

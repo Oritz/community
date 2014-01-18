@@ -2,3 +2,10 @@ $font-stack: Arail, Microsoft YaHei, sans-serif;
 
 $body-width: 980px;
 $body-height: 900px;
+$body-left-width: 980px * 0.2;
+$body-right-width: 980px * 0.8;
+
+.SK-center {
+    margin: 0 auto;
+    text-align: center;
+}

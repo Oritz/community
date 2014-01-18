@@ -1,82 +1,11 @@
-.sns_release
-  .sns_gr_home_top
-    .sns_gr_home_top_Ltx
-      .sns_gr_home_top_Ltx_png
-        .home_top_Ltx_l
-          .home_top_Ltx_l_tx.border_2px_viptx.avatar-block user_id=(@target.id)
-            a href="javascript:void(0);"
-              = image_tag(@target.avatar, height: 112, width: 112, class: "user-avatar")
-        .home_top_Ltx_r
-          .home_top_Ltx_r_id
-            = link_to @target.nick_name, "javascript:void(0);"
-            .snsshowid
-              p
-                a href="#"
-              p
-                a href="#"
-              p
-                a href="#"
-              p
-                a href="#"
-          .home_top_Ltx_r_id_jdt_kuang
-            span.home_top_Ltx_r_id_jdt
-              = link_to "Lv #{level(@target.exp)}", "javascript:void(0);"
-            span.home_top_Ltx_r_id_jdt_bj.total-level
-              i.home_top_Ltx_r_id_jdt_bj1.level level=@target.level
-        .user-status-block
-          - if @relation == Friendship::IS_SELF
-            = link_to I18n.t("pages.edit_info"), "javascript:void(0);"
-          - elsif @relation == Friendship::IRRESPECTIVE
-            = link_to I18n.t("pages.follow_user"), follow_users_path(target_id: @target.id), method: :put
-          - elsif @relation == Friendship::FOLLOWING || @relation == Friendship::MUTUAL
-            = link_to I18n.t("pages.unfollow_user"), unfollow_users_path(target_id: @target.id), method: :delete
-          - else
-            = link_to I18n.t("pages.follow_user"), follow_users_path(target_id: @target.id), method: :put
-      /!更换皮肤span.sns_gr_home_top_pois
-    .sns_gr_home_top_Rzl
-      .sns_gr_home_top_Rzl_b
-        .sns_Cj_Dj
-          .sns_Cj_Dj_l
-            #focus_Box.games-block style="display: none;"
-              .slide_games
-          .sns_Cj_Dj_r
-            .sns_Cj_Dj_r_Tdj
-              .sns_release_data_top_bom
-                span.top_dj_cj.reputation-rank
-                span.top_dj_cj_sj
-              .sns_Cj_Dj_r_Tdj_sj
-                span.top_dj_id_sj
-                  ul
-                    li.sns_tx_id_jlBJ.game-achievement-count 0
-                    li.sns_tx_id_sjBJ.game-playtime-count 0
-            .sns_Cj_Dj_r_Bcj
-              .v_show
-                span.prevs
-                span.nexts
-                .v_content
-                  .v_content_list.ranklist-block
-                    .item-template style="display: none;"
-                      li
-                        a href=""
-                          img alt="" src=""
-                        span.rank
-                    ul
-      .sns_gr_home_top_Rzl_t
-        ul
-          li.sns_gr_home_top_Rzl_t_con_fs
-            = link_to @target.follower_count, people_user_path(@target)
-          li.sns_gr_home_top_Rzl_t_con_fx
-            = link_to @target.following_count, people_user_path(@target)
-          li.sns_gr_home_top_Rzl_t_con_pl
-            = link_to @target.talk_count+@target.subject_count+@target.recommend_count, user_path(@target)
-          li.sns_gr_home_top_Rzl_t_con_ft
-            = link_to @target.following_count, people_user_path(@target)
-#wrapper end_id=0
-.post-loading style="display: none;"
-.templates style="display: none;"
-  .post-template
-    = render "posts/stream_post"
-  .recommend-template
-    = render "posts/recommend"
-  .comment-template
-    = render "posts/comment"
+-content_for :container_left do
+  .SK-image-container
+    .SK-thumbnail
+      = image_tag @target.avatar_l, alt: @target.nick_name, width: 120, height: 120
+  ul.SK-nav.SK-nav-pills.SK-nav-stacked
+    li.active
+      = link_to I18n.t("pages.his_profile"), user_path(@target)
+    li
+      = link_to I18n.t("pages.his_games"), games_user_path(@target)
+    li
+      = link_to I18n.t("pages.his_people"), people_user_path(@target)
