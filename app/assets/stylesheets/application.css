@@ -4,4 +4,5 @@
  *= require messenger-spinner
  *= require messenger-theme-future
  *= require_self
+ *= require hovercard
  */

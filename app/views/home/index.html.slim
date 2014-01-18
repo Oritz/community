@@ -1,7 +1,12 @@
+-content_for :css_files do
+  = stylesheet_link_tag "vendor/elastislide", media: "all"
+  
 -content_for :container_left do
   .SK-profile-card
+    = link_to current_account.nick_name, user_path(current_account), class: "SK-account-name" 
+    = link_to "更改设置", edit_account_registration_path(), class: "SK-account-edit"
     = link_to user_path(current_account), class: "SK-avatar" do
-      = image_tag current_account.avatar, alt: current_account.nick_name, width: 50, height: 50
+      = image_tag current_account.avatar, alt: current_account.nick_name, width: 60, height: 60
   ul.SK-nav.SK-nav-pills.SK-nav-stacked
     li.active
       = link_to I18n.t("pages.my_home"), home_index_path
@@ -9,3 +14,20 @@
       = link_to I18n.t("pages.my_private_messages"), conversations_path
     li
       = link_to I18n.t("pages.my_friends"), people_home_index_path
+      
+-content_for :container_right do
+  .SK-content-communities
+    .SK-content-community-list
+      .SK-content-community-header
+        h3 我的小组
+        a#find-community-link 发现小组
+      .SK-content-community-thumbs
+        ul#carousel.elastislide-list
+          - current_account.groups.each do |group|
+            li.hover-card data-type='group' data-id='#{group.id}'
+              a href="#{group_path(group)}"
+                img alt="#{group.name}" src="#{group.logo}"
+         
+    .SK-content-community-detail
+  .SK-content-b
+  .SK-content-c

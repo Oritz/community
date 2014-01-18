@@ -4,6 +4,7 @@ html
     meta content=("text/html; charset=utf-8") http-equiv="Content-Type"
     = csrf_meta_tags
     = stylesheet_link_tag "application", media: "all"
+    == yield(:css_files) 
     title= @title
     == yield(:js_configs)
   body
@@ -37,6 +38,37 @@ html
         == yield(:container_left)
       .SK-container-right
         == yield(:container_right)
+    .SK-hovercards
+      .user-hovercard-tpl.user-hovercard style="display:none;"
+        .user-info
+          .user-header
+            a.avatar target="_blank" href="javascript:void(0);" 
+              img width="60" height="60"
+            a.user-name target="_blank" href="javascript:void(0);"
+            span "other infomations"
+          .user-body
+            .common-games
+              span 共同游戏
+            .common-follows
+              span 共同关注
+        .user-action
+          a.follow-button.do-follow 关注
+          a.message-button 私信
+      .group-hovercard-tpl style="display:none;"
+        .group-hovercard
+          .group-inner
+            .group-info
+              p.group-name
+              p
+                span.group-members
+                | 个成员
+              p 
+                | 你关注了其中
+                span.group-follow-members
+                | 个成员
+            .group-action
+              span.group-follow-button 关注小组
+          .arrow
     .SK-footer
     .templates.SK-hidden
       .post-template

@@ -1,0 +1,33 @@
+.SK-content-communities {
+  padding-top: 10px;
+  height: 196px;
+}
+
+.SK-content-community-header {
+  margin-top: 10px; 
+  padding: 0px 20px;
+  height: 130px;
+}
+
+.SK-content-community-header h3 {
+  float: left;
+}
+
+.SK-content-community-header a {
+  
+  float: right;
+}
+
+.SK-content-community-thumbs {
+  padding: 0px 55px;
+  background-color: $gray;
+  height: 119px;
+}
+
+.elastislide-list li {
+  opacity: 0.6;
+}
+
+.elastislide-list li:hover, .elastislide-list .current-img {
+  opacity: 1;
+}

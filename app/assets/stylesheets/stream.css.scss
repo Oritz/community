@@ -56,8 +56,30 @@
 }
 
 .SK-profile-card {
-    padding: 4%;
-    width: 92%;
+    padding: 8px;
+    height: 169px;
+}
+
+.SK-profile-card a {
+  display: inline-block;
+  width: 180px;
+}
+
+a.SK-account-name { 
+  font-size: 16px;
+  height: 40px;
+  line-height: 40px; 
+}
+
+a.SK-account-edit {
+  font-size: 10px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.SK-avatar {
+  height: 54px;
+  margin: 2px auto;
 }
 
 .SK-triangle-indicate {

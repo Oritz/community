@@ -18,3 +18,5 @@
 //= require flash_message
 //= require misc
 //= require tipoff
+//= require hovercard
+
