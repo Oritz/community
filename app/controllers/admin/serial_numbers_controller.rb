@@ -21,6 +21,7 @@ class Admin::SerialNumbersController < AdminController
 
     #import serial_numbers
     @serial_types = SerialType.select('serial_types.id, type_name').joins('LEFT JOIN game_serial_types AS gt ON gt.serial_type = serial_types.id').where('type_cat=? or game_id=?', SerialType::TYPE_BASIC, game_id).group('serial_types.id')
+    @basic_types = SerialType.where('type_cat =?', SerialType::TYPE_BASIC)
     @serial_type = SerialType.new
     @serial_type.type_cat = SerialType::TYPE_PRIVATE
 
@@ -31,16 +32,26 @@ class Admin::SerialNumbersController < AdminController
   end
 
   def import
-    if request.post?
-      serial_file = SerialFile.new(params[:serial_number], params[:serial_file])
-      if serial_file.file_valid? == true
-        serial_file.import!
-        flash[:notice] = t('admin.msg.success')
-      else
-        flash[:alert] = serial_file.file_valid?
-      end
-      redirect_to admin_game_serial_numbers_path
+    serial_file = SerialFile.new(params[:serial_number], params[:serial_file])
+    if serial_file.file_valid? == true
+      serial_file.import!
+      flash[:notice] = t('admin.msg.success')
+    else
+      flash[:alert] = serial_file.file_valid?
     end
+    redirect_to admin_game_serial_numbers_path
+  end
+
+  def create
+    serial_number = GameSerialNumber.new(params[:serial])
+    serial_number.create_product_keys!(params[:other])
+
+    if serial_number.errors.any?
+      flash[:alert] = serial_number.errors
+    else
+      flash[:notice] = t('admin.msg.success')
+    end
+    redirect_to admin_game_serial_numbers_path
   end
 
   def delete_selection

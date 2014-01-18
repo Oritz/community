@@ -1,24 +1,32 @@
-= form_for(@serial_type, :url => {:action => :create}, :class=>'form-horizontal') do |f|
-  - @serial_type.errors.any?
-    - @serial_type.errors.full_messages.each do |msg|
-      =msg
-  .control-group
-    label.control-label for='type_cat'
-      =t('admin.serial.categlory')
-    .controls
-      - t('admin.serial.serial_types')[0..2].each do |c|
-        = f.radio_button(:type_cat, t('admin.serial.serial_types').index(c))
-        = c
-  .control-group
-    label.control-label for='type_name'
-      =t('admin.titles.serial_type')
-    .controls
-      = f.text_field('type_name')
-  .control-group
-    label.control-label for='type_desc'
-      =t('admin.serial.type_desc')
-    .controls
-      = f.text_area(:type_desc, :size => '50x3')
-  .control-group
-    .controls
-      = f.submit 'Create', :class=>'btn btn-primary'
+.modal-dialog
+  .modal-content
+    .modal-header
+      button.close data-dismiss='modal' aria-hidden='true'
+        |
+          &times;
+      h3#modal_label.modal-title =yield :modal_title
+    .modal-body
+      = form_for(@serial_type, :url => {:action => :create}, :class=>'form-horizontal') do |f|
+        - @serial_type.errors.any?
+          - @serial_type.errors.full_messages.each do |msg|
+            =msg
+        .control-group
+          label.control-label for='type_cat'
+            =t('admin.serial.categlory')
+          .controls
+            - t('admin.serial.serial_types')[0..2].each do |c|
+              = f.radio_button(:type_cat, t('admin.serial.serial_types').index(c))
+              = c
+        .control-group
+          label.control-label for='type_name'
+            =t('admin.titles.serial_type')
+          .controls
+            = f.text_field('type_name')
+        .control-group
+          label.control-label for='type_desc'
+            =t('admin.serial.type_desc')
+          .controls
+            = f.text_area(:type_desc, :size => '50x3')
+        .control-group
+          .controls
+            = f.submit 'Create', :class=>'btn btn-primary'

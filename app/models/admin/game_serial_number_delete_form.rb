@@ -16,7 +16,7 @@ class Admin::GameSerialNumberDeleteForm < ActiveForm
   end
 
   def serial_types
-    game_serial_types = SerialType.joins("INNER JOIN game_serial_types ON serial_type=serial_types.id").where(["game_id=?", @game_id]).select("serial_types.id, type_name")
+    game_serial_types = SerialType.joins("LEFT JOIN game_serial_types ON serial_type=serial_types.id").where(["game_id=? or type_cat=?", @game_id, SerialType::TYPE_BASIC]).select("serial_types.id, type_name")
 
     serial_types = [] 
     game_serial_types.collect do |t|

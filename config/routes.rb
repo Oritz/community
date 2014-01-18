@@ -186,7 +186,7 @@ SonkwoCommunity::Application.routes.draw do
         put :import_serials
         put :game_serial_type
       end
-      resources:serial_numbers, only: [:index], shallow: true do
+      resources:serial_numbers, only: [:index, :create], shallow: true do
         collection do
           get :delete_selection
           delete :delete_serials
