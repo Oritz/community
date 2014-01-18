@@ -7,11 +7,14 @@ class UsersController < ApplicationController
     @target = Account.find(params[:id])
     @relation = Friendship::IRRESPECTIVE
     @relation = current_account.get_relation(@target) if current_account
+    @recent_game_achievements = @target.recent_game_achievements(3)
+    @games = AllGame.belong_to_account(@target).available.limit(5);
+
+    stream = Stream::Account.new(current_account, @target, min_id: params[:end_id].to_i, order: "created_at DESC")
+    @stream_posts = stream.stream_posts.limit(9)
 
     respond_to do |format|
-      format.html do
-        qiniu_prepare(Settings.cloud_storage.avatar_bucket, "updateavatar")
-      end
+      format.html
       format.json { render json: @target }
     end
   end

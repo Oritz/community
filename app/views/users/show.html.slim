@@ -2,10 +2,78 @@
   .SK-image-container
     .SK-thumbnail
       = image_tag @target.avatar_l, alt: @target.nick_name, width: 120, height: 120
-  ul.SK-nav.SK-nav-pills.SK-nav-stacked
+  ul.SK-nav.SK-nav-pills.SK-nav-stacked.SK-triangle-indicate
     li.active
       = link_to I18n.t("pages.his_profile"), user_path(@target)
     li
       = link_to I18n.t("pages.his_games"), games_user_path(@target)
     li
       = link_to I18n.t("pages.his_people"), people_user_path(@target)
+
+-content_for :container_right do
+  .SK-container-right-left
+    .SK-container-block.SK-grid
+      .SK-grid-row
+        h1 = @target.nick_name
+        - if myself?(@target)
+          = link_to I18n.t("pages.edit"), edit_account_registration_path, class: "SK-grid-right"
+    ul.SK-container-block
+    ul.SK-container-block
+  .SK-container-right-right
+    .SK-container-block
+      h2.SK-container-block = I18n.t("pages.follower_number", count: @target.follower_count)
+      - if show_follow?(@relation)
+        = link_to I18n.t("friendship.follow"), follow_users_path(target_id: @target.id), method: :put, class: "SK-btn SK-btn-default"
+      - elsif show_unfollow?(@relation)
+        = link_to I18n.t("friendship.unfollow"), unfollow_users_path(target_id: @target.id), method: :delete, class: "SK-btn SK-btn-default"
+    .SK-container-block
+      = render "user_info"
+    h2.SK-container-block = I18n.t("pages.community_activity")
+    .SK-container-block
+      .SK-card.SK-grid
+        ul.SK-card-columns.SK-grid-row.SK-grid-row3
+          li.SK-card-columns-split
+            h4= I18n.t("post.post")
+            span= @target.post_count
+          li.SK-card-columns-split
+            h4= I18n.t("friendship.following")
+            span= @target.following_count
+          li.SK-card-columns-split
+            h4= I18n.t("friendship.follower")
+            span= @target.follower_count
+        ul.SK-card-lists
+          li
+            i.fa.fa-comment-o
+            span= I18n.t("pages.talk_count", count: @target.talk_count)
+          li
+            i.fa.fa-edit
+            span= I18n.t("pages.subject_count", count: @target.subject_count)
+    h2.SK-container-block = I18n.t("pages.game_activity")
+    .SK-container-block
+      .SK-card
+        - if @games.empty?
+          p= I18n.t("pages.no_games")
+        - else
+          ul.SK-card-lists
+            - @games.each do |game|
+              li.SK-grid
+                .SK-grid-row
+                  = link_to "javascript:void(0);", class: "SK-grid-row-sub30" do
+                    = image_tag game.image, width: 40, height: 40
+                  = link_to game.name, "javascript:void(0);"
+          .SK-card-footer
+            span
+              = link_to I18n.t("pages.view_all_games"), "javascript: void(0);"
+    h2.SK-container-block = I18n.t("pages.game_achievement_activity")
+    .SK-container-block
+      .SK-card.SK-grid
+        - if @recent_game_achievements.empty?
+          p= I18n.t("pages.no_recent_game_achievements")
+        - else
+          ul.SK-card-columns.SK-grid-row.SK-grid-row3
+            - @recent_game_achievements.each do |ga|
+              li
+                = image_tag(ga.unlock_url, alt: ga.name)
+          .SK-card-footer
+            span
+              = link_to I18n.t("pages.view_all_game_achievements"), "javascript: void(0);"

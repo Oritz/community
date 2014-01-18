@@ -1,0 +1,15 @@
+.SK-form {
+    display: block;
+    margin-top: 0;
+    .SK-form-control {
+        display: block;
+        width: 100%;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 26px;
+        color: $gray1;
+        background-color: $white;
+        @include border-radius(4px);
+        border: 1px solid $gray;
+    }
+}

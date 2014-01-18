@@ -1,27 +1,39 @@
-.sns_gr_home_top_zs
-  .sns_gr_home_top_Ltx_zs
-    .sns_gr_home_top_Ltx_png_zs
-      .home_top_Ltx_l_zs
-        .home_top_Ltx_l_tx_zs.border_2px_viptx
-          a href="javascript:void(0);"
-            = image_tag(account.avatar, class: "user-avatar")
-      .home_top_Ltx_r_zs
-        .home_top_Ltx_r_id_zs
-          = link_to account.nick_name, user_path(account)
-        .home_top_Ltx_r_id_jdt_kuang_zs
-          span.home_top_Ltx_r_id_jdt_zs
-            = link_to "Lv #{level(account.exp)}", "javascript:void(0);"
-          span.home_top_Ltx_r_id_jdt_bj.total-level
-            i.home_top_Ltx_r_id_jdt_bj1.level level=account.level
-    span.sns_gr_home_top_pois_zs
-  .sns_gr_home_top_Rzl_zs
-    .sns_gr_home_top_Rzl_t_zs
-      ul
-        li.sns_gr_home_top_Rzl_t_con_fs_zs
-          = link_to account.follower_count, people_user_path(account, type: "fans")
-        li.sns_gr_home_top_Rzl_t_con_fx_zs
-          = link_to account.following_count, people_user_path(account, type: "stars")
-        li.sns_gr_home_top_Rzl_t_con_pl_zs
-          = link_to account.talk_count+account.subject_count+account.recommend_count, user_path(account.id)
-        li.sns_gr_home_top_Rzl_t_con_ft_zs
-          a href="#" 99
+.SK-card
+  h3= I18n.t("pages.about_info")
+  p= I18n.t("pages.registed_at", registed_at: @target.created_at.strftime("%Y-%m-%d"))
+  ul.SK-card-lists
+    - if @target.steam_user
+      li
+        i.fa.fa-chain
+        span
+          = link_to "Steam:(#{@target.steamid})", "javascript:void(0);"
+    li
+      i.fa.fa-gamepad
+      span
+        = link_to I18n.t("pages.game_count", count: @target.game_count), games_user_path(@target)
+    li
+      i.fa.fa-th-large
+      span
+        = link_to I18n.t("pages.group_count", count: @target.groups.count), groups_user_path(@target)
+    li
+      i.fa.fa-comments
+      span
+        = link_to I18n.t("pages.post_count", count: @target.post_count), user_path(@target)
+  - if @target.machine
+    h3= I18n.t("pages.machine_info")
+    ul.SK-card-lists
+      li
+        i.fa.fa-laptop
+        span= @target.machine_os
+      li
+        i.fa.fa-flag
+        span= @target.machine_cpu
+      li
+        i.fa.fa-film
+        span= @target.machine_graphics_card
+      li
+        i.fa.fa-maxcdn
+        span= I18n.t("pages.machine_in_gb", value: machine_gb(@target.machine_ram))
+      li
+        i.fa.fa-hdd-o
+        span= I18n.t("pages.machine_in_gb", value: machine_gb( @target.machine_hdd))

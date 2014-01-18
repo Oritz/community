@@ -1,0 +1,38 @@
+@mixin btn-style($color, $from, $to) {
+    border-color: $to;
+    color: $color!important;
+    @include linear-gradient($from, $to, 0%, 100%);
+    &:hover {
+        color: $to;
+        @include linear-gradient($to, $from, 0%, 100%);
+    }
+}
+
+.SK-btn {
+    border-width: 1px;
+    border-style: solid;
+    display: inline-block;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0;
+    overflow: visible;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.35);
+    width: auto;
+    text-align: center;
+    padding: 5px 10px;
+    @include border-radius(5px);
+    &:hover {
+        color: $dark-gray;
+        text-decoration: none;
+    }
+}
+.SK-btn.SK-btn-default {
+    @include btn-style($gray1, $white, $gray);
+}
+.SK-btn.SK-btn-warning {
+    @include btn-style($white, $btn-blue, $btn-dark-blue);
+}
+.SK-btn.SK-btn-primary {
+    @include btn-style($white, $btn-yellow, $btn-dark-yellow);
+}

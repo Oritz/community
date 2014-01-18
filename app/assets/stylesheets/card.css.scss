@@ -1,0 +1,130 @@
+.SK-card {
+    @include border-radius(4px);
+    border: 1px solid $gray;
+    font-size: 12px;
+    overflow: hidden;
+    padding: 5px 7px;
+    width: 100%;
+    h3 {
+        font-weight: bold;
+        font-size: 13px;
+        margin: 0;
+        padding: 3px 0;
+    }
+    h4 {
+        font-size: 13px;
+        font-weight: normal;
+    }
+    p {
+        margin: 0;
+        padding: 3px;
+    }
+    .SK-card-right {
+        float: right;
+    }
+    .SK-card-comment {
+        color: $dark-gray;
+        font-size: 11px;
+        font-weight: normal;
+    }
+    .SK-card-topper {
+    }
+    .SK-card-footer {
+        border-top: 1px solid $gray;
+        display: block;
+        overflow: hidden;
+    }
+    .SK-card-columns {
+        padding: 5px 0;
+        overflow: hidden;
+        .SK-card-columns-split {
+            border-left: 1px solid $gray;
+            padding-left: 3px;
+        }
+        &>li {
+            float: left;
+        }
+        &:after {
+            content: "";
+            clear: both;
+        }
+    }
+    .SK-card-lists {
+        margin: 0;
+        padding: 5px 0;
+        &>li {
+            margin: 0;
+            overflow: hidden;
+            padding: 2px 0;
+            &>i {
+                display: inline-block;
+                margin: auto 0;
+            }
+            &>span {
+                width: 90%;
+                display: inline-block;
+                margin: 0;
+                padding-left: 10px;
+            }
+            &:after {
+                content: "";
+                clear: both;
+            }
+        }
+    }
+}
+
+.SK-post-card {
+    padding-bottom: 15px;
+    overflow: hidden;
+    width: $post-card-width;
+    .SK-post-card-left {
+        width: $post-card-creator-width;
+        float: left;
+        &>img {
+            width: 60;
+        }
+    }
+    .SK-post-card-right {
+        float: left;
+        width: $post-card-card-width;
+        .SK-post-card-operator {
+            padding: 0 10px;
+            .SK-post-card-operator-count {
+                font-weight: normal;
+                color: $dark-gray;
+                &:before {
+                    content: "(";
+                }
+                &:after {
+                    content: ")";
+                }
+            }
+        }
+    }
+    .SK-post-card-comments {
+        border: 1px solid $gray;
+        padding: 5px 7px;
+        background-color: $gray;
+        .SK-post-card-comments-row {
+            overflow: hidden;
+            .SK-post-card-comments-row-left {
+                float: left;
+                width: $post-card-comment-creator-width;
+            }
+            .SK-post-card-comments-row-right {
+                float: left;
+                padding-left: 5px;
+                width: $post-card-comment-content-width;
+            }
+            &:after {
+                content: "";
+                clear: both;
+            }
+        }
+    }
+    &:after {
+        content: "";
+        clear: both;
+    }
+}

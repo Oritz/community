@@ -1,13 +1,21 @@
-@import 'colors';
-@import 'misc';
-@import 'mixins';
-@import 'media-box';
 @import 'index';
 
 .SK-container {
     @include box-shadow(0, 1px, 1px, rgba(0,0,0,0.5));
+    overflow: hidden;
     margin: 0 auto;
     width: $body-width;
+    h1 {
+        font-weight: bold;
+        font-size: 24px;
+        margin: 0;
+    }
+
+    h2 {
+        font-wight: bold;
+        font-size: 18px;
+        maring: 0;
+    }
 }
 
 .SK-container-left {
@@ -15,13 +23,36 @@
     float: left;
     min-height: $body-height;
     width: $body-left-width;
+    overflow: hidden;
 }
 
 .SK-container-right {
     background-color: $background-white;
-    margin-left: 20%;
+    margin-left: $body-left-width;
     min-height: $body-height;
+    overflow: hidden;
     width: $body-right-width;
+    .SK-container-right-left {
+        float: left;
+        min-height: $body-height;
+        padding: 15px 0px 0px 20px;
+        width: $body-right-left-width;
+    }
+    .SK-container-right-right {
+        margin-left: $body-right-left-width;
+        min-height: $body-height;
+        padding: 15px 20px 0px 10px;
+        width: $body-right-right-width;
+    }
+    .SK-container-block {
+        display: block;
+        overflow: hidden;
+        padding: 10px 0;
+    }
+    &:after {
+        content: "";
+        clear: both;
+    }
 }
 
 .SK-profile-card {
@@ -49,4 +80,19 @@ a.SK-account-edit {
 .SK-avatar {
   height: 54px;
   margin: 2px auto;
+}
+
+.SK-triangle-indicate {
+    &>li.active {
+        &>a:after {
+            border: 20px solid transparent;
+            border-right-color: $white;
+            content: "";
+            height: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 0;
+        }
+    }
 }

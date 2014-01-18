@@ -19,15 +19,19 @@ html
             = link_to I18n.t("pages.forum_page"), Settings.subdomains.forum
           li
             = link_to I18n.t("pages.home_page"), home_index_path
-          li.SK-pulldown
-            = link_to current_account.nick_name, "javascript:void(0);", class: "SK-pulldown-toggle"
-            ul.SK-pulldown-menu
-              li
-                = link_to I18n.t("pages.profile"), user_path(current_account)
-              li
-                = link_to I18n.t("pages.setting"), "#"
-              li
-                = link_to I18n.t("pages.quit"), destroy_account_session_path, method: :delete
+          - if current_account
+            li.SK-pulldown
+              = link_to current_account.nick_name, "javascript:void(0);", class: "SK-pulldown-toggle"
+              ul.SK-pulldown-menu
+                li
+                  = link_to I18n.t("pages.profile"), user_path(current_account)
+                li
+                  = link_to I18n.t("pages.setting"), "#"
+                li
+                  = link_to I18n.t("pages.quit"), destroy_account_session_path, method: :delete
+          - else
+            li
+              = link_to I18n.t("pages.login"), new_account_session_path
     .SK-container
       .SK-container-left
         == yield(:container_left)
