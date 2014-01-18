@@ -63,6 +63,7 @@
           var bottom_interval = window.innerHeight - obj_offset.top - obj.height() + scroll_top;
           
           var arrow_to = 'arrow-none';
+          var arrow_style = "";
           if (bottom_interval < card_height) {
             if (top_interval >= card_height) {
               arrow_to = 'arrow-down';
@@ -82,35 +83,47 @@
           
           switch (arrow_to) {
             case 'arrow-up':
+              arrow_style += 'border-bottom-color: #fef7e4;';
               if ((right_interval + obj_width) >= card_width) {
                 card_style += 'left: ' + obj_offset.left + 'px; top: ' + (obj_offset.top + obj_height) + 'px;';
+                arrow_style += 'top: -8px; left: 29px;';
               }
               else {
                 card_style += 'left: ' + (obj_offset.left + obj_width - card_width) + 'px; top: ' + (obj_offset.top + obj_height) + 'px;';
+                arrow_style += 'top: -8px; left: ' + (card_width - 43) + 'px;';
               }
               break;
             case 'arrow-down':
+              arrow_style += 'border-top-color: #fef7e4;';
               if ((right_interval + obj_width) >= card_width) {
                 card_style += 'left: ' + obj_offset.left + 'px; top: ' + (obj_offset.top - card_height) + 'px;';
+                arrow_style += 'top: ' + (card_height - 8) + 'px; left: 29px;';
               }
               else {
                 card_style += 'left: ' + (obj_offset.left + obj_width - card_width) + 'px; top: ' + (obj_offset.top - card_height) + 'px;';
+                arrow_style += 'top: ' + (card_height - 8) + 'px; left: ' + (card_width - 43) + 'px;';
               }
               break;
             case 'arrow-left':
+              arrow_style += 'border-right-color: #fef7e4;';
               if ((bottom_interval + obj_height) >= card_height) {
                 card_style += 'left: ' + (obj_offset.left + obj_width) + 'px; top: ' + obj_offset.top + 'px;';
+                arrow_style += 'top: 29px; left: -8px;';
               }
               else {
                 card_style += 'left: ' + (obj_offset.left + obj_width) + 'px; top: ' + (obj_offset.top + obj_height - card_height) + 'px;';
+                arrow_style += 'top: ' + (card_height - 43) + 'px; left: -8px;';
               }
               break;
             case 'arrow-right':
+              arrow_style += 'border-left-color: #fef7e4;';
               if ((bottom_interval + obj_height) >= card_height) {
                 card_style += 'left: ' + (obj_offset.left - card_width) + 'px; top: ' + obj_offset.top + 'px;';
+                arrow_style += 'top: 29px; left: ' + (card_width - 9) + 'px;';
               }
               else {
                 card_style += 'left: ' + (obj_offset.left - card_width) + 'px; top: ' + (obj_offset.top + obj_height - card_height) + 'px;';
+                arrow_style += 'top: ' + (card_height - 43) + 'px; left: ' + (card_width - 9) + 'px;';
               }
               break;
             case 'arrow-none':
@@ -120,6 +133,7 @@
           if (arrow_to != 'arrow-none') {
             // Display it
             card_obj.attr('style', card_style);
+            card_obj.find('.arrow').attr('style', arrow_style);
             card_obj.fadeIn();
           }
           

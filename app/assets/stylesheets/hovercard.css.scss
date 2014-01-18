@@ -1,13 +1,24 @@
 .group-hovercard {
-  border: 1px solid black;
+  border: 1px solid #888888;
   border-radius: 2px;
   box-shadow: 0 0 6px 1px rgba(0,0,0,.4);
-  padding-right: 4px;
+  margin: 7px;
+  width: 180px;
+  overflow: hidden;
 }
 
-.group-hovercard > .inner {
+.group-hovercard > .group-inner {
   border:solid 2px #ddd;
-  background:#fff;
-  background-color: #FEF7E4;
+  background-color: #fef7e4;
   padding: 2px;
+  overflow: hidden;
 }
+
+.group-hovercard > .arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: solid 8px transparent;
+}
+
+
