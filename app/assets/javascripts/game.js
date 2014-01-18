@@ -1,5 +1,9 @@
 //= require flash_message
 
+function game_info() {
+}
+
+/*
 function game_info(options) {
   options = $.extend(true, {
     $wrapper: $("body"),
@@ -55,3 +59,4 @@ function game_info(options) {
     }
   });
 }
+*/

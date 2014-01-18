@@ -231,6 +231,7 @@ class Account < ActiveRecord::Base
       playtime_forever: item.playtime_forever,
       achievements_count: item.achievements_count,
       rank: need_rank ? ranklist.rank_to_string : nil,
+      delta_reputation: ranklist.delta_reputation,
       user_type: item.is_a?(SteamUsersGame) ? "SteamUser" : "Account"
     }
   end
@@ -373,7 +374,7 @@ class Account < ActiveRecord::Base
     album.account = self
     album.save!
   end
-  
+
   searchable :only_reindex_attribute_changes_of => [ :nick_name ], :if => :confirmed? do
     text :nick_name, :stored => true
   end

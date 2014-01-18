@@ -9,7 +9,7 @@
             position: relative;
             display: block;
             padding: 10px 15px;
-            &:hover, &:focus {
+            &:hover {
                 background-color: $gray;
                 text-decoration: none;
             }
@@ -32,7 +32,7 @@
     }
     &>li.active {
         &>a {
-            background-color: $yellow;
+            background-color: $dark-blue;
             color: $white;
         }
     }

@@ -232,3 +232,6 @@ zh:
     no_recent_game_achievements: "没有游戏成就信息"
     view_all_game_achievements: "查看所有成就"
     about_info: "关于"
+    no_game_info: "无游戏信息"
+    recent_played_games: "最近玩过的游戏"
+    delta_reputation_count: "您还需要%{count}个小时或成就才能达到下一军阶"

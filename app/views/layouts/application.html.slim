@@ -6,6 +6,7 @@ html
     = stylesheet_link_tag "application", media: "all"
     == yield(:css_files) 
     title= @title
+    == yield(:js_configs)
   body
     .SK-topper
       .SK-topper-container
@@ -69,5 +70,10 @@ html
               span.group-follow-button 关注小组
           .arrow
     .SK-footer
+    .templates.SK-hidden
+      .post-template
+        = render "posts/stream_post"
+      .recommend-template
+      .comment-template
   = javascript_include_tag "application"
   = javascript_include_tag "#{params[:controller]}/#{params[:action]}"

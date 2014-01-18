@@ -19,7 +19,7 @@
 }
 
 .SK-container-left {
-    background-color: $background-dark-gray;
+    background-color: $background-gray;
     float: left;
     min-height: $body-height;
     width: $body-left-width;
@@ -95,4 +95,9 @@ a.SK-account-edit {
             width: 0;
         }
     }
+}
+
+.game-cards {
+    height: 209px;
+    overflow: hidden;
 }

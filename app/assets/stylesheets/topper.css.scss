@@ -1,5 +1,5 @@
 .SK-topper {
-    background-color: $background-light-gray;
+    background-color: $background-black;
     @include box-shadow(0, 1px, 1px, rgba(0,0,0,0.15));
     height: 40px;
     width: 100%;
@@ -9,8 +9,16 @@
         width: $body-width;
     }
     .SK-pulldown-menu {
-        background-color: $background-light-gray!important;
+        background-color: $background-black!important;
         min-width: 150px;
         right: 0;
+    }
+    li {
+        &>a:hover {
+            background-color: $gray1!important;
+        }
+    }
+    a {
+        color: $dark-gray;
     }
 }

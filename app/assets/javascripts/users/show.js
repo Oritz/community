@@ -2,27 +2,14 @@
 //= require ../cascading
 //= require ../textarea_form
 //= require ../flash_message
-//= require ../game
+//= require ../game_card
 //= require ../upload_image
 //= require ../../../../vendor/assets/javascripts/jquery.waterwheelCarousel.min
 
 $(document).ready(function() {
-  show_level($(".total-level").parent());
-  var user_id = $(".avatar-block").attr("user_id");
-
-  // upload_avatar
-  qiniu_upload({
-    trigger_item: ".upload-avatar-edit-button",
-    sonkwo_callback: "updateavatar",
-    success: function(url) {
-      $(".user-avatar").attr("src", url+"_l");
-    }
-  });
-
-  var posts = post("/home/posts.json");
+  var posts = post("/users/"+$CONFIG.user_id+"/posts.json");
   var cascadings = cascading({
-    itemSelector: ".item_Container",
-    columnWidth: 341,
+    wrappger: ".posts-container",
     posts: posts,
     on_loading: function() {
       $(".post-loading").hide();
@@ -33,18 +20,37 @@ $(document).ready(function() {
   });
   cascadings.start();
 
-  var comments = comment({
-    get_success: function() {
-      cascadings.refresh();
-    }
-  });
-  posts.bind_like_event(".post-item");
-  posts.bind_recommend_event(".post-item", function() {});
-  posts.bind_comment_event(".post-item", comments, cascadings.refresh, cascadings.refresh);
+  var gcs = $(".game-cards .SK-game-card");
+  if(gcs.length > 0) {
+    var game_cards = [];
+    var st = setTimeout(function() {
+      var gc_first = game_card({ block: gcs[0] });
+      game_cards[0] = gc_first;
+      gc_first.get_user_data($CONFIG.user_id, function() {});
+    }, 0);
 
+    slidr.create('slidr-div', {
+      before: function(e) {
+        var in_i = parseInt(e.in.slidr);
+        var gc_in = game_cards[in_i];
+        if(typeof gc_in === "undefined") {
+          gc_in =game_card({
+            block: e.in.el
+          });
+          game_cards[in_i] = gc_in;
+        }
+        if(typeof st != "undefined")
+          clearTimeout(st);
+        st = setTimeout(function() {
+          gc_in.get_user_data($CONFIG.user_id, function() {});
+        }, 1000);
+      }
+    }).start();
+  }
+  /*
   // get games
   $.ajax({
-    url: "/users/"+user_id+"/games.json",
+    url: "/users/"+$CONFIG.user_id+"/games.json",
     cache: false,
     success: function(data) {
       show_message(data);
@@ -98,9 +104,5 @@ $(document).ready(function() {
       show_message("unknow");
     }
   });
-
-  function slide_3d() {
-    this.initialize.apply(this, arguments);
-  }
-
+   */
 });

@@ -1,3 +1,11 @@
+-content_for :js_configs do
+  javascript:
+    var $CONFIG={};
+    $CONFIG.is_login=#{current_account ? 1 : 0};
+    $CONFIG.my_avatar='#{current_account ? current_account.avatar : ''}'
+    $CONFIG.user_id=#{@target.id};
+    $CONFIG.nick_name='#{@target.nick_name}';
+
 -content_for :container_left do
   .SK-image-container
     .SK-thumbnail
@@ -13,12 +21,20 @@
 -content_for :container_right do
   .SK-container-right-left
     .SK-container-block.SK-grid
-      .SK-grid-row
+      .SK-grid-row.SK-grid-row2
         h1 = @target.nick_name
         - if myself?(@target)
-          = link_to I18n.t("pages.edit"), edit_account_registration_path, class: "SK-grid-right"
-    ul.SK-container-block
-    ul.SK-container-block
+          = link_to I18n.t("pages.edit"), edit_account_registration_path, class: "SK-btn SK-btn-warning"
+    - if @games.empty?
+      p.SK-container-block = I18n.t("pages.no_game_info")
+    - else
+      .SK-container-block
+        h3= I18n.t("pages.recent_played_games")
+        .game-cards id="slidr-div"
+          - @games.each_with_index do |game, index|
+            = render partial: "games/card", locals: {game: game, index: index}
+    ul.SK-container-block.posts-container
+    .SK-container-block.SK-loading.post-loading
   .SK-container-right-right
     .SK-container-block
       h2.SK-container-block = I18n.t("pages.follower_number", count: @target.follower_count)
