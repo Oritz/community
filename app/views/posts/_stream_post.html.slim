@@ -1,30 +1,28 @@
-li.SK-post-card
+li.SK-post-card.post-item
   .SK-post-card-left
-    = link_to user_path(post.creator), class: "SK-grid-row-sub15" do
-      = image_tag post.creator.avatar_m, width: 60
+    a.SK-grid-row-sub15.ceator-link href=""
+      img.creator-avatar src="" style="width: 60px"
   .SK-post-card-right
     .SK-card
-      p= post.content
-      - if post.image
-        = image_tag post.image_url, width: 415
-      p.SK-card-comment = post.created_at
+      p.post-content
+      img.post-image src="" style="width: 415px"
+      p.SK-card-comment.post-time
       .SK-card-footer.SK-grid
         ul.SK-card-colums
           li
             a.SK-post-card-operator.SK-card-right href="javascript:void(0);"
               i.fa.fa-comments
-              span.SK-post-card-operator-count= post.comment_count
+              span.SK-post-card-operator-count.comment-count
             a.SK-post-card-operator.SK-card-right href="javascript:void(0);"
               i.fa.fa-mail-forward
-              span.SK-post-card-operator-count= post.recommend_count
+              span.SK-post-card-operator-count.recommend-count
             a.SK-post-card-operator.SK-card-right href="javascript:void(0);"
               i.fa.fa-thumbs-o-up
-              span.SK-post-card-operator-count= post.like_count
+              span.SK-post-card-operator-count.like-count
     .SK-post-card-comments
-      - if current_account
-        .SK-post-card-comments-row
-          .SK-post-card-comments-row-left
-            = image_tag current_account.avatar_s, width: 30
-          .SK-post-card-comments-row-right
-            = form_tag "", class: "SK-form" do
-              input type="textarea" class="SK-form-control"
+      .SK-post-card-comments-row.add-comment-row
+        .SK-post-card-comments-row-left
+          img.current-avatar src="" style="width: 30px"
+        .SK-post-card-comments-row-right
+          = form_tag "", class: "SK-form" do
+            input type="textarea" class="SK-form-control"

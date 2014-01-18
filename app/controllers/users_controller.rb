@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     @relation = Friendship::IRRESPECTIVE
     @relation = current_account.get_relation(@target) if current_account
     @recent_game_achievements = @target.recent_game_achievements(3)
-    @games = AllGame.belong_to_account(@target).available.limit(5);
+    @games = AllGame.belong_to_account(@target).available;
 
     stream = Stream::Account.new(current_account, @target, min_id: params[:end_id].to_i, order: "created_at DESC")
     @stream_posts = stream.stream_posts.limit(9)
@@ -98,8 +98,8 @@ class UsersController < ApplicationController
 
   def games
     @target = Account.find(params[:id])
-    #@games = @target.other_games.where(status: AllGame::STATUS_NORMAL)
-    #@games = @games | @target.steam_user.games if @target.steam_user
+    # @games = @target.other_games.where(status: AllGame::STATUS_NORMAL)
+    # @games = @games | @target.steam_user.games if @target.steam_user
     @games = AllGame.belong_to_account(@target).where("all_games.status=?", AllGame::STATUS_NORMAL)
 
     respond_to do |format|
@@ -120,10 +120,11 @@ class UsersController < ApplicationController
       end
       format.json do
         @statistic = @account.game_statistic(@game)
+        @ranklists = @game.ranklists.order("reputation DESC").limit(5).fill_account
         if @statistic
-          render json: { status: "success", data: @statistic }
+          render
         else
-          format.json { render json: { status: "error", message: I18n.t("account.not_have_game") } }
+          render json: { status: "error", message: I18n.t("account.not_have_game") }
         end
       end
     end

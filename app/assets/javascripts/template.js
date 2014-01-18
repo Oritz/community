@@ -7,13 +7,11 @@ function template() {
       $t.attr("post_id", data.id).attr("creator_id", data.creator_id).attr("creator_name", data.creator_nick_name);
       $t.find(".creator-name").html(data.creator_nick_name);
       $t.find(".creator-link").attr("href", "/users/"+data.id);
-      $t.find(".creator-level").html("Lv "+data.creator_level);
       $t.find(".like-count").html(data.like_count);
       $t.find(".recommend-count").html(data.recommend_count);
       $t.find(".comment-count").html(data.comment_count);
       $t.find(".post-time").html(data.created_at);
       $t.find(".creator-avatar").attr("src", data.creator_avatar);
-      $t.find(".level").attr("level", data.creator_level);
       $t.find(".post-content").html(data.content);
       if(data.image_url)
         $t.find(".post-image").attr("src", data.image_url);
@@ -24,6 +22,12 @@ function template() {
       $t.find(".post-link").attr("href", "/posts/"+data.id);
       if(typeof data.original_content === "undefined") {
         $t.find(".recommendation").remove();
+      }
+      if($CONFIG.is_login != 1) {
+        $t.find(".add-comment-row").remove();
+      }
+      else {
+        $t.find("img.current-avatar").attr("src", $CONFIG.my_avatar);
       }
       $t.find("form").attr("action", "/posts/"+data.id+"/comments");
 

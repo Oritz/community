@@ -1,3 +1,21 @@
-.SK-game-card
+.SK-game-card data-slidr=index game_id=game.id
   .SK-game-card-left
+    = link_to "javascript:void(0);" do
+      = image_tag game.image
+    .SK-grid
+      .SK-grid-row.SK-grid-row2
+        span
+          i.fa.fa-clock-o
+            span.user-game-time N/A
+        span
+          i.fa.fa-trophy
+            span.user-game-trophy N/A
   .SK-game-card-right
+    .SK-game-card-stat
+      h2
+        = link_to game.name, "javascript:void(0);"
+      h3.user-game-info.reputation-rank
+      p.user-game-info style="height: 40px;"
+      p.user-game-info.delta-reputation
+    ul.SK-game-card-rank.user-game-info.SK-hidden.rank-list
+    .SK-game-card-loading.SK-loading

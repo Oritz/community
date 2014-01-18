@@ -5,6 +5,7 @@ html
     = csrf_meta_tags
     = stylesheet_link_tag "application", media: "all"
     title= @title
+    == yield(:js_configs)
   body
     .SK-topper
       .SK-topper-container
@@ -37,5 +38,10 @@ html
       .SK-container-right
         == yield(:container_right)
     .SK-footer
+    .templates.SK-hidden
+      .post-template
+        = render "posts/stream_post"
+      .recommend-template
+      .comment-template
   = javascript_include_tag "application"
   = javascript_include_tag "#{params[:controller]}/#{params[:action]}"

@@ -1,12 +1,10 @@
 function cascading(opts) {
   var options = $.extend(true, {
-    wrapper: "#wrapper",
-    posts: undefined,
-    itemSelector: undefined,
-    columnWidth: undefined
+    wrapper: ".posts-container",
+    posts: undefined
   }, opts);
 
-  var $wrapper;
+  var $wrapper = $(options.wrapper);
 
   function fetch() {
     options.posts.fetch_posts({
@@ -25,21 +23,13 @@ function cascading(opts) {
         options.after_fetch();
       },
       post_process: function($post) {
-        $wrapper.append($post).imagesLoaded(function() {
-          show_level($post);
-          $wrapper.masonry('appended', $post).masonry();
-        });
+        $wrapper.append($post);
       }
     });
   }
 
   return {
     start: function() {
-      $wrapper = $(options.wrapper).masonry({
-        columnWidth: options.columnWidth,
-        itemSelector: options.itemSelector
-      });
-
       $(window).on("scroll", function() {
         if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
           fetch();
