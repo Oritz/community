@@ -4,6 +4,7 @@
   box-shadow: 0 0 6px 1px rgba(0,0,0,.4);
   margin: 7px;
   overflow: hidden;
+  min-width: 180px;
 }
 
 .group-hovercard > .group-inner {  
@@ -20,22 +21,25 @@
   border: solid 8px transparent;
 }
 
-.group-info > p {
+.group-info p {
   overflow: hidden;
   font-size: 11px;
-  margin: 8px;
+  margin: 4px;
+}
+
+.group-detail {
+  margin: 4px 0px;
 }
 
 .group-info span {
   font-weight: bold;
 }
 
-p.group-name {
+p.group-name a {
   color: #b87100;
   text-decoration: none;
   font-size: 14px;
   font-weight: bold;
-  margin: 10px;
 }
 
 
